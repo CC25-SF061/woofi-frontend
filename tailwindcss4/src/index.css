@@ -1,0 +1,22 @@
+@font-face {
+  font-family: Quicksand;
+  src: url("../fonts/Quicksand-VariableFont_wght.ttf");
+}
+
+@font-face {
+  font-family: JuliusSansOne;
+  src: url("../fonts/JuliusSansOne-Regular.ttf");
+}
+
+@font-face {
+  font-family: InknutAntiqua;
+  src: url("../fonts/InknutAntiqua-Regular.ttf");
+}
+
+@import "tailwindcss";
+
+@theme {
+  --font-quicksand: 'Quicksand', sans-serif;
+  --font-julius-sans-one: 'JuliusSansOne', sans-serif;
+  --font-inknut-antiqua: 'InknutAntiqua', serif;
+}
