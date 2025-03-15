@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import logo from "../assets/navbar/logo.png";
 
 const Navbar = () => {
@@ -25,30 +26,35 @@ const Navbar = () => {
         isScrolled ? "bg-white shadow-lg" : "bg-white/10 backdrop-blur-md"
       }`}
     >
-      <div className={`flex justify-between px-7 py-3 font-quicksand
-        ${
-          isScrolled ? "text-black" : "text-white"
-        }`}>
-        <div className="navbar-start">
+      <div
+        className={`flex justify-between px-7 py-3 font-quicksand
+        ${isScrolled ? "text-black" : "text-white"}`}
+      >
+        <Link to="/">
           <img src={logo} alt="Logo" className="w-20 mr-2" />
-        </div>
+        </Link>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
             <li>
-              <a>Home</a>
+              <Link to="/">Home</Link>
             </li>
             <li>
-              <a>Destination</a>
+              <Link to="/">Destination</Link>
             </li>
             <li>
-              <a>Culture and History</a>
+              <Link to="/culture-history">Culture and History</Link>
             </li>
             <li>
-              <a>Contact Us</a>
+              <Link to="/gallery">Gallery</Link>
+            </li>
+            <li>
+              <Link to="/">Contact Us</Link>
             </li>
           </ul>
           <div>
-            <a className="btn">Sign In</a>
+            <Link to="/" className="btn">
+              Sign In
+            </Link>
           </div>
         </div>
       </div>
