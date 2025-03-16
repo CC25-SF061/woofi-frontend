@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import logo from "../assets/navbar/logo.png";
+import { Link, useLocation } from "react-router-dom";
+import { FaChevronDown } from "react-icons/fa"; // Import ikon dropdown
+import logo from "../assets/navbar/finalLogo.png";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const location = useLocation(); // Mendapatkan path saat ini
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,39 +26,93 @@ const Navbar = () => {
   return (
     <div
       className={`fixed top-0 left-0 w-full transition-all duration-300 shadow-md z-50 ${
-        isScrolled ? "bg-white shadow-lg" : "bg-white/10 backdrop-blur-md"
+        isScrolled ? "bg-transparent shadow-lg" : "bg-[#252527] backdrop-blur-md"
       }`}
     >
-      <div
-        className={`flex justify-between px-7 py-3 font-quicksand
-        ${isScrolled ? "text-black" : "text-white"}`}
-      >
+      <div className="flex justify-between items-center px-6 font-quicksand text-white">
+        {/* Logo */}
         <Link to="/">
-          <img src={logo} alt="Logo" className="w-20 mr-2" />
+          <img src={logo} alt="Logo" className="w-42 h-auto mr-2" />
         </Link>
-        <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal px-1">
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/">Destination</Link>
-            </li>
-            <li>
-              <Link to="/culture-history">Culture and History</Link>
-            </li>
-            <li>
-              <Link to="/gallery">Gallery</Link>
-            </li>
-            <li>
-              <Link to="/">Contact Us</Link>
-            </li>
-          </ul>
-          <div>
-            <Link to="/" className="btn">
-              Sign In
-            </Link>
+
+        {/* Menu */}
+        <div className="hidden lg:flex items-center space-x-6">
+          <Link
+            to="/"
+            className={`hover:text-gray-300 transition ${
+              location.pathname === "/" ? "text-[#FFA666] font-bold" : ""
+            }`}
+          >
+            Home
+          </Link>
+
+          <Link
+            to="/destination"
+            className={`hover:text-gray-300 transition ${
+              location.pathname === "/destination" ? "text-[#FFA666] font-bold" : ""
+            }`}
+          >
+            Destination
+          </Link>
+
+          <Link
+            to="/culture-history"
+            className={`hover:text-gray-300 transition ${
+              location.pathname === "/culture-history" ? "text-[#FFA666] font-bold" : ""
+            }`}
+          >
+            Culture & History
+          </Link>
+
+          <Link
+            to="/gallery"
+            className={`hover:text-gray-300 transition ${
+              location.pathname === "/gallery" ? "text-[#FFA666] font-bold" : ""
+            }`}
+          >
+            Gallery
+          </Link>
+
+          {/* Dropdown untuk Contact Us & Join Us */}
+          <div className="relative">
+            <button
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              className="flex items-center gap-1 hover:text-gray-300 transition"
+            >
+              More <FaChevronDown className="text-sm" />
+            </button>
+
+            {dropdownOpen && (
+              <div className="absolute mt-4 w-40 bg-white text-black rounded-b-lg shadow-lg">
+                <Link
+                  to="/contact-us"
+                  className={`block px-4 py-2 hover:bg-gray-200 ${
+                    location.pathname === "/contact-us" ? "bg-gray-300 font-bold" : ""
+                  }`}
+                  onClick={() => setDropdownOpen(false)}
+                >
+                  Contact Us
+                </Link>
+                <Link
+                  to="/join-us"
+                  className={`block px-4 py-2 hover:bg-gray-200 ${
+                    location.pathname === "/join-us" ? "bg-gray-300 font-bold" : ""
+                  }`}
+                  onClick={() => setDropdownOpen(false)}
+                >
+                  Join Us
+                </Link>
+              </div>
+            )}
           </div>
+
+          {/* Sign In Button */}
+          <Link
+            to="/sign-in"
+            className="px-4 py-2 border border-white rounded-md hover:bg-white hover:text-black transition"
+          >
+            Sign In
+          </Link>
         </div>
       </div>
     </div>

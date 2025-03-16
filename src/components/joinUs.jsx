@@ -1,8 +1,12 @@
 import React from "react";
 import Image8 from "../assets/homePage/image8.png";
 import LogoWoofi from "../assets/navbar/logo.png";
+import { Link } from "react-router-dom";
+
 
 const joinUs = () => {
+  
+
   return (
     <div>
       <div
@@ -19,15 +23,18 @@ const joinUs = () => {
           }}
         ></div>
         <div className="w-xs flex flex-col items-center justify-center z-20">
-          <img src={LogoWoofi} alt="Logo Woofi" className="w-30 mb-5" />
+          <img src={LogoWoofi} alt="Logo Woofi" className="w-42" />
           <hr className="w-full border-t-2 border-white my-4" />
           <h1 className="font-inknut-antiqua text-3xl mb-7">Join With Us</h1>
           <p className="font-quicksand text-xl mb-3 text-center">
             Lorem Ipsum is simply dummy text of the printing and f
           </p>
-          <button className="font-quicksand text-lg py-2 px-12 border-2 border-white rounded-md border-solid">
+          <Link
+            to="/join-us"
+            className="px-4 py-2 border border-white rounded-md hover:bg-white hover:text-black transition"
+          >
             Click Here
-          </button>
+          </Link>
         </div>
       </div>
     </div>

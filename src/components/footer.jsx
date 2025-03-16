@@ -9,9 +9,9 @@ import gmail from "../assets/footer/ic--baseline-email.svg";
 const footer = () => {
   return (
     <div>
-      <div className="p-10 bg-neutral-800 text-neutral-100 flex flex-col gap-5">
+      <div className="py-5 px-10 bg-neutral-800 text-neutral-100 flex flex-col gap-5">
         <div className="flex justify-center">
-          <img src={logo} alt="" className="w-20" />
+          <img src={logo} alt="" className="w-42" />
         </div>
         <div className="flex justify-between">
           <div className="w-xs">
