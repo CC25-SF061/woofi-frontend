@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FaChevronDown } from "react-icons/fa"; // Import ikon dropdown
+import { FaChevronDown } from "react-icons/fa";
 import logo from "../assets/navbar/finalLogo.webp";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const location = useLocation(); // Mendapatkan path saat ini
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,14 +25,14 @@ const Navbar = () => {
 
   return (
     <div
-      className={`fixed top-0 left-0 w-full transition-all duration-300 shadow-md z-50 ${
+      className={`fixed top-0 left-0 w-full transition-all duration-300 shadow-md z-50 py-2 ${
         isScrolled ? "bg-[#252527] shadow-lg" : "bg-transparent backdrop-blur-md"
       }`}
     >
       <div className="flex justify-between items-center px-6 font-quicksand text-white">
         {/* Logo */}
         <Link to="/">
-          <img src={logo} alt="Logo" className="w-42 h-auto mr-2" />
+          <img src={logo} alt="Logo" className="w-60 h-auto mr-2" />
         </Link>
 
         {/* Menu */}
@@ -56,7 +56,7 @@ const Navbar = () => {
           </Link>
 
           <Link
-            to="/culture-history"
+            to="/cultureHistory"
             className={`hover:text-gray-300 transition ${
               location.pathname === "/culture-history" ? "text-[#FFA666] font-bold" : ""
             }`}
@@ -85,7 +85,7 @@ const Navbar = () => {
             {dropdownOpen && (
               <div className="absolute mt-4 w-40 bg-white text-black rounded-b-lg shadow-lg">
                 <Link
-                  to="/contact-us"
+                  to="/contactUs"
                   className={`block px-4 py-2 hover:bg-gray-200 ${
                     location.pathname === "/contact-us" ? "bg-gray-300 font-bold" : ""
                   }`}
@@ -94,7 +94,7 @@ const Navbar = () => {
                   Contact Us
                 </Link>
                 <Link
-                  to="/join-us"
+                  to="/joinUs"
                   className={`block px-4 py-2 hover:bg-gray-200 ${
                     location.pathname === "/join-us" ? "bg-gray-300 font-bold" : ""
                   }`}
@@ -108,7 +108,7 @@ const Navbar = () => {
 
           {/* Sign In Button */}
           <Link
-            to="/sign-in"
+            to="/signIn"
             className="px-4 py-2 border border-[#FFA666] rounded-md hover:bg-[#FFA666] hover:text-black transition"
           >
             Sign In

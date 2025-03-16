@@ -62,7 +62,7 @@ const home = () => {
           <img
             src={LogoWoofi}
             alt="Logo Woofi"
-            className="h-auto absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 "
+            className="h-auto w-50 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 "
           />
         </div>
 
