@@ -18,8 +18,8 @@ import PageWrapper from "./components/loading/pageWrapper";
 const App = () => {
   return (
     <Router>
-      <PageWrapper/>
       <ScrollToTop/>
+      <PageWrapper/>
       <Routes>
         <Route path='/' element ={<Home/>}></Route>
         <Route path='/cultureHistory' element ={<CultureHistory/>}></Route>
