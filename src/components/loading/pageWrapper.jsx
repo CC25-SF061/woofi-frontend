@@ -4,21 +4,18 @@ import { useLocation } from "react-router-dom";
 import LoadingScreen from "./loadingScreen";
 
 const PageWrapper = ({ children }) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // Set awalnya true agar halaman tidak muncul dulu
   const location = useLocation();
 
   useEffect(() => {
     setLoading(true);
-    const timeout = setTimeout(() => setLoading(false), 3000); // Simulasi loading selama 1 detik
+    const timeout = setTimeout(() => setLoading(false), 1000); // Simulasi loading selama 3 detik
     return () => clearTimeout(timeout);
   }, [location]);
 
   return (
     <div className="relative">
-      {loading && <LoadingScreen />}
-      <div className={`${loading ? "opacity-50 blur-sm" : "opacity-100"} transition-all duration-500`}>
-        {children}
-      </div>
+      {loading ? <LoadingScreen /> : <div className="opacity-100">{children}</div>}
     </div>
   );
 };
