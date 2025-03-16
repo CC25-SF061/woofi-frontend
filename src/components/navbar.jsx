@@ -109,7 +109,7 @@ const Navbar = () => {
           {/* Sign In Button */}
           <Link
             to="/sign-in"
-            className="px-4 py-2 border border-white rounded-md hover:bg-white hover:text-black transition"
+            className="px-4 py-2 border border-[#FFA666] rounded-md hover:bg-[#FFA666] hover:text-black transition"
           >
             Sign In
           </Link>
