@@ -32,7 +32,9 @@ const SignIn = () => {
           <p className="text-sm text-gray-400 mt-2">
             Don't have an account yet?{" "}
             <span className="text-[#FFA666] font-quicksand cursor-pointer">
-              Register
+              <Link to={"/register"}>
+                Register
+              </Link>
             </span>
           </p>
         </div>

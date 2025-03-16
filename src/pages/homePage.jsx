@@ -62,7 +62,7 @@ const home = () => {
           <img
             src={LogoWoofi}
             alt="Logo Woofi"
-            className="h-auto w-50 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 "
+            className="h-auto w-38 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 "
           />
         </div>
 
@@ -89,7 +89,7 @@ const home = () => {
       {/* Explore your favorite dentination */}
       <div className="relative flex w-full min-h-screen items-center justify-center bg-[#221122] px-8 gap-8 py-12">
         <div className="flex flex-col items-center justify-center w-2/5 text-center text-white gap-6">
-          <img src={LogoWoofi} alt="Logo Woofi" className="w-52" />
+          <img src={LogoWoofi} alt="Logo Woofi" className="w-38" />
           <hr className="w-full border-t-2 border-white" />
           <h2 className="font-inknut-antiqua text-3xl">
             Explore Your <span className="text-[#FFA666]">Favorite</span>{" "}

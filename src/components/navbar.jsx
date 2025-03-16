@@ -29,10 +29,10 @@ const Navbar = () => {
         isScrolled ? "bg-[#252527] shadow-lg" : "bg-transparent backdrop-blur-md"
       }`}
     >
-      <div className="flex justify-between items-center px-6 font-quicksand text-white">
+      <div className="flex justify-between items-center py-2 px-6 font-quicksand text-white">
         {/* Logo */}
         <Link to="/">
-          <img src={logo} alt="Logo" className="w-60 h-auto mr-2" />
+          <img src={logo} alt="Logo" className="w-48 h-auto mr-2" />
         </Link>
 
         {/* Menu */}

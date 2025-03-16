@@ -11,7 +11,7 @@ const footer = () => {
     <div>
       <div className="py-5 px-10 bg-neutral-800 text-neutral-100 flex flex-col gap-5">
         <div className="flex justify-center">
-          <img src={logo} alt="" className="w-42" />
+          <img src={logo} alt="" className="w-28 h-auto" />
         </div>
         <div className="flex justify-between">
           <div className="w-xs">

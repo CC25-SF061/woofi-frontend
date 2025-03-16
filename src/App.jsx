@@ -13,10 +13,12 @@ import Register from "./pages/register";
 import ForgetPassword from "./pages/forgetPassword";
 
 import ScrollToTop from "./scrollToTop";
+import PageWrapper from "./components/loading/pageWrapper";
 
 const App = () => {
   return (
     <Router>
+      <PageWrapper/>
       <ScrollToTop/>
       <Routes>
         <Route path='/' element ={<Home/>}></Route>

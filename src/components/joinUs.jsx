@@ -23,7 +23,7 @@ const joinUs = () => {
           }}
         ></div>
         <div className="w-xs flex flex-col items-center justify-center z-20">
-          <img src={LogoWoofi} alt="Logo Woofi" className="w-42" />
+          <img src={LogoWoofi} alt="Logo Woofi" className="w-28" />
           <hr className="w-full border-t-2 border-white my-4" />
           <h1 className="font-inknut-antiqua text-3xl mb-7">Join With Us</h1>
           <p className="font-quicksand text-xl mb-3 text-center">
