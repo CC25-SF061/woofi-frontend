@@ -2,14 +2,14 @@ import React from "react";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import HeroSection from "../components/heroSection";
-import Image1 from "../assets/cultureHistory/image1.png";
+import Image1 from "../assets/cultureHistory/image1.webp";
 import JoinUs from "../components/joinUs";
-import Image2 from "../assets/cultureHistory/image2.png";
-import Image3 from "../assets/cultureHistory/image3.png";
-import Image4 from "../assets/cultureHistory/image4.png";
-import Image5 from "../assets/cultureHistory/image5.png";
-import Image6 from "../assets/cultureHistory/image6.png";
-import Image7 from "../assets/cultureHistory/image7.png";
+import Image2 from "../assets/cultureHistory/image2.webp";
+import Image3 from "../assets/cultureHistory/image3.webp";
+import Image4 from "../assets/cultureHistory/image4.webp";
+import Image5 from "../assets/cultureHistory/image5.webp";
+import Image6 from "../assets/cultureHistory/image6.webp";
+import Image7 from "../assets/cultureHistory/image7.webp";
 
 const cultureHistory = () => {
   return (

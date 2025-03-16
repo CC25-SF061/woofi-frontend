@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import logo from "../assets/navbar/finalLogo.png";
-import notFoundImage from "../assets/images/notFound.png"; 
+import logo from "../assets/navbar/finalLogo.webp";
+import notFoundImage from "../assets/images/notFound.webp"; 
 
 const NotFound = () => {
   return (

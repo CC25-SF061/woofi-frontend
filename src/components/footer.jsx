@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../assets/navbar/logo.png";
+import logo from "../assets/navbar/logo.webp";
 import instagram from "../assets/footer/mdi--instagram.svg";
 import twitter from "../assets/footer/prime--twitter.svg";
 import youtube from "../assets/footer/mdi--youtube.svg";

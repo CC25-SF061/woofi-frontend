@@ -2,21 +2,21 @@ import React from "react";
 import HeroBanner from "../components/heroBanner";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
-import LogoWoofi from "../assets/navbar/logo.png";
-import Image1 from "../assets/homePage/whatWoofi.png";
-import Image2 from "../assets/homePage/image2.png";
-import Image3 from "../assets/homePage/image3.png";
-import Image4 from "../assets/homePage/image4.png";
-import Image5 from "../assets/homePage/image5.png";
-import Image6 from "../assets/homePage/image6.png";
-import Image7 from "../assets/homePage/image7.png";
+import LogoWoofi from "../assets/navbar/logo.webp";
+import Image1 from "../assets/homePage/whatWoofi.webp";
+import Image2 from "../assets/homePage/image2.webp";
+import Image3 from "../assets/homePage/image3.webp";
+import Image4 from "../assets/homePage/image4.webp";
+import Image5 from "../assets/homePage/image5.webp";
+import Image6 from "../assets/homePage/image6.webp";
+import Image7 from "../assets/homePage/image7.webp";
 import SeeDetail from "../components/seeDetail";
 import JoinUs from "../components/joinUs";
 
 const backgroundImages = [
-  "/src/assets/homePage/borobudur.png",
-  "/src/assets/homePage/gunung-rinjani.jpeg",
-  "/src/assets/homePage/raja-ampat.jpeg",
+  "/src/assets/homePage/borobudur.webp",
+  "/src/assets/homePage/gunung-rinjani.webp",
+  "/src/assets/homePage/raja-ampat.webp",
 ];
 
 const home = () => {

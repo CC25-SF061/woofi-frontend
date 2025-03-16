@@ -1,6 +1,6 @@
 import React from "react";
-import Image8 from "../assets/homePage/image8.png";
-import LogoWoofi from "../assets/navbar/logo.png";
+import Image8 from "../assets/homePage/image8.webp";
+import LogoWoofi from "../assets/navbar/logo.webp";
 import { Link } from "react-router-dom";
 
 

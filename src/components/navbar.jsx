@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { FaChevronDown } from "react-icons/fa"; // Import ikon dropdown
-import logo from "../assets/navbar/finalLogo.png";
+import logo from "../assets/navbar/finalLogo.webp";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -26,7 +26,7 @@ const Navbar = () => {
   return (
     <div
       className={`fixed top-0 left-0 w-full transition-all duration-300 shadow-md z-50 ${
-        isScrolled ? "bg-transparent shadow-lg" : "bg-[#252527] backdrop-blur-md"
+        isScrolled ? "bg-[#252527] shadow-lg" : "bg-transparent backdrop-blur-md"
       }`}
     >
       <div className="flex justify-between items-center px-6 font-quicksand text-white">
