@@ -5,32 +5,37 @@ import { Link } from "react-router-dom";
 
 const forgetPassword = () => {
   return (
-    <div className="bg-[#221122] h-screen p-10">
-      <div className="flex h-full rounded-lg overflow-hidden shadow-lg bg-[#252527]">
-        <BannerLogin imageSrc={Image1} />
+    <div className="bg-[#221122] min-h-screen w-full flex items-center justify-center p-5 md:p-10">
+      <div className="flex flex-col md:flex-row w-full max-w-5xl rounded-lg overflow-hidden shadow-lg bg-[#252527] min-h-[650px]">
+        
+        {/* Image Section */}
+        <div className="hidden md:flex md:w-1/2 h-screen max-h-[650px]">
+          <BannerLogin imageSrc={Image1} />
+        </div>
 
-        <div className="w-1/2 flex flex-col justify-center items-center px-8">
-          <h1 className="text-3xl font-inknut-antiqua text-white mb-6">
+        {/* Form section */}
+        <form className="w-full md:w-1/2 flex flex-col justify-center items-center px-6 py-10 md:px-8 flex-grow">
+          <h1 className="text-2xl md:text-3xl font-inknut-antiqua text-white mb-6 text-center">
             Forgot Password
           </h1>
-          <p className="text-xl font-quicksand text-white mb-6">We will send password reset link on your email Id</p>
+          <p className="text-xl text-center md:text-lg font-quicksand text-white mb-6">We will send password reset link on your email Id</p>
           <input
             type="email"
             placeholder="Email"
-            className="w-full p-3 font-quicksand mb-4 rounded text-white border border-white focus:outline-none"
+            className="w-full p-3 font-quicksand mb-4 rounded text-white border border-white bg-transparent focus:outline-none"
           />
-          <button className="w-full p-2 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition">
+          <button className="w-full p-3 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition">
             Send reset link
           </button>
-          <p className="text-sm text-gray-400 mt-2">
-            Don't have an account yet?{" "}
-            <span className="text-[#FFA666] font-quicksand cursor-pointer">
+          <p className="text-sm text-gray-400 mt-2 text-center">
+            Don't have an account yet?
+            <span className="text-[#FFA666] font-quicksand ml-1">
               <Link to={"/register"}>
                 Register
               </Link>
             </span>
           </p>
-        </div>
+        </form>
       </div>
     </div>
   );

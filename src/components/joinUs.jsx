@@ -3,16 +3,14 @@ import Image8 from "../assets/homePage/image8.webp";
 import LogoWoofi from "../assets/navbar/logo.webp";
 import { Link } from "react-router-dom";
 
-
-const joinUs = () => {
-  
-
+const JoinUs = () => {
   return (
     <div>
       <div
-        className="relative flex flex-col items-center text-white py-12 bg-cover bg-center bg-no-repeat"
+        className="relative flex flex-col items-center text-white py-12 bg-cover bg-center bg-no-repeat min-h-full"
         style={{ backgroundImage: `url(${Image8})` }}
       >
+        {/* Overlay Background */}
         <div className="absolute inset-0 bg-black opacity-40 z-10"></div>
         <div
           className="absolute top-0 w-full z-10"
@@ -22,16 +20,20 @@ const joinUs = () => {
             height: "40%",
           }}
         ></div>
-        <div className="w-xs flex flex-col items-center justify-center z-20">
-          <img src={LogoWoofi} alt="Logo Woofi" className="w-28" />
+
+        {/* Content */}
+        <div className="relative z-20 w-full max-w-md px-6 flex flex-col items-center text-center">
+          <img src={LogoWoofi} alt="Logo Woofi" className="w-28 mb-4" />
           <hr className="w-full border-t-2 border-white my-4" />
-          <h1 className="font-inknut-antiqua text-3xl mb-7">Join With Us</h1>
-          <p className="font-quicksand text-xl mb-3 text-center">
+          <h1 className="font-inknut-antiqua text-2xl md:text-3xl mb-6">
+            Join With Us
+          </h1>
+          <p className="font-quicksand text-lg md:text-xl mb-4 max-w-lg">
             Lorem Ipsum is simply dummy text of the printing and f
           </p>
           <Link
             to="/joinUs"
-            className="px-4 py-2 border border-white rounded-md hover:bg-white hover:text-black transition"
+            className="px-5 py-3 border border-white rounded-md hover:bg-white hover:text-black transition duration-300"
           >
             Click Here
           </Link>
@@ -41,4 +43,4 @@ const joinUs = () => {
   );
 };
 
-export default joinUs;
+export default JoinUs;

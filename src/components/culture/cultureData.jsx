@@ -41,7 +41,7 @@ const culturalData = {
       { id: 12, name: "Fahombo", from: "Nias, North Sumatra", image: Tradition6},
     ],
 
-    "Traditional Dance": [
+    "Traditional-Dance": [
       { id: 13, name: "Saman dance", from: "Aceh", image: Dance1},
       { id: 14, name: "Piring dance", from: "West Sumatra", image: Dance2},
       { id: 15, name: "Jaipong dance", from: "West Java", image: Dance3},
