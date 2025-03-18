@@ -37,7 +37,7 @@ const joinUs = () => {
   return (
     <>
       <Navbar></Navbar>
-      <section className="bg-[#221122] min-h-screen w-full flex items-center justify-center p-5 md:p-10">
+      <section className="bg-[#221122] min-h-screen w-full flex items-center justify-center p-8 pt-30 lg:pt-30">
         <div className="flex flex-col md:flex-row w-full max-w-5xl rounded-lg overflow-hidden shadow-lg bg-[#252527] min-h-[650px]">
           {/* Form section */}
           <form className="w-full md:w-1/2 flex flex-col justify-center items-center px-6 py-10 md:px-8 flex-grow">
