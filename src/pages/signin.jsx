@@ -36,12 +36,12 @@ const SignIn = () => {
             <FcGoogle className="text-2xl mr-2" /> Sign in with Google
           </button>
           
-          <Link to="/forgetPassword" className="text-sm text-[#FFA666] font-quicksand mt-4">
+          <Link to="/forget-password" className="text-sm text-[#FFA666] font-quicksand underline mt-4">
             Forgot password?
           </Link>
           <p className="text-sm text-gray-400 mt-2 text-center">
             Don't have an account yet? 
-            <Link to="/register" className="text-[#FFA666] font-quicksand ml-1">
+            <Link to="/register" className="text-[#FFA666] font-quicksand underline ml-1">
               Register
             </Link>
           </p>

@@ -50,8 +50,8 @@ const register = () => {
           <p className="text-sm text-gray-400 mt-2">
             Already have an account{" "}
             <Link
-              to={"/signIn"}
-              className="text-[#FFA666] font-quicksand cursor-pointer"
+              to={"/sign-in"}
+              className="text-[#FFA666] font-quicksand underline cursor-pointer"
             >
               Sign In
             </Link>

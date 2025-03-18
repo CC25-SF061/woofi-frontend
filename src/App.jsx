@@ -22,13 +22,13 @@ const App = () => {
       <PageWrapper/>
       <Routes>
         <Route path='/' element ={<Home/>}></Route>
-        <Route path='/cultureHistory' element ={<CultureHistory/>}></Route>
+        <Route path='/culture-history' element ={<CultureHistory/>}></Route>
         <Route path='/gallery' element ={<GalleryPage/>}></Route>
-        <Route path='/contactUs' element ={<ContactUs/>}></Route>
-        <Route path='/joinUs' element ={<JoinUs/>}></Route>
-        <Route path='/signIn' element ={<Signin/>}></Route>
+        <Route path='/contact-us' element ={<ContactUs/>}></Route>
+        <Route path='/join-us' element ={<JoinUs/>}></Route>
+        <Route path='/sign-in' element ={<Signin/>}></Route>
         <Route path='/register' element ={<Register/>}></Route>
-        <Route path='/forgetpassword' element ={<ForgetPassword/>}></Route>
+        <Route path='/forget-password' element ={<ForgetPassword/>}></Route>
         <Route path="*" element={<NotFound/>}></Route>
       </Routes>
     </Router>

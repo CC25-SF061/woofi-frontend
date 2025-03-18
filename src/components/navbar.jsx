@@ -27,16 +27,16 @@ const Navbar = () => {
 
   return (
     <div
-      className={`fixed top-0 left-0 w-full transition-all duration-300 shadow-md z-50 py-2 ${
+      className={`fixed top-0 left-0 w-full transition-all duration-300 shadow-md z-50 py-4 ${
         isScrolled
           ? "bg-[#252527] shadow-lg"
           : "bg-transparent backdrop-blur-md"
       }`}
     >
-      <div className="flex justify-between items-center py-2 px-6 font-quicksand text-white">
+      <div className="flex justify-between items-center px-6 font-quicksand text-white">
         {/* Logo */}
         <Link to="/">
-          <img src={logo} alt="Logo" className="w-48 h-auto mr-2" />
+          <img src={logo} alt="Logo" className="lg:w-48 w-38 h-auto mr-2" />
         </Link>
 
         {/* Hamburger Menu Button */}
@@ -77,9 +77,9 @@ const Navbar = () => {
             </Link>
 
             <Link
-              to="/cultureHistory"
+              to="/culture-history"
               className={`hover:text-gray-300 transition ${
-                location.pathname === "/cultureHistory"
+                location.pathname === "/culture-history"
                   ? "text-[#FFA666] font-bold"
                   : ""
               }`}
@@ -110,9 +110,9 @@ const Navbar = () => {
               {dropdownOpen && (
                 <div className="absolute mt-4 w-40 bg-[#252527] text-white rounded-lg shadow-lg">
                   <Link
-                    to="/contactUs"
+                    to="/contact-us"
                     className={`block px-4 py-2 hover:bg-orange-500 hover:text-white rounded-t-lg ${
-                      location.pathname === "/contactUs"
+                      location.pathname === "/contact-us"
                         ? "text-[#FFA666] font-bold"
                         : ""
                     }`}
@@ -121,9 +121,9 @@ const Navbar = () => {
                     Contact Us
                   </Link>
                   <Link
-                    to="/joinUs"
+                    to="/join-us"
                     className={`block px-4 py-2 hover:bg-orange-500 hover:text-white rounded-b-lg ${
-                      location.pathname === "/joinUs"
+                      location.pathname === "/join-us"
                         ? "text-[#FFA666] font-bold"
                         : ""
                     }`}
@@ -137,7 +137,7 @@ const Navbar = () => {
 
             {/* Sign In Button */}
             <Link
-              to="/signIn"
+              to="/sign-in"
               className="px-4 py-2 border border-[#FFA666] rounded-md hover:bg-[#FFA666] hover:text-black transition"
             >
               Sign In
@@ -195,9 +195,9 @@ const Navbar = () => {
 
                   <li>
                     <Link
-                      to="/cultureHistory"
+                      to="/culture-history"
                       className={`block py-2 hover:text-gray-300 ${
-                        location.pathname === "/cultureHistory" &&
+                        location.pathname === "/culture-history" &&
                         "text-[#FFA666] font-bold"
                       }`}
                       onClick={() => setMobileMenuOpen(false)}
@@ -235,9 +235,9 @@ const Navbar = () => {
                     {dropdownOpen && (
                       <div className="pl-4 mt-2 space-y-3">
                         <Link
-                          to="/contactUs"
+                          to="/contact-us"
                           className={`block py-1 hover:text-gray-300 ${
-                            location.pathname === "/contactUs" &&
+                            location.pathname === "/contact-us" &&
                             "text-[#FFA666] font-bold"
                           }`}
                           onClick={() => {
@@ -248,9 +248,9 @@ const Navbar = () => {
                           Contact Us
                         </Link>
                         <Link
-                          to="/joinUs"
+                          to="/join-us"
                           className={`block py-1 hover:text-gray-300 ${
-                            location.pathname === "/joinUs" &&
+                            location.pathname === "/join-us" &&
                             "text-[#FFA666] font-bold"
                           }`}
                           onClick={() => {
@@ -266,7 +266,7 @@ const Navbar = () => {
 
                   <li>
                     <Link
-                      to="/signIn"
+                      to="/sign-in"
                       className="block w-full px-4 py-2 border border-[#FFA666] rounded-md hover:bg-[#FFA666] hover:text-black text-center"
                       onClick={() => setMobileMenuOpen(false)}
                     >
