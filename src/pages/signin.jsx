@@ -6,7 +6,7 @@ import { FcGoogle } from "react-icons/fc";
 
 const SignIn = () => {
   return (
-    <div className="bg-[#221122] min-h-screen w-full flex items-center justify-center p-5 md:p-10">
+    <section className="bg-[#221122] min-h-screen w-full flex items-center justify-center p-5 md:p-10">
       <div className="flex flex-col md:flex-row w-full max-w-5xl rounded-lg overflow-hidden shadow-lg bg-[#252527] min-h-[650px]">
         {/* Form Section */}
         <form className="w-full md:w-1/2 flex flex-col justify-center items-center px-6 py-10 md:px-8 flex-grow">
@@ -48,11 +48,11 @@ const SignIn = () => {
         </form>
 
         {/* Image Section */}
-        <div className="hidden md:flex md:w-1/2 h-screen max-h-[650px]">
+        <div className="hidden md:flex md:w-1/2 min-h-screen max-h-[650px]">
           <BannerLogin imageSrc={Image1} />
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

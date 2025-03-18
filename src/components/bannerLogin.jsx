@@ -14,8 +14,8 @@ const bannerLogin = ({ imageSrc }) => {
 
       <div className="absolute w-full md:text-center inset-0 flex flex-col items-center justify-center text-white z-10">
         <img src={Logo} alt="Logo" className="w-30 mb-2" />
-        <h2 className="font-quicksand text-3xl">Woofi</h2>
-        <p className="font-quicksand text-3xl">(Wonderful Of Indonesia)</p>
+        <h2 className="font-inknut-antiqua text-3xl">WOOFI</h2>
+        <p className="font-quicksand text-3xl">(<span className="text-[#FFA666]">Wonderful</span> Of Indonesia)</p>
       </div>
 
       <div

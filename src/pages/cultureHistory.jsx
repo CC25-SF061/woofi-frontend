@@ -1,26 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import HeroSection from "../components/heroSection";
 import Image1 from "../assets/cultureHistory/image1.webp";
 import JoinUs from "../components/joinUs";
-import CultureCard from "../components/culture/cultureCard";
-import culturalData from "../components/culture/cultureData";
-import { motion, AnimatePresence } from "framer-motion";
+import CulturalDiversity from "../components/culture/culturalDiversity";
 
 const CultureHistory = () => {
-  const defaultCategory = "Traditional-Music";
-  const [selectedCategory, setSelectedCategory] = useState(defaultCategory);
-  const [displayedData, setDisplayedData] = useState([]);
-
-  // Update displayedData setiap kali selectedCategory berubah
-  useEffect(() => {
-    if (culturalData[selectedCategory]) {
-      setDisplayedData(culturalData[selectedCategory]);
-    } else {
-      setDisplayedData([]); // Jika tidak ada data, set ke array kosong
-    }
-  }, [selectedCategory]);
 
   return (
     <div>
@@ -83,64 +69,7 @@ const CultureHistory = () => {
         ></div>
       </section>
 
-      {/* Cultural Diversity of Indonesia */}
-
-      <section className="w-5xl mx-auto py-20 px-8">
-        <h1 className="font-inknut-antiqua text-3xl text-center">
-          <span className="text-[#FFA666]">Cultural Diversity</span> of
-          Indonesia
-        </h1>
-        <div className="flex divide-x-2 divide-white rounded-lg overflow-hidden justify-center mt-10">
-          {Object.keys(culturalData).map((category) => (
-            <motion.button
-              key={category}
-              className={`px-6 py-2 text-lg font-quicksand hover:underline transition-all ${
-                selectedCategory === category
-                  ? "font-bold text-[#FFA666] underline"
-                  : ""
-              }`}
-              onClick={() => setSelectedCategory(category)}
-              whileTap={{ scale: 0.9 }}
-              whileHover={{ scale: 1.1 }}
-            >
-              {category}
-            </motion.button>
-          ))}
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-10">
-          <AnimatePresence mode="wait">
-            {displayedData.length > 0 ? (
-              displayedData.map((item) => (
-                <motion.div
-                  key={item.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <CultureCard
-                    image={item.image}
-                    name={item.name}
-                    from={item.from}
-                  />
-                </motion.div>
-              ))
-            ) : (
-              <motion.p
-                key="no-data"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-                className="text-center text-lg mt-10"
-              >
-                No data available for this category.
-              </motion.p>
-            )}
-          </AnimatePresence>
-        </div>
-      </section>
+      <CulturalDiversity/>
       <JoinUs />
       <Footer />
     </div>

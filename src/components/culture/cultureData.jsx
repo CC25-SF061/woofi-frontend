@@ -23,32 +23,127 @@ import Dance5 from "../../assets/cultureHistory/traditional-dance/Dance5.webp";
 import Dance6 from "../../assets/cultureHistory/traditional-dance/Dance6.webp";
 
 const culturalData = {
-    "Traditional-Music": [
-      { id: 1, name: "Angklung", from: "West Java", image:Music1},
-      { id: 2, name: "Gamelan", from: "Bali/Java", image: Music2  },
-      { id: 3, name: "Sasando", from: "NTT", image: Music3},
-      { id: 4,name: "Rebab", from: "Java/Sumatra", image:Music4 },
-      { id: 5,name: "Saluang", from: "West Sumatra", image: Music5},
-      { id: 6,name: "Japen", from: "Central Kalimantan", image: Music6 },
-      
-    ],
-    "Traditions": [
-      { id: 7, name: "Ngaben", from: "Bali", image:Tradition1 },
-      { id: 8, name: "Rambu Solo", from: "Toraja,South Sulawesi", image: Tradition2 },
-      { id: 9, name: "Tabuik", from: "Pariaman,West Sumatra", image: Tradition3 },
-      { id: 10, name: "Bakar batu", from: "Papua", image: Tradition4},
-      { id: 11, name: "Kebo-keboan", from: "Banyuwangi,East Java", image: Tradition5},
-      { id: 12, name: "Fahombo", from: "Nias, North Sumatra", image: Tradition6},
-    ],
+  "Traditional-Music": [
+    {
+      id: 1,
+      name: "Angklung",
+      from: "West Java",
+      image: Music1,
+      desc: "Loremipsum",
+    },
+    {
+      id: 2,
+      name: "Gamelan",
+      from: "Bali/Java",
+      image: Music2,
+      desc: "Loremipsum",
+    },
+    { id: 3, 
+      name: "Sasando",
+      from: "NTT",
+      image: Music3,
+      desc: "Loremipsum" 
+    },
+    {
+      id: 4,
+      name: "Rebab",
+      from: "Java/Sumatra",
+      image: Music4,
+      desc: "Loremipsum",
+    },
+    { id: 5,
+      name: "Saluang",
+      from: "West Sumatra",
+      image: Music5,
+      desc:"Lorem ipsum"
+    },
+    { id: 6,
+      name: "Japen",
+      from: "Central Kalimantan",
+      image: Music6,
+      desc:"Lorem ipsum"
+    },
+  ],
 
-    "Traditional-Dance": [
-      { id: 13, name: "Saman dance", from: "Aceh", image: Dance1},
-      { id: 14, name: "Piring dance", from: "West Sumatra", image: Dance2},
-      { id: 15, name: "Jaipong dance", from: "West Java", image: Dance3},
-      { id: 16, name: "Reog dance", from: "East Java", image: Dance4},
-      { id: 17, name: "Tor-tor dance", from: "North Sumatra", image: Dance5 },
-      { id: 18, name: "Topeng dance", from: "Central Java", image: Dance6},
-    ],
-  };
+  Traditions: [
+    { id: 7,
+      name: "Ngaben",
+      from: "Bali",
+      image: Tradition1,
+      desc:"Lorem ipsum"
+    },
+    {
+      id: 8,
+      name: "Rambu Solo",
+      from: "Toraja,South Sulawesi",
+      image: Tradition2,
+      desc:"Lorem ipsum"
+    },
+    { id: 9, 
+      name: "Tabuik", 
+      from: "Pariaman,West Sumatra", 
+      image: Tradition3,
+      desc:"Lorem ipsum"
+    },
+    { id: 10, 
+      name: "Bakar batu", 
+      from: "Papua", 
+      image: Tradition4,
+      desc:"Lorem ipsum"
+    },
+    {
+      id: 11,
+      name: "Kebo-keboan",
+      from: "Banyuwangi,East Java",
+      image: Tradition5,
+      desc:"Lorem ipsum"
+    },
+    { id: 12, 
+      name: "Fahombo", 
+      from: "Nias, North Sumatra", 
+      image: Tradition6,
+      desc:"Lorem ipsum"
+    },
+  ],
+
+  "Traditional-Dance": [
+    { id: 13, 
+      name: "Saman dance", 
+      from: "Aceh", 
+      image: Dance1,
+      desc:"Lorem ipsum"
+    },
+    { id: 14, 
+      name: "Piring dance", 
+      from: "West Sumatra", 
+      image: Dance2,
+      desc:"Lorem ipsum"
+    },
+    { id: 15, 
+      name: "Jaipong dance",
+      from: "West Java", 
+      image: Dance3,
+      desc:"Lorem ipsum"
+    },
+    { id: 16, 
+      name: "Reog dance", 
+      from: "East Java", 
+      image: Dance4 ,
+      desc:"Lorem ipsum"
+    },
+    { id: 17, 
+      name: "Tor-tor dance", 
+      from: "North Sumatra", 
+      image: Dance5 ,
+      desc:"Lorem ipsum"
+    },
+    { id: 18, 
+      name: "Topeng dance", 
+      from: "Central Java", 
+      image: Dance6,
+      desc:"Lorem ipsum"
+    },
+  ],
+};
 
 export default culturalData;

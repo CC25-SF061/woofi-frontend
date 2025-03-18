@@ -9,7 +9,7 @@ const forgetPassword = () => {
       <div className="flex flex-col md:flex-row w-full max-w-5xl rounded-lg overflow-hidden shadow-lg bg-[#252527] min-h-[650px]">
         
         {/* Image Section */}
-        <div className="hidden md:flex md:w-1/2 h-screen max-h-[650px]">
+        <div className="hidden md:flex md:w-1/2 min-h-screen max-h-[650px]">
           <BannerLogin imageSrc={Image1} />
         </div>
 
