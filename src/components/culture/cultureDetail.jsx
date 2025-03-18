@@ -51,7 +51,7 @@ const CultureDetail = ({ item, onClose }) => {
 
           {/* Isi Modal */}
           <img src={item.image} alt={item.name} className="w-full h-72 object-cover rounded-md" />
-          <h2 className="text-lg font-inknut-antiqua text-white font-bold mt-4">{item.name} - {item.from}</h2>
+          <h2 className="text-lg font-inknut-antiqua text-white font-bold mt-4">{item.name} - <span className="text-[#FFA666]">{item.from}</span></h2>
           <p className="text-white">{item.desc}</p>
         </motion.div>
       </motion.div>
