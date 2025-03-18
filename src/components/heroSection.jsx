@@ -11,11 +11,11 @@ const heroSection = ({ backgroundImage, title, description }) => {
       >
         <div className="hero-overlay"></div>
         <div className="hero-content text-neutral-content">
-          <div className="max-w-full">
-            <h1 className="mb-5 text-5xl font-inknut-antiqua uppercase">
+          <div className="max-w-full px-8 lg:px-0">
+            <h1 className="mb-5 lg:text-5xl text-3xl font-inknut-antiqua uppercase">
               {title}
             </h1>
-            <p className="mb-5 text-3xl font-quicksand">{description}</p>
+            <p className="mb-5 lg:text-3xl text-xl font-quicksand">{description}</p>
           </div>
         </div>
         <div

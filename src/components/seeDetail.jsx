@@ -2,7 +2,7 @@ import React from "react";
 
 const SeeDetail = ({ image, title, description }) => {
   return (
-    <div className="relative w-1/3 h-full rounded-lg overflow-hidden">
+    <div className="relative w-1/3 h-full rounded-lg overflow-hidden flex-grow">
       <img src={image} alt={title} className="object-cover w-full h-full" />
       <div className="absolute inset-0 bg-black opacity-40"></div>
       <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center p-4">
