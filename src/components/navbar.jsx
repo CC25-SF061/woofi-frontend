@@ -84,7 +84,7 @@ const Navbar = () => {
                   : ""
               }`}
             >
-              Culture & History
+              Culture
             </Link>
 
             <Link
