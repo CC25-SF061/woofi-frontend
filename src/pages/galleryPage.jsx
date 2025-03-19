@@ -3,24 +3,32 @@ import Navbar from "../components/navbar";
 import JoinUs from "../components/joinUs";
 import Footer from "../components/footer";
 import HeroSection from "../components/heroSection";
-import Image1 from "../assets/gallery/image1.png";
-import Image2 from "../assets/gallery/image2.png";
-import Image3 from "../assets/gallery/lompatBatu.jpeg";
-import Image4 from "../assets/gallery/rambuSolo.jpeg";
+import Image1 from "../assets/gallery/image1.webp";
+import Image2 from "../assets/gallery/image2.webp";
+import Image3 from "../assets/gallery/image3.webp";
+import Image4 from "../assets/gallery/image4.webp";
+import Image5 from "../assets/gallery/image5.webp";
+import Image6 from "../assets/gallery/image6.webp";
+import Image7 from "../assets/gallery/image7.webp";
+import Image8 from "../assets/gallery/image8.webp";
+import Image9 from "../assets/gallery/image9.webp";
+import Image10 from "../assets/gallery/image10.webp";
+import Image11 from "../assets/gallery/lompatBatu.webp";
+import Image12 from "../assets/gallery/rambuSolo.webp";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/effect-fade";
 import "swiper/css/pagination";
 import { EffectFade, Autoplay, Pagination } from "swiper/modules";
 
-const images = [Image2, Image3, Image4];
+const images = [Image10, Image11, Image12];
 
 const galleryPage = () => {
   return (
     <div>
       <Navbar />
       <HeroSection
-        backgroundImage={Image1}
+        backgroundImage={Image9}
         title="Gallery"
         description="Lorem Ipsum is simply dummy text of the printing and t"
       />
@@ -64,21 +72,14 @@ const galleryPage = () => {
             <div>
               <img
                 class="h-auto max-w-full rounded-lg"
-                src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image.jpg"
+                src={Image1}                
                 alt=""
               />
             </div>
             <div>
               <img
                 class="h-auto max-w-full rounded-lg"
-                src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-1.jpg"
-                alt=""
-              />
-            </div>
-            <div>
-              <img
-                class="h-auto max-w-full rounded-lg"
-                src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-2.jpg"
+                src={Image2}
                 alt=""
               />
             </div>
@@ -87,21 +88,14 @@ const galleryPage = () => {
             <div>
               <img
                 class="h-auto max-w-full rounded-lg"
-                src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-3.jpg"
+                src={Image3}
                 alt=""
               />
             </div>
             <div>
               <img
                 class="h-auto max-w-full rounded-lg"
-                src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-4.jpg"
-                alt=""
-              />
-            </div>
-            <div>
-              <img
-                class="h-auto max-w-full rounded-lg"
-                src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-5.jpg"
+                src={Image4}
                 alt=""
               />
             </div>
@@ -110,21 +104,14 @@ const galleryPage = () => {
             <div>
               <img
                 class="h-auto max-w-full rounded-lg"
-                src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-6.jpg"
+                src={Image5}
                 alt=""
               />
             </div>
             <div>
               <img
                 class="h-auto max-w-full rounded-lg"
-                src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-7.jpg"
-                alt=""
-              />
-            </div>
-            <div>
-              <img
-                class="h-auto max-w-full rounded-lg"
-                src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-8.jpg"
+                src={Image6}
                 alt=""
               />
             </div>
@@ -133,21 +120,14 @@ const galleryPage = () => {
             <div>
               <img
                 class="h-auto max-w-full rounded-lg"
-                src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-9.jpg"
+                src={Image7}
                 alt=""
               />
             </div>
             <div>
               <img
                 class="h-auto max-w-full rounded-lg"
-                src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-10.jpg"
-                alt=""
-              />
-            </div>
-            <div>
-              <img
-                class="h-auto max-w-full rounded-lg"
-                src="https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-11.jpg"
+                src={Image8}
                 alt=""
               />
             </div>
