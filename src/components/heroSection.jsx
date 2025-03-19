@@ -1,6 +1,13 @@
 import React from "react";
 
-const heroSection = ({ backgroundImage, title, description }) => {
+const heroSection = ({
+  backgroundImage,
+  title,
+  highlightedWord,
+  description,
+}) => {
+  const titleParts = title.split(" ");
+
   return (
     <div>
       <div
@@ -13,9 +20,18 @@ const heroSection = ({ backgroundImage, title, description }) => {
         <div className="hero-content text-neutral-content">
           <div className="max-w-full px-8 lg:px-0">
             <h1 className="mb-5 lg:text-5xl text-3xl font-inknut-antiqua uppercase">
-              {title}
+              {titleParts.map((word, index) => (
+                <span
+                  key={index}
+                  className={word === highlightedWord ? "text-[#FFA666]" : ""}
+                >
+                  {word}{" "}
+                </span>
+              ))}
             </h1>
-            <p className="mb-5 lg:text-3xl text-xl font-quicksand">{description}</p>
+            <p className="mb-5 lg:text-3xl text-xl font-quicksand">
+              {description}
+            </p>
           </div>
         </div>
         <div
