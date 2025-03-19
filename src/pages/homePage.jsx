@@ -26,6 +26,7 @@ const home = () => {
       <HeroBanner
         backgroundImages={backgroundImages}
         title="Indonesia's natural beauty"
+        highlightedWord="natural"
         description="Discover the natural beauty, culture and history of Indonesia in one place."
       />
 

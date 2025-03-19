@@ -29,7 +29,8 @@ const galleryPage = () => {
       <Navbar />
       <HeroSection
         backgroundImage={Image9}
-        title="Gallery"
+        title="Explore Our Gallery"
+        highlightedWord="Gallery"
         description="Lorem Ipsum is simply dummy text of the printing and t"
       />
       <div className="flex flex-col px-10 items-center bg-[#221122]">
