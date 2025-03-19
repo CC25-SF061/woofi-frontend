@@ -11,7 +11,7 @@ const CulturalDiversity = () => {
   const displayedData = culturalData[selectedCategory] || [];
 
   return (
-    <section className="lg:w-full lg:justify-center lg:flex bg-[#221122] text-white">
+    <section className="lg:w-full lg:justify-center md:px-10 lg:flex bg-[#221122] text-white">
       <div className="lg:max-w-5xl py-20 lg:px-8">
         <h1 className="font-inknut-antiqua text-3xl text-center">
           <span className="text-[#FFA666]">Cultural Diversity</span> of
@@ -38,7 +38,7 @@ const CulturalDiversity = () => {
         </div>
 
         {/* Culture Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-1 md:gap-2 mt-10">
           <AnimatePresence mode="wait">
             {displayedData.length > 0 ? (
               displayedData.map((item) => (
