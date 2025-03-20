@@ -16,7 +16,7 @@ const forgetPassword = () => {
         {/* Form section */}
         <form className="w-full md:w-1/2 flex flex-col justify-center items-center px-6 py-10 md:px-8 flex-grow">
           <h1 className="text-2xl md:text-3xl font-inknut-antiqua text-white mb-6 text-center">
-            Forgot Password
+            Forget Password
           </h1>
           <p className="text-xl text-center md:text-lg font-quicksand text-white mb-6">We will send password reset link on your email Id</p>
           <input
@@ -29,7 +29,7 @@ const forgetPassword = () => {
           </button>
           <p className="text-sm text-gray-400 mt-2 text-center">
             Don't have an account yet?
-            <span className="text-[#FFA666] font-quicksand ml-1">
+            <span className="text-[#FFA666] font-quicksand underline ml-1">
               <Link to={"/register"}>
                 Register
               </Link>

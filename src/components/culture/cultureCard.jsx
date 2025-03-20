@@ -11,7 +11,7 @@ const CultureCard = ({ image, name, from }) => {
       whileHover={{ scale: 1.05, boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.2)" }}
       className="p-2 rounded-l shadow-lg relative"
     >
-      <div className="relative isolate flex flex-col justify-end overflow-hidden rounded-lg px-8 pb-8 pt-40 max-w-sm mx-auto group">
+      <div className="relative md:w-[210px] md:h-[210px] w-[280px] h-[280px]  isolate flex flex-col justify-end overflow-hidden rounded-lg px-8 pb-8 pt-40  mx-auto group">
         <motion.img
           src={image}
           alt={name}

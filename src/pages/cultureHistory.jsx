@@ -14,6 +14,7 @@ const CultureHistory = () => {
       <HeroSection
         backgroundImage={Image1}
         title="Culture & History Of Indonesia"
+        highlightedWord="Indonesia"
         description="Uncovering Indonesia's Colorful Cultural and Historical Wealth"
       />
 

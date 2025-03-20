@@ -3,8 +3,8 @@ import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import Image1 from "../assets/logIn/image4.webp";
 import BannerLogin from "../components/bannerLogin";
+import Logo from "../assets/navbar/logo.webp";
 import { Link } from "react-router-dom";
-
 const contactUs = () => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -29,9 +29,10 @@ const contactUs = () => {
   return (
     <>
       <Navbar></Navbar>
-      <section className="bg-[#221122] min-h-screen w-full flex items-center justify-center p-5 md:p-10">
+      <section className="bg-[#221122] min-h-screen w-full flex items-center justify-center px-5 pb-5 pt-20 md:px-10 md:pb-10 md:pt-25">
         <div className="flex flex-col md:flex-row w-full max-w-5xl rounded-lg overflow-hidden shadow-lg bg-[#252527] min-h-[650px]">
           <form className="w-full md:w-1/2 flex flex-col justify-center items-center px-6 py-10 md:px-8 flex-grow">
+            <img src={Logo} alt="Logo Woofi" className="w-36 mb-5 lg:hidden" />
             <h1 className="text-2xl md:text-3xl font-inknut-antiqua text-white mb-6 text-center">
               Get In Touch
             </h1>
