@@ -10,7 +10,7 @@ const Footer = () => {
   return (
     <footer className="py-5 px-6 md:px-10 bg-neutral-800 text-neutral-100 flex flex-col gap-5">
       {/* Logo Section */}
-      <div className="flex justify-center border-t border-neutral-700 pt-4">
+      <div className="flex justify-center">
         <img src={logo} alt="Logo" className="w-28 h-auto" />
       </div>
 

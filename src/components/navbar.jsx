@@ -77,9 +77,9 @@ const Navbar = () => {
             </Link>
 
             <Link
-              to="/culture-history"
+              to="/cultureHistory"
               className={`hover:text-gray-300 transition ${
-                location.pathname === "/culture-history"
+                location.pathname === "/cultureHistory"
                   ? "text-[#FFA666] font-bold"
                   : ""
               }`}
