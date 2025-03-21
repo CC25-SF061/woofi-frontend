@@ -11,8 +11,9 @@ import JoinUs from "./pages/joinUs";
 import Signin from "./pages/signin";
 import Register from "./pages/register";
 import ForgetPassword from "./pages/forgetPassword";
-import Profil from "./pages/profil";
+import Profile from "./pages/profile";
 import Wishlist from "./pages/wishlist";
+import AddData from "./pages/addData";
 
 import ScrollToTop from "./scrollToTop";
 import PageWrapper from "./components/loading/pageWrapper";
@@ -32,7 +33,8 @@ const App = () => {
         <Route path='/register' element ={<Register/>}></Route>
         <Route path='/forget-password' element ={<ForgetPassword/>}></Route>
         <Route path='/wishlist' element ={<Wishlist/>}></Route>
-        <Route path='/profil' element ={<Profil/>}></Route>
+        <Route path='/profile' element ={<Profile/>}></Route>
+        <Route path='/add-data' element ={<AddData/>}></Route>
         <Route path="*" element={<NotFound/>}></Route>
       </Routes>
     </Router>

@@ -5,7 +5,7 @@ import Profile from "../assets/navbar/Icon.webp";
 import Notification from "../assets/profile/ic--baseline-notifications-none.svg";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-const wishlist = () => {
+const profil = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -56,7 +56,7 @@ const wishlist = () => {
           </div>
 
           <h1 className="font-inknut-antiqua text-2xl text-center my-4">
-            Wishlist Destination
+            Account Information
           </h1>
 
           <div className="flex flex-col gap-2">
@@ -124,4 +124,4 @@ const wishlist = () => {
   );
 };
 
-export default wishlist;
+export default profil;
