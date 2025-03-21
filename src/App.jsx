@@ -5,6 +5,7 @@ import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import Home from "./pages/homePage";
 import CultureHistory from "./pages/cultureHistory";
 import GalleryPage from "./pages/galleryPage";
+import DestinationPage from "./pages/destinationPage";
 import NotFound from "./pages/notFound";
 import ContactUs from "./pages/contactUs";
 import JoinUs from "./pages/joinUs";
@@ -25,7 +26,8 @@ const App = () => {
       <PageWrapper/>
       <Routes>
         <Route path='/' element ={<Home/>}></Route>
-        <Route path='/culture-history' element ={<CultureHistory/>}></Route>
+        <Route path='/cultureHistory' element ={<CultureHistory/>}></Route>
+        <Route path='/destination' element ={<DestinationPage/>}></Route>
         <Route path='/gallery' element ={<GalleryPage/>}></Route>
         <Route path='/contact-us' element ={<ContactUs/>}></Route>
         <Route path='/join-us' element ={<JoinUs/>}></Route>
