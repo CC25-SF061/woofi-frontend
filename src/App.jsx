@@ -9,12 +9,14 @@ import DestinationPage from "./pages/destinationPage";
 import NotFound from "./pages/notFound";
 import ContactUs from "./pages/contactUs";
 import JoinUs from "./pages/joinUs";
-import Signin from "./pages/signin";
-import Register from "./pages/register";
-import ForgetPassword from "./pages/forgetPassword";
-import Profile from "./pages/profile";
-import Wishlist from "./pages/wishlist";
-import AddData from "./pages/addData";
+
+import Signin from "./pages/loginPages/signin";
+import Register from "./pages/loginPages/register";
+import ForgetPassword from "./pages/loginPages/forgetPassword";
+
+import Profile from "./pages/profilePages/profile";
+import Wishlist from "./pages/profilePages/wishlist";
+import AddData from "./pages/profilePages/addData";
 
 import ScrollToTop from "./scrollToTop";
 import PageWrapper from "./components/loading/pageWrapper";
@@ -34,9 +36,9 @@ const App = () => {
         <Route path='/sign-in' element ={<Signin/>}></Route>
         <Route path='/register' element ={<Register/>}></Route>
         <Route path='/forget-password' element ={<ForgetPassword/>}></Route>
-        <Route path='/wishlist' element ={<Wishlist/>}></Route>
+        <Route path='/profile/wishlist' element ={<Wishlist/>}></Route>
         <Route path='/profile' element ={<Profile/>}></Route>
-        <Route path='/add-data' element ={<AddData/>}></Route>
+        <Route path='/profile/add-data' element ={<AddData/>}></Route>
         <Route path="*" element={<NotFound/>}></Route>
       </Routes>
     </Router>

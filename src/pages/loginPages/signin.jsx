@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import Image1 from '../assets/logIn/image1.webp';
-import BannerLogin from '../components/bannerLogin';
+import Image1 from '../../assets/logIn/image1.webp';
+import BannerLogin from '../../components/bannerLogin';
 import { Link } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 import axios, { AxiosError } from 'axios';

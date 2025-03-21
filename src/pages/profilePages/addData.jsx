@@ -1,44 +1,16 @@
 import React, { useState } from "react";
-import LogoHome from "../assets/profile/material-symbols--home-outline-rounded.svg";
-import Logo from "../assets/navbar/logo.webp";
-import Profile from "../assets/navbar/Icon.webp";
-import Notification from "../assets/profile/ic--baseline-notifications-none.svg";
+import Profile from "../../assets/navbar/Icon.webp";
+import Notification from "../../assets/profile/ic--baseline-notifications-none.svg";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import Sidebar from "../../components/profile/sidebar";
 
-const profil = () => {
+const addData = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div>
       <div className="bg-[#221122] h-screen w-full flex items-center justify-center p-5 md:p-10 gap-5 text-white">
-        <div className="flex flex-col items-center justify-between rounded-lg overflow-hidden shadow-lg bg-[#252527] p-5 h-full w-1/4">
-          <button className="flex gap-1 bg-[#252527] shadow-lg shadow-stone-950/50 p-2 rounded-lg">
-            <img src={LogoHome} alt="Home Icon" className="w-6 h-6" />
-            <p className="font-quicksand text-lg">Back To Home</p>
-          </button>
-
-          <div className="flex flex-col items-center justify-center gap-5">
-            <img src={Logo} alt="Logo Woofi" className="w-25" />
-
-            <div className="flex flex-col overflow-x-auto scroll-smooth whitespace-nowrap divide-y-2 divide-white rounded-lg justify-start md:justify-center w-50">
-              <button className="lg:px-6 px-4 py-2 text-lg font-quicksand font-bold text-[#FFA666]">
-                Profile
-              </button>
-              <button className="lg:px-6 px-4 py-2 text-lg font-quicksand font-bold text-[#FFA666]">
-                Add Data
-              </button>
-              <button className="lg:px-6 px-4 py-2 text-lg font-quicksand font-bold text-[#FFA666]">
-                Wishlist
-              </button>
-            </div>
-          </div>
-
-          <div className="flex flex-row gap-2">
-            <div className="rounded-full border-white border-2 p-2"></div>
-            <div className="rounded-full border-white border-2 p-2"></div>
-            <div className="rounded-full border-white border-2 p-2"></div>
-          </div>
-        </div>
+        <Sidebar/>
         <div className="flex flex-col flex-1 rounded-lg overflow-hidden shadow-lg bg-[#252527] p-5 h-full w-3/4">
           <div className="flex justify-between items-center border-white border-b-2 pb-5 rounded-b-lg">
             <div className="flex flex-row gap-3 items-center">
@@ -56,7 +28,7 @@ const profil = () => {
           </div>
 
           <h1 className="font-inknut-antiqua text-2xl text-center my-4">
-            Account Information
+            Add Data
           </h1>
 
           <div className="flex flex-col gap-2">
@@ -124,4 +96,4 @@ const profil = () => {
   );
 };
 
-export default profil;
+export default addData;

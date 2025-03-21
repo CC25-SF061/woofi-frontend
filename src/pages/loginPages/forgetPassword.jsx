@@ -1,6 +1,6 @@
 import React from "react";
-import Image1 from "../assets/logIn/image3.webp";
-import BannerLogin from "../components/bannerLogin";
+import Image1 from "../../assets/logIn/image3.webp";
+import BannerLogin from "../../components/bannerLogin";
 import { Link } from "react-router-dom";
 
 const forgetPassword = () => {
