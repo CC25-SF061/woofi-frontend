@@ -75,7 +75,7 @@ const DestinationCard = ({id, order, picture, name, desc, rating, onclick}) => {
                 <p className="text-md text-[#aaa]">{desc}</p>
                 <div className="flex flex-row">
                     <motion.button
-                        className="mt-1 ml-auto w-auto h-fit px-3 py-1 rounded-md border-solid border-[1px] border-white tracking-wide cursor-pointer"
+                        className="text-white mt-1 ml-auto w-auto h-fit px-3 py-1 rounded-md border-solid border-[1px] border-white tracking-wide cursor-pointer"
                     >See Detail</motion.button>
                 </div>
             </div>

@@ -77,9 +77,9 @@ const Navbar = () => {
             </Link>
 
             <Link
-              to="/cultureHistory"
+              to="/culture"
               className={`hover:text-gray-300 transition ${
-                location.pathname === "/cultureHistory"
+                location.pathname === "/culture"
                   ? "text-[#FFA666] font-bold"
                   : ""
               }`}
@@ -195,9 +195,9 @@ const Navbar = () => {
 
                   <li>
                     <Link
-                      to="/culture-history"
+                      to="/culture"
                       className={`block py-2 hover:text-gray-300 ${
-                        location.pathname === "/culture-history" &&
+                        location.pathname === "/culture" &&
                         "text-[#FFA666] font-bold"
                       }`}
                       onClick={() => setMobileMenuOpen(false)}

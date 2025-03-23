@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-const register = () => {
+const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword1, setShowPassword1] = useState(false);
 
@@ -13,7 +13,7 @@ const register = () => {
     <div className="bg-[#221122] min-h-screen w-full flex items-center justify-center p-5 md:p-10">
       <div className="flex flex-col md:flex-row w-full max-w-5xl rounded-lg overflow-hidden shadow-lg bg-[#252527] min-h-[650px]">
         {/* Image Section */}
-        <div className="hidden md:flex md:w-1/2 min-h-screen max-h-[650px]">
+        <div className="hidden md:flex md:w-1/2 min-h-screen">
           <BannerLogin imageSrc={Image1} />
         </div>
 
@@ -41,34 +41,36 @@ const register = () => {
             className="w-full p-3 font-quicksand mb-4 rounded text-white border border-white bg-transparent focus:outline-none"
           />
 
-          <div className="relative w-full mx-auto">
+          <div className="relative w-full mx-auto mb-4">
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Password"
-              className="w-full p-3 font-quicksand mb-4 rounded text-white border border-white bg-transparent focus:outline-none"
+              className="w-full p-3 pr-10 font-quicksand rounded text-white border border-white bg-transparent focus:outline-none"
             />
-            <li
+            <button
+              type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute inset-y-0 right-3 flex items-center text-white"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-white"
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
-            </li>
+            </button>
           </div>
 
-          <div className="relative w-full mx-auto">
+          <div className="relative w-full mx-auto mb-4">
             <input
-              type={showPassword1 ? "text" : "password"}
-              placeholder="Show Password"
-              className="w-full p-3 font-quicksand mb-4 rounded text-white border border-white bg-transparent focus:outline-none"
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              className="w-full p-3 pr-10 font-quicksand rounded text-white border border-white bg-transparent focus:outline-none"
             />
-            <li
+            <button
+              type="button"
               onClick={() => setShowPassword1(!showPassword1)}
-              className="absolute inset-y-0 right-3 flex items-center text-white"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-white"
             >
-              {showPassword1 ? <FaEyeSlash /> : <FaEye />}
-            </li>
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
           </div>
-          
+
           <button className="w-full p-3 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition">
             Register
           </button>
@@ -99,4 +101,4 @@ const register = () => {
   );
 };
 
-export default register;
+export default Register;

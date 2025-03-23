@@ -28,7 +28,7 @@ const App = () => {
       <PageWrapper/>
       <Routes>
         <Route path='/' element ={<Home/>}></Route>
-        <Route path='/cultureHistory' element ={<CultureHistory/>}></Route>
+        <Route path='/culture' element ={<CultureHistory/>}></Route>
         <Route path='/destination' element ={<DestinationPage/>}></Route>
         <Route path='/gallery' element ={<GalleryPage/>}></Route>
         <Route path='/contact-us' element ={<ContactUs/>}></Route>
