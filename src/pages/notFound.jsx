@@ -1,16 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import logo from "../assets/navbar/finalLogo.webp";
 import notFoundImage from "../assets/images/notFound.webp"; 
 
 const NotFound = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white relative">
-      {/* Logo */}
-      <div className="absolute top-5 left-5">
-        <img src={logo} alt="Logo" className="w-48"/>
-      </div>
 
       {/* Ilustrasi 404 dengan animasi bounce */}
       <motion.div

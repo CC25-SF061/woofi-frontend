@@ -21,7 +21,7 @@ const Footer = () => {
           <h1 className="font-quicksand text-2xl pb-2">Sosial Media</h1>
           <div className="flex justify-center md:justify-start items-center gap-4">
             <img src={instagram} alt="Instagram" className="w-6 md:w-8" />
-            <img src={twitter} alt="Twitter/X" className="w-6 md:w-8" />
+            <img src={twitter} alt="Twitter/X" className="w-6 md:w-7" />
             <img src={youtube} alt="Youtube" className="w-6 md:w-8" />
           </div>
         </div>
@@ -52,7 +52,7 @@ const Footer = () => {
       </div>
 
       {/* Copyright */}
-      <div className="text-center font-quicksand mt-4 border-t border-neutral-700 pt-4">
+      <div className="text-center font-quicksand mt-4 border-t border-neutral-700 pt-4 text-sm">
         <p>Copyright © 2025. Woofi Team</p>
       </div>
     </footer>

@@ -5,7 +5,7 @@ import Image1 from "../assets/logIn/image4.webp";
 import BannerLogin from "../components/bannerLogin";
 import Logo from "../assets/navbar/logo.webp";
 import { Link } from "react-router-dom";
-const contactUs = () => {
+const ContactUs = () => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
@@ -76,4 +76,4 @@ const contactUs = () => {
   );
 };
 
-export default contactUs;
+export default ContactUs;
