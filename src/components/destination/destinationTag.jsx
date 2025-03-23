@@ -1,6 +1,7 @@
 import React from "react";
+import { motion } from "framer-motion";
 
-const destinationFilter = ({name, order, activity}) => {
+const DestinationTag = ({name, order, activity}) => {
 
     const [isActive, setActive, onChanged] = activity;
 
@@ -13,10 +14,12 @@ const destinationFilter = ({name, order, activity}) => {
     };
 
     return (
-        <button className={
+        <motion.button 
+        whileHover={{ scale: 1.05 }}        
+        className={
             isActive[order] ?
-            "rounded-md px-4 py-2 bg-[#FFA666] hover:scale-105 box-content tracking-wider transition-all duration-75" :
-            "rounded-md px-4 py-2 border-solid border-[2px] border-white hover:bg-[#ffffff55] hover:scale-105 box-content tracking-wide transition-all duration-75"
+            "rounded-md px-4 py-2 border-solid border-[2px] border-transparent bg-[#FFA666] box-border tracking-wider" :
+            "rounded-md px-4 py-2 border-solid border-[2px] border-white hover:bg-[#ffffff55] box-border tracking-wide"
         } onMouseUp={onToggle} >
             <p className={
                 isActive[order] ?
@@ -25,8 +28,8 @@ const destinationFilter = ({name, order, activity}) => {
             }>
                 {name}
             </p>
-        </button>
+        </motion.button>
     );
 };
 
-export default destinationFilter;
+export default DestinationTag;

@@ -18,10 +18,10 @@ import { EffectFade, Autoplay, Pagination } from "swiper/modules";
 const destinations = [
   {
     id: "ncOA22d8",
-    picture: Image1,
-    rating: 4,
-    name: "Gunung Ranjani",
-    desc: "Gunung tinggi nan misterius"
+    picture: Image2,
+    rating: 2.65,
+    name: "Wayank Wayank Wayank Wayank  ",
+    desc: "Wayank Lorem Ipsum jirWayank Lorem Ipsum jirWayank Lorem Ipsum jirWayank Lorem Ipsum jirWayank Lorem Ipsum jirWayank Lorem Ipsum jir"
   },
   {
     id: "vQox27X1",

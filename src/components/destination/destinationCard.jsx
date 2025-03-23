@@ -2,8 +2,9 @@ import React from "react";
 import StarFull from "../../assets/icons/ratestar/full.svg";
 import StarHalf from "../../assets/icons/ratestar/half.svg";
 import StarEmpty from "../../assets/icons/ratestar/empty.svg";
+import { motion } from "framer-motion";
 
-const destinationCard = ({id, order, picture, name, desc, rating, onclick}) => {
+const DestinationCard = ({id, order, picture, name, desc, rating, onclick}) => {
 
     // Rating star display
     const lowest_half = 0.46;
@@ -30,36 +31,56 @@ const destinationCard = ({id, order, picture, name, desc, rating, onclick}) => {
     empty_rating -= whole_rating;
     empty_rating -= has_half_rating ? 1 : 0;
 
-    let fade_in_time = order;
-    if(order > 8) fade_in_time = 1;
+    let fade_in_time = 0.325+order * 0.125;
+    if(order > 8) fade_in_time = 0.125;
+
+    // Trimming long title
+    const trimmed_title = name.substring(0, 24) + "...";
+    name = name.length > 24+3 ? trimmed_title : name;
+
+    // Trimming long description
+    const trimmed_desc = desc.substring(0, 90) + "...";
+    desc = desc.length > 90+3 ? trimmed_desc : desc;
 
     return (
-        <div style={{animation: `fade-in 500ms ${75*fade_in_time}ms forwards`}} className="bg-[#252527] font-quicksand rounded-lg min-w-75 min-h-75 opacity-0 cursor-pointer shadow-[#18081825] shadow-lg" onMouseUp={()=>{onclick(id)}}>
+        <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1, transition: {delay: fade_in_time} }}
+        exit={{ opacity: 0, scale: 0.8 }}
+        transition={{ duration: 0.25, ease: "backOut", delay: 0 }}
+        whileHover={{ scale: 1.05 }}
+        className="bg-[#252527] font-quicksand rounded-lg min-w-75 min-h-75 opacity-0 cursor-pointer shadow-[#18081825] shadow-lg" 
+        onMouseUpCapture={()=>{onclick(id)}}>
             <img
                 src={picture}
                 className="w-auto max-h rounded-tl-lg rounded-tr-lg"
             />
-            <div className="p-5 pb-10">
+            <div className="flex flex-col gap-2 p-3 pb-10">
                 <div className="flex flex-row gap-2">
                     {
                         Array.from({length: whole_rating}).map(() => {
-                            return <img src={StarFull} width="20"/>
+                            return <img src={StarFull} width="19"/>
                         })
                     }
                     {
-                        has_half_rating ? <img src={StarHalf} width="20"/> : null
+                        has_half_rating ? <img src={StarHalf} width="19"/> : null
                     }
                     {
                         Array.from({length: empty_rating}).map(() => {
-                            return <img src={StarEmpty} width="20"/>
+                            return <img src={StarEmpty} width="19"/>
                         })
                     }
                 </div>
-                <h2 className="mb-1/2 mt-1 text-2xl text-white tracking-wide">{name}</h2>
-                <p className="my-1/2 mt-2 text-md text-[#aaa]">{desc}</p>
+                <h2 className="text-2xl text-white tracking-wide">{name}</h2>
+                <p className="text-md text-[#aaa]">{desc}</p>
+                <div className="flex flex-row">
+                    <motion.button
+                        className="mt-1 ml-auto w-auto h-fit px-3 py-1 rounded-md border-solid border-[1px] border-white tracking-wide cursor-pointer"
+                    >See Detail</motion.button>
+                </div>
             </div>
-        </div>
+        </motion.div>
     );
 };
 
-export default destinationCard;
+export default DestinationCard;
