@@ -12,14 +12,16 @@ const DestinationGroup = ({destinations}) => {
   };
 
   const onCardClick = (id) => {
-    console.log(id)
   };
 
   return (
     <div ref={containerRef} className="flex flex-col" >
-      <h1 className="font-inknut-antiqua text-5xl self-center mt-25">
-        Top Destinations at <em className="text-[#FFA666] not-italic font-bold">Bali</em>
-      </h1>
+      <div className="mt-25 relative w-full">
+        <div className="absolute right-0 left-0 h-[2px] top-[50%] bg-[#FFA66677]"></div>
+        <h1 className="relative mx-auto px-3 font-inknut-antiqua text-5xl w-fit text-center text-[#FFA666] font-bold bg-[#221122]">
+          Explore Destinations
+        </h1>
+      </div>
 
       {/* The Filters */}
       <div className="flex flex-row gap-5 mt-18 self-start caret-transparent">
