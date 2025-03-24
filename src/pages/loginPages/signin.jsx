@@ -21,11 +21,18 @@ const SignIn = () => {
         }
         fetchApi();
     }, []);
+    const submit = (e) => {
+        e.preventDefault();
+        console.log(e);
+    };
     return (
         <section className="bg-[#221122] min-h-screen w-full flex items-center justify-center p-5 md:p-10">
             <div className="flex flex-col md:flex-row w-full max-w-5xl rounded-lg overflow-hidden shadow-lg bg-[#252527] min-h-[650px]">
                 {/* Form Section */}
-                <form className="w-full md:w-1/2 flex flex-col justify-center items-center px-6 py-10 md:px-8 flex-grow">
+                <form
+                    className="w-full md:w-1/2 flex flex-col justify-center items-center px-6 py-10 md:px-8 flex-grow"
+                    onSubmit={submit}
+                >
                     <h1 className="text-2xl md:text-3xl font-inknut-antiqua text-white mb-6 text-center">
                         Login
                     </h1>
