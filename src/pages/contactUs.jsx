@@ -5,24 +5,37 @@ import Image1 from "../assets/logIn/image4.webp";
 import BannerLogin from "../components/bannerLogin";
 import Logo from "../assets/navbar/logo.webp";
 import { Link } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const ContactUs = () => {
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    if (!username.trim()) {
+      toast.error("Please enter your username", { position: "top-right" });
+      return;
+    }
+
     if (!email.trim()) {
-      alert("Please enter email");
+      toast.error("Please enter your email", { position: "top-right" });
       return;
     }
 
     if (!message.trim()) {
-      alert("Please enter your message");
+      toast.error("Please enter your message", { position: "top-right" });
       return;
     }
-    alert("Your message sent succesfully");
 
+    toast.success("Your message has been sent successfully!", {
+      position: "top-right",
+    });
+
+    setUsername("");
     setEmail("");
     setMessage("");
   };
@@ -36,6 +49,17 @@ const ContactUs = () => {
             <h1 className="text-2xl md:text-3xl font-inknut-antiqua text-white mb-6 text-center">
               Get In Touch
             </h1>
+
+            <div className="flex flex-col w-full mb-4">
+              <p className="font-quicksand text-white pb-2">Username</p>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Your Username"
+                className="w-full p-3 font-quicksand rounded text-white border border-white focus:outline-none"
+              />
+            </div>
 
             <div className="flex flex-col w-full mb-4">
               <p className="font-quicksand text-white pb-2">Email</p>
@@ -72,6 +96,7 @@ const ContactUs = () => {
         </div>
       </section>
       <Footer></Footer>
+      <ToastContainer />
     </>
   );
 };
