@@ -11,6 +11,7 @@ import {
     useGoogleLogin,
     useGoogleOneTapLogin,
 } from '@react-oauth/google';
+import { ToastContainer } from 'react-toastify';
 
 const SignIn = () => {
     const [invalidLoginState, setInvalidLoginState] = useState(null);
@@ -44,6 +45,7 @@ const SignIn = () => {
             password: null,
             email: null,
         }));
+
         const request = Object.fromEntries(new FormData(e.target));
         try {
             const response = await axios.post('/api/auth/login', request);
@@ -73,6 +75,8 @@ const SignIn = () => {
                 })
             ).data;
             localStorage.setItem('accessToken', response.data.token);
+
+            //lakukan sesuatu jika berhasil
         } catch (e) {
             console.log(e);
         }
@@ -86,6 +90,7 @@ const SignIn = () => {
                     })
                 ).data;
                 localStorage.setItem('accessToken', response.data.token);
+                //lakukan sesuatu jika berhasil kurang lebih sama dengan yang diatas
             } catch (e) {
                 if (!(e instanceof AxiosError)) {
                     return;
@@ -117,13 +122,18 @@ const SignIn = () => {
                     <input
                         type="email"
                         placeholder="Email"
+                        name="email"
                         className="w-full p-3 font-quicksand mb-4 rounded text-white border border-white bg-transparent focus:outline-none"
                     />
+                    <div className="error">{errState.email}</div>
                     <input
                         type="password"
                         placeholder="Password"
+                        name="password"
                         className="w-full p-3 font-quicksand mb-4 rounded text-white border border-white bg-transparent focus:outline-none"
                     />
+                    <div className="error">{errState.password}</div>
+
                     <button className="w-full p-3 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition">
                         Login
                     </button>
@@ -134,7 +144,11 @@ const SignIn = () => {
                         <hr className="flex-grow border-gray-400" />
                     </div>
 
-                    <button className="w-full flex items-center justify-center p-3 bg-white text-black font-quicksand rounded shadow hover:bg-gray-200 transition mb-4">
+                    <button
+                        onClick={googleLogin}
+                        type="button"
+                        className="w-full flex items-center justify-center p-3 bg-white text-black font-quicksand rounded shadow hover:bg-gray-200 transition mb-4"
+                    >
                         <FcGoogle className="text-2xl mr-2" /> Sign in with
                         Google
                     </button>
