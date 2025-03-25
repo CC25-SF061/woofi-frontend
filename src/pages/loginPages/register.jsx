@@ -39,7 +39,7 @@ const Register = () => {
       email: "",
     };
     arr.forEach((element) => {
-      if (newObjErr.hasOwnProperty(element.path[0])) {
+      if (Object.prototype.hasOwnProperty.call(newObjErr, element.path[0])) {
         newObjErr[element.path[0]] = element.message;
       }
     });
@@ -59,11 +59,22 @@ const Register = () => {
     const formData = new FormData(e.target);
     const request = Object.fromEntries(formData.entries());
 
-    for (const key in request) {
+    let isValid = true;
+    const newErrState = { ...errState };
+
+    Object.keys(request).forEach((key) => {
       if (!request[key].trim()) {
-        showError(`${key.charAt(0).toUpperCase() + key.slice(1)} is required.`);
-        return;
+        newErrState[key] = `${
+          key.charAt(0).toUpperCase() + key.slice(1)
+        } is required.`;
+        isValid = false;
       }
+    });
+
+    setErrState(newErrState);
+
+    if (!isValid) {
+      return;
     }
 
     try {
@@ -120,31 +131,55 @@ const Register = () => {
             Register Account
           </h1>
 
-          <input
-            type="text"
-            placeholder="Username"
-            name="username"
-            className="w-full p-3 font-quicksand mb-4 rounded text-white border border-white bg-transparent focus:outline-none"
-          />
-          <div className="error text-red-400">{errState.username}</div>
+          <div className="mb-2 w-full">
+            <input
+              type="text"
+              placeholder="Username"
+              name="username"
+              className="w-full p-3 font-quicksand rounded text-white border border-white bg-transparent focus:outline-none"
+            />
+            <div className="min-h-[20px]">
+              {errState.username && (
+                <div className="error text-red-400 text-sm">
+                  {errState.username}
+                </div>
+              )}
+            </div>
+          </div>
 
-          <input
-            type="text"
-            placeholder="Display Name"
-            name="name"
-            className="w-full p-3 font-quicksand mb-4 rounded text-white border border-white bg-transparent focus:outline-none"
-          />
-          <div className="error text-red-400">{errState.name}</div>
+          <div className="mb-2 w-full">
+            <input
+              type="text"
+              placeholder="Display Name"
+              name="name"
+              className="w-full p-3 font-quicksand rounded text-white border border-white bg-transparent focus:outline-none"
+            />
+            <div className="min-h-[20px]">
+              {errState.name && (
+                <div className="error text-red-400 text-sm">
+                  {errState.name}
+                </div>
+              )}
+            </div>
+          </div>
 
-          <input
-            type="email"
-            placeholder="Email"
-            name="email"
-            className="w-full p-3 font-quicksand mb-4 rounded text-white border border-white bg-transparent focus:outline-none"
-          />
-          <div className="error text-red-400">{errState.email}</div>
+          <div className="mb-2 w-full">
+            <input
+              type="email"
+              placeholder="Email"
+              name="email"
+              className="w-full p-3 font-quicksand rounded text-white border border-white bg-transparent focus:outline-none"
+            />
+            <div className="min-h-[20px]">
+              {errState.email && (
+                <div className="error text-red-400 text-sm">
+                  {errState.email}
+                </div>
+              )}
+            </div>
+          </div>
 
-          <div className="relative w-full mx-auto mb-4">
+          <div className="mb-2 w-full relative">
             <input
               type={showPassword ? "text" : "password"}
               name="password"
@@ -154,14 +189,20 @@ const Register = () => {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-white cursor-pointer"
+              className="absolute right-3 top-1/3 -translate-y-1/2 text-white cursor-pointer"
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
-            <div className="error text-red-400">{errState.password}</div>
+            <div className="min-h-[20px]">
+              {errState.password && (
+                <div className="error text-red-500 text-sm">
+                  {errState.password}
+                </div>
+              )}
+            </div>
           </div>
 
-          <div className="relative w-full mx-auto mb-4">
+          <div className="relative w-full mx-auto mb-2">
             <input
               type={showPassword1 ? "text" : "password"}
               placeholder="Password confirmation"
@@ -171,12 +212,16 @@ const Register = () => {
             <button
               type="button"
               onClick={() => setShowPassword1(!showPassword1)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-white cursor-pointer"
+              className="absolute right-3 top-1/3 -translate-y-1/2 text-white cursor-pointer"
             >
               {showPassword1 ? <FaEyeSlash /> : <FaEye />}
             </button>
-            <div className="error text-red-400">
-              {errState.passwordConfirmation}
+            <div className="min-h-[20px]">
+              {errState.passwordConfirmation && (
+                <div className="error text-red-500 text-sm">
+                  {errState.passwordConfirmation}
+                </div>
+              )}
             </div>
           </div>
 
