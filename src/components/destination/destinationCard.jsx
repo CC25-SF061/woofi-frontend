@@ -2,9 +2,11 @@ import React from "react";
 import StarFull from "../../assets/icons/ratestar/full.svg";
 import StarHalf from "../../assets/icons/ratestar/half.svg";
 import StarEmpty from "../../assets/icons/ratestar/empty.svg";
+import WishlistEmpty from "../../assets/icons/wishlist/empty.svg";
+import Wishlisted from "../../assets/icons/wishlist/full.svg";
 import { motion } from "framer-motion";
 
-const DestinationCard = ({id, order, picture, name, desc, rating, onclick}) => {
+const DestinationCard = ({id, picture, name, desc, rating, onclick}) => {
 
     // Rating star display
     const lowest_half = 0.46;
@@ -31,8 +33,8 @@ const DestinationCard = ({id, order, picture, name, desc, rating, onclick}) => {
     empty_rating -= whole_rating;
     empty_rating -= has_half_rating ? 1 : 0;
 
-    let fade_in_time = 0.325+order * 0.125;
-    if(order > 8) fade_in_time = 0.125;
+    // Decompound description paragraph
+    desc = desc.replaceAll(/([\n]+[\w.,/ ]+)/g, '...');
 
     // Trimming long title
     const trimmed_title = name.substring(0, 24) + "...";
@@ -45,7 +47,7 @@ const DestinationCard = ({id, order, picture, name, desc, rating, onclick}) => {
     return (
         <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1, transition: {delay: fade_in_time} }}
+        animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.8 }}
         transition={{ duration: 0.25, ease: "backOut", delay: 0 }}
         whileHover={{ scale: 1.05 }}
@@ -55,27 +57,30 @@ const DestinationCard = ({id, order, picture, name, desc, rating, onclick}) => {
                 src={picture}
                 className="w-auto max-h rounded-tl-lg rounded-tr-lg"
             />
-            <div className="flex flex-col gap-2 p-3 pb-10">
-                <div className="flex flex-row gap-2">
-                    {
-                        Array.from({length: whole_rating}).map(() => {
-                            return <img src={StarFull} width="19"/>
-                        })
-                    }
-                    {
-                        has_half_rating ? <img src={StarHalf} width="19"/> : null
-                    }
-                    {
-                        Array.from({length: empty_rating}).map(() => {
-                            return <img src={StarEmpty} width="19"/>
-                        })
-                    }
+            <div className="flex flex-col gap-2 p-3 pb-6">
+                <div className="flex flex-row">
+                    <div className="flex flex-row gap-2">
+                        {
+                            Array.from({length: whole_rating}).map(() => {
+                                return <img src={StarFull} width="19"/>
+                            })
+                        }
+                        {
+                            has_half_rating ? <img src={StarHalf} width="19"/> : null
+                        }
+                        {
+                            Array.from({length: empty_rating}).map(() => {
+                                return <img src={StarEmpty} width="19"/>
+                            })
+                        }
+                    </div>
+                    <img className="ml-auto" src={WishlistEmpty} width="21" />
                 </div>
-                <h2 className="text-2xl text-white tracking-wide">{name}</h2>
+                <h2 className="text-xl text-white tracking-wide">{name}</h2>
                 <p className="text-md text-[#aaa]">{desc}</p>
                 <div className="flex flex-row">
                     <motion.button
-                        className="text-white mt-1 ml-auto w-auto h-fit px-3 py-1 rounded-md border-solid border-[1px] border-white tracking-wide cursor-pointer"
+                        className="text-white text-md font-light px-4 py-1 mt-1 ml-auto w-auto h-fit rounded-md border-solid border-[1px] border-[#ffffff88] tracking-wider cursor-pointer"
                     >See Detail</motion.button>
                 </div>
             </div>
