@@ -21,45 +21,57 @@ import AddData from './pages/profilePages/addData';
 
 import ScrollToTop from './scrollToTop';
 import PageWrapper from './components/loading/pageWrapper';
-import { GoogleLogin } from '@react-oauth/google';
+import { Provider } from 'react-redux';
+import store from './stores/store.js';
 
 const App = () => {
     return (
-        <GoogleOAuthProvider
-            clientId={import.meta.env.VITE_GOOGLE_WEB_CLIENT_ID}
-        >
-            <Router>
-                <ScrollToTop />
-                <PageWrapper />
-                <Routes>
-                    <Route path="/" element={<Home />}></Route>
-                    <Route path="/culture" element={<CultureHistory />}></Route>
-                    <Route
-                        path="/destination"
-                        element={<DestinationPage />}
-                    ></Route>
-                    <Route path="/gallery" element={<GalleryPage />}></Route>
-                    <Route path="/contact-us" element={<ContactUs />}></Route>
-                    <Route path="/join-us" element={<JoinUs />}></Route>
-                    <Route path="/sign-in" element={<Signin />}></Route>
-                    <Route path="/register" element={<Register />}></Route>
-                    <Route
-                        path="/forget-password"
-                        element={<ForgetPassword />}
-                    ></Route>
-                    <Route
-                        path="/profile/wishlist"
-                        element={<Wishlist />}
-                    ></Route>
-                    <Route path="/profile" element={<Profile />}></Route>
-                    <Route
-                        path="/profile/add-data"
-                        element={<AddData />}
-                    ></Route>
-                    <Route path="*" element={<NotFound />}></Route>
-                </Routes>
-            </Router>
-        </GoogleOAuthProvider>
+        <Provider store={store}>
+            <GoogleOAuthProvider
+                clientId={import.meta.env.VITE_GOOGLE_WEB_CLIENT_ID}
+            >
+                <Router>
+                    <ScrollToTop />
+                    <PageWrapper />
+                    <Routes>
+                        <Route path="/" element={<Home />}></Route>
+                        <Route
+                            path="/culture"
+                            element={<CultureHistory />}
+                        ></Route>
+                        <Route
+                            path="/destination"
+                            element={<DestinationPage />}
+                        ></Route>
+                        <Route
+                            path="/gallery"
+                            element={<GalleryPage />}
+                        ></Route>
+                        <Route
+                            path="/contact-us"
+                            element={<ContactUs />}
+                        ></Route>
+                        <Route path="/join-us" element={<JoinUs />}></Route>
+                        <Route path="/sign-in" element={<Signin />}></Route>
+                        <Route path="/register" element={<Register />}></Route>
+                        <Route
+                            path="/forget-password"
+                            element={<ForgetPassword />}
+                        ></Route>
+                        <Route
+                            path="/profile/wishlist"
+                            element={<Wishlist />}
+                        ></Route>
+                        <Route path="/profile" element={<Profile />}></Route>
+                        <Route
+                            path="/profile/add-data"
+                            element={<AddData />}
+                        ></Route>
+                        <Route path="*" element={<NotFound />}></Route>
+                    </Routes>
+                </Router>
+            </GoogleOAuthProvider>
+        </Provider>
     );
 };
 

@@ -133,7 +133,7 @@ const Register = () => {
                     token: accessToken,
                 })
             ).data;
-            localStorage.setItem('accessToken', response.data.token);
+            localStorage.setItem('token', response.data.token);
             //lakukan sesuatu jika berhasil kurang lebih sama dengan yang diatas
         } catch (e) {
             console.log(e);
@@ -147,7 +147,7 @@ const Register = () => {
                         token: credentialsResponse.access_token,
                     })
                 ).data;
-                localStorage.setItem('accessToken', response.data.token);
+                localStorage.setItem('token', response.data.token);
 
                 //lakukan sesuatu jika berhasil
             } catch (e) {
