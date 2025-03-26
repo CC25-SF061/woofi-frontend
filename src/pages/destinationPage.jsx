@@ -18,31 +18,47 @@ import { EffectFade, Autoplay, Pagination } from "swiper/modules";
 const destinations = [
   {
     id: "ncOA22d8",
-    picture: Image2,
+    images: [Image3, Image3, Image3],
     rating: 2.65,
     name: "Wayank Wayank Wayank Wayank  ",
-    desc: "Wayank Lorem Ipsum jirWayank Lorem Ipsum jirWayank Lorem Ipsum jirWayank Lorem Ipsum jirWayank Lorem Ipsum jirWayank Lorem Ipsum jir"
+    desc: "Wayank Lorem Ipsum jirWayank Lorem Ipsum jirWayank Lorem Ipsum jirWayank Lorem Ipsum jirWayank Lorem Ipsum jirWayank Lorem Ipsum jir",
+    wishlisted: false,
+    countRating: 6,
+    avgRating: 2.5,
+    location: "Jl. Kartini No.133, Dauh Puri Kaja, Kec. Denpasar Utara, Kota Denpasar, Bali 80231",
   },
   {
     id: "vQox27X1",
-    picture: Image3,
+    images: [Image3],
     rating: 3.86,
     name: "OMAYGAT",
-    desc: "LOMPATAN SUPERRRR"
+    desc: "LOMPATAN SUPERRRR",
+    wishlisted: false,
+    countRating: 6,
+    avgRating: 2.5,
+    location: "Jl. Kartini No.133, Dauh Puri Kaja, Kec. Denpasar Utara, Kota Denpasar, Bali 80231",
   },
   {
     id: "vzox27X1",
-    picture: Image3,
+    images: [Image3],
     rating: 3.75,
     name: "OMAYGAT",
-    desc: "LOMPATAN SUPERRRR"
+    desc: "LOMPATAN SUPERRRR",
+    wishlisted: false,
+    countRating: 6,
+    avgRating: 2.5,
+    location: "Jl. Kartini No.133, Dauh Puri Kaja, Kec. Denpasar Utara, Kota Denpasar, Bali 80231",
   },
   {
     id: "vQox7X1",
-    picture: Image3,
+    images: [Image3],
     rating: 2.5,
     name: "OMAYGAT",
-    desc: "LOMPATAN"
+    desc: "LOMPATAN",
+    wishlisted: false,
+    countRating: 6,
+    avgRating: 2.5,
+    location: "Jl. Kartini No.133, Dauh Puri Kaja, Kec. Denpasar Utara, Kota Denpasar, Bali 80231",
   }
 ]
 
