@@ -30,13 +30,13 @@ const DestinationCard = ({id, picture, name, desc, rating, onclick}) => {
         exit={{ opacity: 0, scale: 0.8 }}
         transition={{ duration: 0.25, ease: "backOut", delay: 0 }}
         whileHover={{ scale: 1.05 }}
-        className="bg-[#252527] font-quicksand rounded-lg min-w-75 min-h-75 opacity-0 cursor-pointer shadow-[#18081825] shadow-lg" 
+        className="relative bg-[#252527] font-quicksand rounded-lg min-w-75 min-h-75 opacity-0 cursor-pointer shadow-[#18081825] shadow-lg" 
         onMouseUpCapture={()=>{onclick(id)}}>
             <img
                 src={picture}
                 className="w-auto max-h rounded-tl-lg rounded-tr-lg"
             />
-            <div className="flex flex-col gap-2 p-3 pb-6">
+            <div className="flex flex-col gap-2 p-3 pb-14">
                 <div className="flex flex-row">
                     <div className="flex flex-row gap-2">
                         {
@@ -57,11 +57,11 @@ const DestinationCard = ({id, picture, name, desc, rating, onclick}) => {
                 </div>
                 <h2 className="text-xl text-white tracking-wide">{name}</h2>
                 <p className="text-md text-[#aaa]">{desc}</p>
-                <div className="flex flex-row">
-                    <motion.button
-                        className="text-white text-md font-light px-4 py-1 mt-1 ml-auto w-auto h-fit rounded-md border-solid border-[1px] border-[#ffffff88] tracking-wider cursor-pointer"
-                    >See Detail</motion.button>
-                </div>
+            </div>
+            <div className="absolute bottom-3 right-3 flex flex-row">
+                <motion.button
+                    className="text-white text-md font-light px-4 py-1 mt-1 ml-auto w-auto h-fit rounded-md border-solid border-[1px] border-[#ffffff88] tracking-wider cursor-pointer"
+                >See Detail</motion.button>
             </div>
         </motion.div>
     );
