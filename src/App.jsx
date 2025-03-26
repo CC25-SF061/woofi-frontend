@@ -14,6 +14,7 @@ import JoinUs from './pages/joinUs';
 import Signin from './pages/loginPages/signin';
 import Register from './pages/loginPages/register';
 import ForgetPassword from './pages/loginPages/forgetPassword';
+import OtpPages from './pages/loginPages/otpPages';
 
 import Profile from './pages/profilePages/profile';
 import Wishlist from './pages/profilePages/wishlist';
@@ -47,6 +48,7 @@ const App = () => {
                         path="/forget-password"
                         element={<ForgetPassword />}
                     ></Route>
+                    <Route path="/otp-code" element={<OtpPages />}></Route>
                     <Route
                         path="/profile/wishlist"
                         element={<Wishlist />}
