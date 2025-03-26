@@ -7,6 +7,7 @@ import Home from './pages/homePage';
 import CultureHistory from './pages/cultureHistory';
 import GalleryPage from './pages/galleryPage';
 import DestinationPage from './pages/destinationPage';
+import DestinationViewPage from './pages/destinationViewPage';
 import NotFound from './pages/notFound';
 import ContactUs from './pages/contactUs';
 import JoinUs from './pages/joinUs';
@@ -38,6 +39,10 @@ const App = () => {
                     <Route
                         path="/destination"
                         element={<DestinationPage />}
+                    ></Route>
+                    <Route 
+                        path="/destination/:destinationId"
+                        element={<DestinationViewPage />}
                     ></Route>
                     <Route path="/gallery" element={<GalleryPage />}></Route>
                     <Route path="/contact-us" element={<ContactUs />}></Route>

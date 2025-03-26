@@ -6,32 +6,11 @@ import WishlistEmpty from "../../assets/icons/wishlist/empty.svg";
 import Wishlisted from "../../assets/icons/wishlist/full.svg";
 import { motion } from "framer-motion";
 
+import countStars from "../../util/starRating";
+
 const DestinationCard = ({id, picture, name, desc, rating, onclick}) => {
 
-    // Rating star display
-    const lowest_half = 0.46;
-    const highest_half = 0.76;
-
-    let whole_rating = 0;
-    let has_half_rating = false;
-    let empty_rating = 5;
-
-    if((rating % 1.0) < lowest_half) {
-        whole_rating = Math.floor(rating);
-    } else if ((rating % 1.0) > highest_half) {
-        whole_rating = Math.ceil(rating);
-    } else {
-        whole_rating = Math.floor(rating);
-        has_half_rating = true;
-    }
-
-    if (whole_rating > 5) {
-        has_half_rating = false;
-        whole_rating = 5
-    }
-    
-    empty_rating -= whole_rating;
-    empty_rating -= has_half_rating ? 1 : 0;
+    const {whole_rating, has_half_rating, empty_rating} = countStars(rating);
 
     // Decompound description paragraph
     desc = desc.replaceAll(/([\n]+[\w.,/ ]+)/g, '...');
