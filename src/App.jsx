@@ -7,6 +7,7 @@ import Home from './pages/homePage';
 import CultureHistory from './pages/cultureHistory';
 import GalleryPage from './pages/galleryPage';
 import DestinationPage from './pages/destinationPage';
+import DestinationViewPage from './pages/destinationViewPage';
 import NotFound from './pages/notFound';
 import ContactUs from './pages/contactUs';
 import JoinUs from './pages/joinUs';
@@ -14,6 +15,7 @@ import JoinUs from './pages/joinUs';
 import Signin from './pages/loginPages/signin';
 import Register from './pages/loginPages/register';
 import ForgetPassword from './pages/loginPages/forgetPassword';
+import OtpPages from './pages/loginPages/otpPages';
 
 import Profile from './pages/profilePages/profile';
 import Wishlist from './pages/profilePages/wishlist';
@@ -44,6 +46,10 @@ const App = () => {
                             element={<DestinationPage />}
                         ></Route>
                         <Route
+                            path="/destination/:destinationId"
+                            element={<DestinationViewPage />}
+                        ></Route>
+                        <Route
                             path="/gallery"
                             element={<GalleryPage />}
                         ></Route>
@@ -58,6 +64,7 @@ const App = () => {
                             path="/forget-password"
                             element={<ForgetPassword />}
                         ></Route>
+                        <Route path="/otp-code" element={<OtpPages />}></Route>
                         <Route
                             path="/profile/wishlist"
                             element={<Wishlist />}
