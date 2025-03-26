@@ -39,7 +39,7 @@ const CulturalDiversity = () => {
 
         {/* Culture Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-1 md:gap-2 mt-10">
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="sync">
             {displayedData.length > 0 ? (
               displayedData.map((item) => (
                 <motion.div

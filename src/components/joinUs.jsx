@@ -32,7 +32,7 @@ const JoinUs = () => {
             Lorem Ipsum is simply dummy text of the printing and f
           </p>
           <Link
-            to="/join-us"
+            to="/sign-in"
             className="px-5 py-3 border border-white rounded-md hover:bg-white hover:text-black transition duration-300"
           >
             Click Here
