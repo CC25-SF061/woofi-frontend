@@ -199,7 +199,7 @@ const SignIn = () => {
         </form>
 
         {/* Image Section */}
-        <div className="hidden md:flex md:w-1/2 min-h-screen max-h-[650px]">
+        <div className="hidden md:flex md:w-1/2 min-h-screen">
           <BannerLogin imageSrc={Image1} />
         </div>
       </div>
