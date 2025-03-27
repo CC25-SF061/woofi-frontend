@@ -9,10 +9,12 @@ import ErrorConstant from '../../util/ErrorConstant';
 import { ErrorToast } from '../../components/toast';
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
 
 const SignIn = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [invalidLoginState, setInvalidLoginState] = useState(null);
+    const navigate = useNavigate();
 
     const [errState, setErrState] = useState({
         password: null,
@@ -55,8 +57,8 @@ const SignIn = () => {
             await axios.post('/api/auth/login', request, {
                 withCredentials: true,
             });
-
             //lakukan sesuatu ketika sukses
+            navigate("/profile");
         } catch (e) {
             if (!(e instanceof AxiosError)) {
                 return;
@@ -104,6 +106,7 @@ const SignIn = () => {
 
                 localStorage.setItem('token', response.data.data.token);
                 //lakukan sesuatu jika berhasil kurang lebih sama dengan yang diatas
+                navigate("/profile");
             } catch (e) {
                 if (!(e instanceof AxiosError)) {
                     return;

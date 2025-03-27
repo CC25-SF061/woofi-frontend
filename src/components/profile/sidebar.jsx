@@ -3,12 +3,12 @@ import Logo from "../../assets/navbar/logo.webp";
 import LogoHome from "../../assets/profile/material-symbols--home-outline-rounded.svg";
 import { Link, useLocation } from "react-router-dom";
 
-const sidebar = () => {
+const Sidebar = () => {
   const location = useLocation();
 
   return (
     <>
-      <sidebar className="flex flex-col items-center justify-between rounded-lg overflow-hidden shadow-lg bg-[#252527] p-5 h-full w-1/4">
+      <div className="flex flex-col items-center justify-between rounded-lg overflow-hidden shadow-lg bg-[#252527] p-5 h-full w-1/4">
         <Link
           to="/"
           className="flex gap-1 bg-[#252527] shadow-lg shadow-stone-950/50 p-2 rounded-lg"
@@ -59,9 +59,9 @@ const sidebar = () => {
           <div className="rounded-full border-white border-2 p-2"></div>
           <div className="rounded-full border-white border-2 p-2"></div>
         </div>
-      </sidebar>
+      </div>
     </>
   );
 };
 
-export default sidebar;
+export default Sidebar;
