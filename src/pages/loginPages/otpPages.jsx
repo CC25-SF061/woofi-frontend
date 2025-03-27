@@ -7,21 +7,28 @@ import "react-toastify/dist/ReactToastify.css";
 
 const OtpPages = () => {
   const [otpCode, setOtpCode] = useState("");
+  const [errors, setErrors] = useState({});
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    let validationErrors = {};
+
     if (!otpCode.trim()) {
-      toast.error("OTP field cannot be empty", {
-        position: "top-right",
-        autoClose: 3000,
-      });
+      validationErrors.otpCode = "OTP Code field cannot be empty!";
+    }
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
       return;
     }
+
     toast.success("OTP verified successfully", {
       position: "top-right",
       autoClose: 3000,
     });
+
     setOtpCode("");
+    setErrors({});
   };
 
   return (
@@ -42,15 +49,26 @@ const OtpPages = () => {
             We have sent an OTP Code
           </p>
           <p className="text-xl text-center md:text-sm font-quicksand text-white mb-6">
-            to your registered email
+            to <span className="font-bold">(your register email)</span>
           </p>
-          <input
-            type="text"
-            placeholder="Enter OTP Code"
-            value={otpCode}
-            onChange={(e) => setOtpCode(e.target.value)}
-            className="w-full p-3 font-quicksand mb-4 rounded text-white border border-white bg-transparent focus:outline-none"
-          />
+          <div className="mb-2 w-full">
+            <input
+              type="text"
+              placeholder="Enter OTP Code"
+              value={otpCode}
+              onChange={(e) => setOtpCode(e.target.value)}
+              className={`w-full p-3 pr-12 font-quicksand rounded text-white border ${
+                errors.otpCode ? "border-red-500" : "border-white"
+              } bg-transparent focus:outline-none focus:ring-2 focus:ring-[#FFA666]`}
+            />
+            <div className="min-h-[20px]">
+              {errors.otpCode && (
+                <div className="error text-red-500 text-sm">
+                  {errors.otpCode}
+                </div>
+              )}
+            </div>
+          </div>
           <button
             type="submit"
             className="w-full p-3 bg-[#FFA666] text-black font-bold cursor-pointer font-quicksand rounded hover:bg-orange-500 transition"

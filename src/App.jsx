@@ -16,6 +16,7 @@ import Signin from './pages/loginPages/signin';
 import Register from './pages/loginPages/register';
 import ForgetPassword from './pages/loginPages/forgetPassword';
 import OtpPages from './pages/loginPages/otpPages';
+import NewPassword from './pages/loginPages/newPassword.jsx'
 
 import Profile from './pages/profilePages/profile';
 import Wishlist from './pages/profilePages/wishlist';
@@ -65,6 +66,7 @@ const App = () => {
                             element={<ForgetPassword />}
                         ></Route>
                         <Route path="/otp-code" element={<OtpPages />}></Route>
+                        <Route path="/new-password" element={<NewPassword />}></Route>
                         <Route
                             path="/profile/wishlist"
                             element={<Wishlist />}

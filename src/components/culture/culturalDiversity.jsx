@@ -23,14 +23,13 @@ const CulturalDiversity = () => {
           {Object.keys(culturalData).map((category) => (
             <motion.button
               key={category}
-              className={`lg:px-6 px-4 py-2 text-lg font-quicksand hover:underline transition-all ${
+              className={`lg:px-6 px-4 py-2 text-lg font-quicksand hover:underline transition-all tracking-wide cursor-pointer ${
                 selectedCategory === category
-                  ? "font-bold text-[#FFA666] underline"
+                  ? "font-bold text-[#FFA666]"
                   : ""
               }`}
               onClick={() => setSelectedCategory(category)}
               whileTap={{ scale: 0.9 }}
-              whileHover={{ scale: 1.1 }}
             >
               {category}
             </motion.button>
