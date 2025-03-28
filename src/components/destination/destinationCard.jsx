@@ -41,16 +41,16 @@ const DestinationCard = ({id, picture, name, desc, rating, onclick}) => {
                 <div className='flex flex-row'>
                     <div className='flex flex-row gap-2'>
                         {
-                            Array.from({length: whole_rating}).map(() => {
-                                return <img src={StarFull} width='19'/>
+                            Array.from({length: whole_rating}).map((_, i) => {
+                                return <img key={i} src={StarFull} width='19'/>
                             })
                         }
                         {
-                            has_half_rating ? <img src={StarHalf} width='19'/> : null
+                            has_half_rating ? <img key={10} src={StarHalf} width='19'/> : null
                         }
                         {
-                            Array.from({length: empty_rating}).map(() => {
-                                return <img src={StarEmpty} width='19'/>
+                            Array.from({length: empty_rating}).map((_, i) => {
+                                return <img key={i} src={StarEmpty} width='19'/>
                             })
                         }
                     </div>

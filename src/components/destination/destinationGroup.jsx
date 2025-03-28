@@ -35,7 +35,7 @@ const DestinationGroup = ({tags, destinations}) => {
       <div className='mt-8 mb-15 grid justify-stretch items-stretch 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-5 caret-transparent'>
         {
           destinations.map((element, order) => {
-            return <DestinationCard key={element.id} id={element.id} order={order} picture={element.images[0]} name={element.name} desc={element.desc} rating={element.avgRating} onclick={onCardClick}></DestinationCard>
+            return <DestinationCard key={order} id={element.id} order={order} picture={element.images[0]} name={element.name} desc={element.desc} rating={element.avgRating} onclick={onCardClick}></DestinationCard>
           })
         }
       </div>
