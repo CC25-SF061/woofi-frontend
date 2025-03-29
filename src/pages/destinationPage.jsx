@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../components/navbar";
 import SearchDestination from "../components/searchDestination";
 import DestinationGroup from "../components/destination/destinationGroup";
@@ -18,7 +18,7 @@ import { EffectFade, Autoplay, Pagination } from "swiper/modules";
 const destinations = [
   {
     id: "ncOA22d8",
-    images: [Image3, Image3, Image3],
+    images: [Image2, Image1, Image2],
     rating: 2.65,
     name: "Wayank Wayank Wayank Wayank  ",
     desc: "Wayank Lorem Ipsum jirWayank Lorem Ipsum jirWayank Lorem Ipsum jirWayank Lorem Ipsum jirWayank Lorem Ipsum jirWayank Lorem Ipsum jir",
@@ -26,6 +26,7 @@ const destinations = [
     countRating: 6,
     avgRating: 2.5,
     location: "Jl. Kartini No.133, Dauh Puri Kaja, Kec. Denpasar Utara, Kota Denpasar, Bali 80231",
+    writer: "Kak Gung Wah",
   },
   {
     id: "vQox27X1",
@@ -37,6 +38,7 @@ const destinations = [
     countRating: 6,
     avgRating: 2.5,
     location: "Jl. Kartini No.133, Dauh Puri Kaja, Kec. Denpasar Utara, Kota Denpasar, Bali 80231",
+    writer: "Kak Sulih",
   },
   {
     id: "vzox27X1",
@@ -48,6 +50,7 @@ const destinations = [
     countRating: 6,
     avgRating: 2.5,
     location: "Jl. Kartini No.133, Dauh Puri Kaja, Kec. Denpasar Utara, Kota Denpasar, Bali 80231",
+    writer: "Dik Yana",
   },
   {
     id: "vQox7X1",
@@ -59,10 +62,26 @@ const destinations = [
     countRating: 6,
     avgRating: 2.5,
     location: "Jl. Kartini No.133, Dauh Puri Kaja, Kec. Denpasar Utara, Kota Denpasar, Bali 80231",
+    writer: "Mr blabla lorem ipsum dolor sit anj",
   }
 ]
 
-const destinationPage = () => {
+
+const DestinationPage = () => {
+
+  const onTagChange = () => {
+    // TODO : API Recall and Refresh view
+  };
+  
+  const [destinationList, setDestinationList] = useState(destinations);
+  const [activeTags, setActiveTag] = useState([true, false, false]); // 0: Highest rating 1: Cheapest 2: Closest
+  
+  useEffect(() => {
+    onTagChange();
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTags]);
+
   return (
     <div>
       <Navbar />
@@ -73,7 +92,7 @@ const destinationPage = () => {
       />
       <div className="flex flex-col px-10 items-center bg-[#221122] w-full">
         <SearchDestination></SearchDestination>
-        <DestinationGroup destinations={destinations}></DestinationGroup>
+        <DestinationGroup tags={[activeTags, setActiveTag]} destinations={destinationList}></DestinationGroup>
       </div>
       <JoinUs />
       <Footer />
@@ -81,4 +100,4 @@ const destinationPage = () => {
   );
 };
 
-export default destinationPage;
+export default DestinationPage;

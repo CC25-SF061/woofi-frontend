@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 const LoadingScreen = () => {
   return (
     <motion.div
-      className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 backdrop-blur-md z-50"
+      className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 backdrop-blur-md z-1000"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}

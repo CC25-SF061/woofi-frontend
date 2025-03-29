@@ -82,14 +82,6 @@ const Register = () => {
 
         try {
             await axios.post('/api/auth/register', request);
-            // kalo ingin pake toast, pake ini
-            // toast.success("Registration successful!", {
-            //   position: "top-right",
-            //   autoClose: 3000,
-            // });
-            // setTimeout(() => {
-            //   navigate("/profile");
-            // }, 3000);
             e.target.reset();
             navigate('/profile');
         } catch (error) {
@@ -191,7 +183,9 @@ const Register = () => {
                             type="text"
                             placeholder="Username"
                             name="username"
-                            className="w-full p-3 font-quicksand rounded text-white border border-white bg-transparent focus:outline-none"
+                            className={`w-full p-3 pr-12 font-quicksand rounded text-white border ${
+                                errState.username ? "border-red-500" : "border-white"
+                            } bg-transparent focus:outline-none focus:ring-2 focus:ring-[#FFA666]`}
                         />
                         <div className="min-h-[20px]">
                             {errState.username && (
@@ -207,7 +201,9 @@ const Register = () => {
                             type="text"
                             placeholder="Display Name"
                             name="name"
-                            className="w-full p-3 font-quicksand rounded text-white border border-white bg-transparent focus:outline-none"
+                            className={`w-full p-3 pr-12 font-quicksand rounded text-white border ${
+                                errState.name ? "border-red-500" : "border-white"
+                            } bg-transparent focus:outline-none focus:ring-2 focus:ring-[#FFA666]`}
                         />
                         <div className="min-h-[20px]">
                             {errState.name && (
@@ -223,7 +219,9 @@ const Register = () => {
                             type="email"
                             placeholder="Email"
                             name="email"
-                            className="w-full p-3 font-quicksand rounded text-white border border-white bg-transparent focus:outline-none"
+                            className={`w-full p-3 pr-12 font-quicksand rounded text-white border ${
+                                errState.email ? "border-red-500" : "border-white"
+                            } bg-transparent focus:outline-none focus:ring-2 focus:ring-[#FFA666]`}
                         />
                         <div className="min-h-[20px]">
                             {errState.email && (
@@ -239,7 +237,9 @@ const Register = () => {
                             type={showPassword ? 'text' : 'password'}
                             name="password"
                             placeholder="Password"
-                            className="w-full p-3 pr-10 font-quicksand rounded text-white border border-white bg-transparent focus:outline-none"
+                            className={`w-full p-3 pr-12 font-quicksand rounded text-white border ${
+                                errState.password ? "border-red-500" : "border-white"
+                            } bg-transparent focus:outline-none focus:ring-2 focus:ring-[#FFA666]`}
                         />
                         <button
                             type="button"
@@ -262,7 +262,9 @@ const Register = () => {
                             type={showPassword1 ? 'text' : 'password'}
                             placeholder="Password confirmation"
                             name="passwordConfirmation"
-                            className="w-full p-3 pr-10 font-quicksand rounded text-white border border-white bg-transparent focus:outline-none"
+                            className={`w-full p-3 pr-12 font-quicksand rounded text-white border ${
+                                errState.passwordConfirmation ? "border-red-500" : "border-white"
+                            } bg-transparent focus:outline-none focus:ring-2 focus:ring-[#FFA666]`}
                         />
                         <button
                             type="button"
@@ -280,7 +282,7 @@ const Register = () => {
                         </div>
                     </div>
 
-                    <button className="w-full p-3 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition cursor-pointer">
+                    <button className="w-full p-3 bg-[#FFA666] text-black font-bold cursor-pointer font-quicksand rounded hover:bg-orange-500 transition">
                         Register
                     </button>
 

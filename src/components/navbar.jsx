@@ -7,7 +7,6 @@ import { fetchUserProfile } from "../stores/userReducer";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const user = useSelector((state) => state.user.data);
   const dispatch = useDispatch();
@@ -167,7 +166,7 @@ const Navbar = () => {
                   <li>
                     <Link
                       to="/"
-                      className={`block py-2 hover:text-gray-300 ${
+                      className={`block hover:text-gray-300 ${
                         location.pathname === "/" && "text-[#FFA666] font-bold"
                       }`}
                       onClick={() => setMobileMenuOpen(false)}
@@ -179,7 +178,7 @@ const Navbar = () => {
                   <li>
                     <Link
                       to="/destination"
-                      className={`block py-2 hover:text-gray-300 ${
+                      className={`block hover:text-gray-300 ${
                         location.pathname === "/destination" &&
                         "text-[#FFA666] font-bold"
                       }`}
@@ -192,7 +191,7 @@ const Navbar = () => {
                   <li>
                     <Link
                       to="/culture"
-                      className={`block py-2 hover:text-gray-300 ${
+                      className={`block hover:text-gray-300 ${
                         location.pathname === "/culture" &&
                         "text-[#FFA666] font-bold"
                       }`}
@@ -205,7 +204,7 @@ const Navbar = () => {
                   <li>
                     <Link
                       to="/gallery"
-                      className={`block py-2 hover:text-gray-300 ${
+                      className={`block hover:text-gray-300 ${
                         location.pathname === "/gallery" &&
                         "text-[#FFA666] font-bold"
                       }`}
@@ -215,52 +214,20 @@ const Navbar = () => {
                     </Link>
                   </li>
 
-                  <li className="relative">
-                    <button
-                      className="flex items-center gap-2 w-full py-2"
-                      onClick={() => setDropdownOpen(!dropdownOpen)}
+                  <li>
+                    <Link
+                      to="/contact-us"
+                      className={`hover:text-gray-300 transition ${
+                        location.pathname === "/contact-us"
+                          ? "text-[#FFA666] font-bold"
+                          : ""
+                      }`}
                     >
-                      <span>More</span>
-                      <FaChevronDown
-                        className={`text-sm transition-transform duration-200 ${
-                          dropdownOpen ? "rotate-180" : ""
-                        }`}
-                      />
-                    </button>
-
-                    {dropdownOpen && (
-                      <div className="pl-4 mt-2 space-y-3">
-                        <Link
-                          to="/contact-us"
-                          className={`block py-1 hover:text-gray-300 ${
-                            location.pathname === "/contact-us" &&
-                            "text-[#FFA666] font-bold"
-                          }`}
-                          onClick={() => {
-                            setDropdownOpen(false);
-                            setMobileMenuOpen(false);
-                          }}
-                        >
-                          Contact Us
-                        </Link>
-                        <Link
-                          to="/join-us"
-                          className={`block py-1 hover:text-gray-300 ${
-                            location.pathname === "/join-us" &&
-                            "text-[#FFA666] font-bold"
-                          }`}
-                          onClick={() => {
-                            setDropdownOpen(false);
-                            setMobileMenuOpen(false);
-                          }}
-                        >
-                          Join Us
-                        </Link>
-                      </div>
-                    )}
+                      Contact Us
+                    </Link>
                   </li>
 
-                  <li>
+                  {!user.id ? (
                     <Link
                       to="/sign-in"
                       className="block w-full px-4 py-2 border border-[#FFA666] rounded-md hover:bg-[#FFA666] hover:text-black text-center"
@@ -268,7 +235,15 @@ const Navbar = () => {
                     >
                       Sign In
                     </Link>
-                  </li>
+                  ) : (
+                    <Link to="/profile" className="flex items-center gap-2">
+                      <img
+                        src={user.profileImage || "/default-avatar.png"} // Gunakan gambar default jika tidak ada
+                        alt="Profile"
+                        className="w-8 h-8 rounded-full border border-gray-300"
+                      />
+                    </Link>
+                  )}
                 </ul>
               </div>
             </div>

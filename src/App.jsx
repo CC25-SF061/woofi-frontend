@@ -10,12 +10,12 @@ import DestinationPage from './pages/destinationPage';
 import DestinationViewPage from './pages/destinationViewPage';
 import NotFound from './pages/notFound';
 import ContactUs from './pages/contactUs';
-import JoinUs from './pages/joinUs';
 
 import Signin from './pages/loginPages/signin';
 import Register from './pages/loginPages/register';
 import ForgetPassword from './pages/loginPages/forgetPassword';
 import OtpPages from './pages/loginPages/otpPages';
+import NewPassword from './pages/loginPages/newPassword.jsx'
 
 import Profile from './pages/profilePages/profile';
 import Wishlist from './pages/profilePages/wishlist';
@@ -57,17 +57,21 @@ const App = () => {
                             path="/contact-us"
                             element={<ContactUs />}
                         ></Route>
-                        <Route path="/join-us" element={<JoinUs />}></Route>
                         <Route path="/sign-in" element={<Signin />}></Route>
                         <Route path="/register" element={<Register />}></Route>
                         <Route
                             path="/forget-password"
                             element={<ForgetPassword />}
                         ></Route>
+<<<<<<< HEAD
                         <Route
                             path="/otp-code/:hash"
                             element={<OtpPages />}
                         ></Route>
+=======
+                        <Route path="/otp-code" element={<OtpPages />}></Route>
+                        <Route path="/new-password" element={<NewPassword />}></Route>
+>>>>>>> ca3e45065ec438c0b2fbb3abeca3c1db99753b58
                         <Route
                             path="/profile/wishlist"
                             element={<Wishlist />}

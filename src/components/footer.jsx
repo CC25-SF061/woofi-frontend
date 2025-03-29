@@ -20,9 +20,9 @@ const Footer = () => {
         <div className="w-full md:w-1/3 flex flex-col items-center md:items-start">
           <h1 className="font-quicksand text-2xl pb-2">Sosial Media</h1>
           <div className="flex justify-center md:justify-start items-center gap-4">
-            <img src={instagram} alt="Instagram" className="w-6 md:w-8" />
-            <img src={twitter} alt="Twitter/X" className="w-6 md:w-7" />
-            <img src={youtube} alt="Youtube" className="w-6 md:w-8" />
+            <img src={instagram} alt="Instagram" className="w-6 cursor-pointer md:w-8" />
+            <img src={twitter} alt="Twitter/X" className="w-6 cursor-pointer md:w-7" />
+            <img src={youtube} alt="Youtube" className="w-6 cursor-pointer md:w-8" />
           </div>
         </div>
 
@@ -39,11 +39,11 @@ const Footer = () => {
         <div className="w-full md:w-1/3 flex flex-col items-center md:items-end">
           <h1 className="text-2xl pb-2">Contact Us</h1>
           <div className="flex flex-col gap-2 items-center md:items-end">
-            <div className="flex gap-2 items-center">
+            <div className="flex gap-2 items-center cursor-pointer">
               <img src={whatsapp} alt="WhatsApp" className="w-5 md:w-7" />
               <p>082147700295</p>
             </div>
-            <div className="flex gap-2 items-center">
+            <div className="flex gap-2 items-center cursor-pointer">
               <img src={gmail} alt="Email" className="w-5 md:w-7" />
               <p>WoofiTeam@gmail.com</p>
             </div>

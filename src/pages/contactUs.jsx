@@ -118,7 +118,9 @@ const ContactUs = () => {
                 placeholder="Your Username"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full p-3 font-quicksand rounded text-white border border-white focus:outline-none"
+                className={`w-full p-3 pr-12 font-quicksand rounded text-white border ${
+                  errState.name ? "border-red-500" : "border-white"
+                } bg-transparent focus:outline-none focus:ring-2 focus:ring-[#FFA666]`}
               />
               <div className="min-h-[20px]">
                 {errState.name && (
@@ -137,7 +139,9 @@ const ContactUs = () => {
                 placeholder="Your Email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full p-3 font-quicksand rounded text-white border border-white focus:outline-none"
+                className={`w-full p-3 pr-12 font-quicksand rounded text-white border ${
+                  errState.email ? "border-red-500" : "border-white"
+                } bg-transparent focus:outline-none focus:ring-2 focus:ring-[#FFA666]`}
               />
               <div className="min-h-[20px]">
                 {errState.email && (
@@ -156,7 +160,9 @@ const ContactUs = () => {
                 placeholder="Reason for contacting us"
                 value={formData.reason}
                 onChange={handleChange}
-                className="w-full p-3 font-quicksand rounded text-white border border-white focus:outline-none"
+                className={`w-full p-3 pr-12 font-quicksand rounded text-white border ${
+                  errState.reason ? "border-red-500" : "border-white"
+                } bg-transparent focus:outline-none focus:ring-2 focus:ring-[#FFA666]`}
               />
               <div className="min-h-[20px]">
                 {errState.reason && (
@@ -174,7 +180,9 @@ const ContactUs = () => {
                 placeholder="Your message"
                 value={formData.message}
                 onChange={handleChange}
-                className="w-full p-3 font-quicksand rounded text-white border border-white focus:outline-none"
+                className={`w-full p-3 pr-12 font-quicksand rounded text-white border ${
+                  errState.message ? "border-red-500" : "border-white"
+                } bg-transparent focus:outline-none focus:ring-2 focus:ring-[#FFA666]`}
               />
               <div className="min-h-[20px]">
                 {errState.message && (

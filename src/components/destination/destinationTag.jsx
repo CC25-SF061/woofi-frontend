@@ -3,14 +3,13 @@ import { motion } from "framer-motion";
 
 const DestinationTag = ({name, order, activity}) => {
 
-    const [isActive, setActive, onChanged] = activity;
+    const [isActive, setActive] = activity;
 
     const onToggle = () => {
         const newState = !isActive[order];
         const newActive = [...isActive];
         newActive[order] = newState;
         setActive(newActive);
-        onChanged();
     };
 
     return (

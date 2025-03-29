@@ -141,7 +141,9 @@ const SignIn = () => {
                             type="email"
                             placeholder="Email"
                             name="email"
-                            className="w-full p-3 font-quicksand rounded text-white border border-white bg-transparent focus:outline-none"
+                            className={`w-full p-3 pr-12 font-quicksand rounded text-white border ${
+                                errState.email ? "border-red-500" : "border-white"
+                            } bg-transparent focus:outline-none focus:ring-2 focus:ring-[#FFA666]`}
                         />
                         <div className="min-h-[20px]">
                             {errState.email && (
@@ -157,7 +159,9 @@ const SignIn = () => {
                             type={showPassword ? 'text' : 'password'}
                             name="password"
                             placeholder="Password"
-                            className="w-full p-3 pr-10 font-quicksand rounded text-white border border-white bg-transparent focus:outline-none"
+                            className={`w-full p-3 pr-12 font-quicksand rounded text-white border ${
+                                errState.password ? "border-red-500" : "border-white"
+                            } bg-transparent focus:outline-none focus:ring-2 focus:ring-[#FFA666]`}
                         />
                         <button
                             type="button"
