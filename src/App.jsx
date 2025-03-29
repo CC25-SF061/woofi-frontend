@@ -64,7 +64,10 @@ const App = () => {
                             path="/forget-password"
                             element={<ForgetPassword />}
                         ></Route>
-                        <Route path="/otp-code" element={<OtpPages />}></Route>
+                        <Route
+                            path="/otp-code/:hash"
+                            element={<OtpPages />}
+                        ></Route>
                         <Route
                             path="/profile/wishlist"
                             element={<Wishlist />}
