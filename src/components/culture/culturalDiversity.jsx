@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import culturalData from "./cultureData";
 import CultureCard from "./cultureCard";
 import CultureDetail from "./cultureDetail";
+import { fadeInUp } from "../../util/animation";
 
 const CulturalDiversity = () => {
   const [selectedCategory, setSelectedCategory] = useState("Traditional-Music");
@@ -11,7 +12,13 @@ const CulturalDiversity = () => {
   const displayedData = culturalData[selectedCategory] || [];
 
   return (
-    <section className="lg:w-full lg:justify-center md:px-10 lg:flex bg-[#221122] text-white">
+    <motion.section 
+      className="lg:w-full lg:justify-center md:px-10 lg:flex bg-[#221122] text-white"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{once: true,amount:0.1}}
+      variants={fadeInUp}
+     >
       <div className="lg:max-w-5xl py-20 lg:px-8">
         <h1 className="font-inknut-antiqua text-3xl text-center">
           <span className="text-[#FFA666]">Cultural Diversity</span> of
@@ -82,7 +89,7 @@ const CulturalDiversity = () => {
           onClose={() => setSelectedItem(null)}
         />
       </div>
-    </section>
+    </motion.section>
   );
 };
 

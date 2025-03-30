@@ -16,8 +16,8 @@ const DestinationGroup = ({tags, destinations}) => {
   };
 
   return (
-    <div ref={containerRef} className='flex flex-col' >
-      <div className='mt-25 relative w-full'>
+    <div ref={containerRef} className='mt-15 flex flex-col' >
+      <div className='relative w-full caret-transparent'>
         <div className='absolute right-0 left-0 h-[2px] top-[50%] bg-[#FFA66677]'></div>
         <h1 className='relative mx-auto px-3 font-inknut-antiqua text-5xl w-fit text-center text-[#FFA666] font-bold bg-[#221122]'>
           Explore Destinations
@@ -27,8 +27,10 @@ const DestinationGroup = ({tags, destinations}) => {
       {/* The Filters */}
       <div className='flex flex-row gap-5 mt-18 self-start caret-transparent'>
         <DestinationFilter name='Highest Rating' order='0' activity={[activeTags, setActiveTag]}></DestinationFilter>
-        <DestinationFilter name='Cheapest' order='1' activity={[activeTags, setActiveTag]}></DestinationFilter>
-        <DestinationFilter name='Closest to you' order='2' activity={[activeTags, setActiveTag]}></DestinationFilter>
+        <DestinationFilter name='Wishlisted' order='1' activity={[activeTags, setActiveTag]}></DestinationFilter>
+        <DestinationFilter name='Newest' order='2' activity={[activeTags, setActiveTag]}></DestinationFilter>
+        <DestinationFilter name='Oldest' order='3' activity={[activeTags, setActiveTag]}></DestinationFilter>
+        <DestinationFilter name='Written by you' order='4' activity={[activeTags, setActiveTag]}></DestinationFilter>
       </div>
 
       {/* The Cards */}

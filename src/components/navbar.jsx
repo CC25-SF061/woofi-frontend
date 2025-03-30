@@ -4,6 +4,8 @@ import { FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
 import logo from "../assets/navbar/finalLogo.webp";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfile } from "../stores/userReducer";
+import { motion } from "framer-motion";
+import { slideInRight } from "../util/animation";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -140,114 +142,104 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Mobile Menu Overlay */}
         {mobileMenuOpen && (
-          <div className="lg:hidden fixed inset-0 z-50 flex justify-end">
-            {/* Backdrop Blur */}
+          <motion.div
+            className="lg:hidden fixed inset-0 z-50 flex justify-end"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.3 } }}
+          >
+            {/* Backdrop Blur dengan animasi */}
+            <motion.div
+              className="fixed inset-0 w-full bg-black/40 "
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
 
-            {/* Mobile Menu Content */}
-            <div
-              className={`relative w-full h-screen transform transition-transform duration-300 ease-in-out shadow-xl ${
-                mobileMenuOpen ? "translate-x-0" : "translate-x-full"
-              } right-0 fixed`}
+            {/* Mobile Menu */}
+            <motion.div
+              className="overflow-y-auto w-1/2 max-w-sm h-screen shadow-xl fixed right-0 bg-[#252527] text-white"
+              initial={{ x: "100%" }}
+              animate={{ x: 0, transition: { duration: 0.4, ease: "easeOut" } }}
+              exit={{
+                x: "100%",
+                transition: { duration: 0.3, ease: "easeIn" },
+              }}
             >
-              <div className="fixed inset-0 w-1/2 bg-black/40 backdrop-blur-xs" />
-              <div className="p-6 w-1/2 h-full overflow-y-auto translate-x-0 fixed inset-y-0 right-0 bg-[#252527]">
-                <div className="flex justify-end mb-8">
-                  <button
-                    className="hover:text-gray-300 transition"
-                    onClick={() => setMobileMenuOpen(false)}
+              {/* Tombol Close */}
+              <div className="flex justify-end p-6">
+                <button
+                  className="hover:text-gray-300 transition"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <FaTimes className="text-2xl" />
+                </button>
+              </div>
+
+              {/* Navigasi Menu */}
+              <ul className="space-y-6 px-6">
+                {[
+                  { name: "Home", path: "/" },
+                  { name: "Destination", path: "/destination" },
+                  { name: "Culture", path: "/culture" },
+                  { name: "Gallery", path: "/gallery" },
+                  { name: "Contact Us", path: "/contact-us" },
+                ].map((item, index) => (
+                  <motion.li
+                    key={index}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{
+                      opacity: 1,
+                      x: 0,
+                      transition: { delay: 0.1 * index },
+                    }}
                   >
-                    <FaTimes className="text-2xl" />
-                  </button>
-                </div>
-
-                <ul className="space-y-6">
-                  <li>
                     <Link
-                      to="/"
-                      className={`block hover:text-gray-300 ${
-                        location.pathname === "/" && "text-[#FFA666] font-bold"
-                      }`}
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Home
-                    </Link>
-                  </li>
-
-                  <li>
-                    <Link
-                      to="/destination"
-                      className={`block hover:text-gray-300 ${
-                        location.pathname === "/destination" &&
+                      to={item.path}
+                      className={`block hover:text-gray-300 transition ${
+                        location.pathname === item.path &&
                         "text-[#FFA666] font-bold"
                       }`}
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      Destination
+                      {item.name}
                     </Link>
-                  </li>
+                  </motion.li>
+                ))}
 
-                  <li>
-                    <Link
-                      to="/culture"
-                      className={`block hover:text-gray-300 ${
-                        location.pathname === "/culture" &&
-                        "text-[#FFA666] font-bold"
-                      }`}
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Culture & History
-                    </Link>
-                  </li>
-
-                  <li>
-                    <Link
-                      to="/gallery"
-                      className={`block hover:text-gray-300 ${
-                        location.pathname === "/gallery" &&
-                        "text-[#FFA666] font-bold"
-                      }`}
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Gallery
-                    </Link>
-                  </li>
-
-                  <li>
-                    <Link
-                      to="/contact-us"
-                      className={`hover:text-gray-300 transition ${
-                        location.pathname === "/contact-us"
-                          ? "text-[#FFA666] font-bold"
-                          : ""
-                      }`}
-                    >
-                      Contact Us
-                    </Link>
-                  </li>
-
-                  {!user.id ? (
+                {/* Sign In / Profile */}
+                {!user.id ? (
+                  <motion.li
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0, transition: { delay: 0.5 } }}
+                  >
                     <Link
                       to="/sign-in"
-                      className="block w-full px-4 py-2 border border-[#FFA666] rounded-md hover:bg-[#FFA666] hover:text-black text-center"
+                      className="block w-full px-4 py-2 border border-[#FFA666] rounded-md hover:bg-[#FFA666] hover:text-black text-center transition"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Sign In
                     </Link>
-                  ) : (
+                  </motion.li>
+                ) : (
+                  <motion.li
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0, transition: { delay: 0.5 } }}
+                  >
                     <Link to="/profile" className="flex items-center gap-2">
                       <img
-                        src={user.profileImage || "/default-avatar.png"} // Gunakan gambar default jika tidak ada
+                        src={user.profileImage || "/default-avatar.png"}
                         alt="Profile"
                         className="w-8 h-8 rounded-full border border-gray-300"
                       />
+                      <span>{user.name}</span>
                     </Link>
-                  )}
-                </ul>
-              </div>
-            </div>
-          </div>
+                  </motion.li>
+                )}
+              </ul>
+            </motion.div>
+          </motion.div>
         )}
       </div>
     </div>

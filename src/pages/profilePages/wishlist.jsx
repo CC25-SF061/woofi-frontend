@@ -6,10 +6,77 @@ import Sidebar from "../../components/profile/sidebar";
 import { HiX } from "react-icons/hi";
 import { RiMenu2Line } from "react-icons/ri";
 import { IoIosNotifications } from "react-icons/io";
+import DestinationCard from "../../components/destination/DestinationCard";
+import Image1 from "../../assets/cultureHistory/traditions/traditions3.webp";
+import Image2 from "../../assets/cultureHistory/traditional-dance/Dance3.webp";
+import Image3 from "../../assets/cultureHistory/traditional-dance/Dance3.webp";
+import Image4 from "../../assets/cultureHistory/traditional-dance/Dance3.webp";
+import Image5 from "../../assets/cultureHistory/traditional-dance/Dance3.webp";
+import Image6 from "../../assets/cultureHistory/traditional-dance/Dance3.webp";
+import Image7 from "../../assets/cultureHistory/traditional-dance/Dance3.webp";
+import Image8 from "../../assets/cultureHistory/traditional-dance/Dance3.webp";
 
 const Wishlist = () => {
-  const [showPassword, setShowPassword] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const wishlistDestinations = [
+    {
+      id: 1,
+      picture: [Image1],
+      name: "Bali Beach Paradise",
+      desc: "Enjoy the stunning beaches and vibrant culture of Bali...",
+      rating: 4.5,
+    },
+    {
+      id: 2,
+      picture: [Image2],
+      name: "Mount Fuji Adventure",
+      desc: "Experience the breathtaking view of Mount Fuji and its surroundings...",
+      rating: 4.7,
+    },
+    {
+      id: 3,
+      picture: [Image3],
+      name: "Mount Fuji Adventure",
+      desc: "Experience the breathtaking view of Mount Fuji and its surroundings...",
+      rating: 4.7,
+    },
+    {
+      id: 4,
+      picture: [Image4],
+      name: "Mount Fuji Adventure",
+      desc: "Experience the breathtaking view of Mount Fuji and its surroundings...",
+      rating: 4.7,
+    },
+    {
+      id: 5,
+      picture: [Image5],
+      name: "Mount Fuji Adventure",
+      desc: "Experience the breathtaking view of Mount Fuji and its surroundings...",
+      rating: 4.7,
+    },
+    {
+      id: 6,
+      picture: [Image6],
+      name: "Mount Fuji Adventure",
+      desc: "Experience the breathtaking view of Mount Fuji and its surroundings...",
+      rating: 4.7,
+    },
+    {
+      id: 7,
+      picture: [Image7],
+      name: "Mount Fuji Adventure",
+      desc: "Experience the breathtaking view of Mount Fuji and its surroundings...",
+      rating: 4.7,
+    },
+    {
+      id: 8,
+      picture: [Image8],
+      name: "Mount Fuji Adventure",
+      desc: "Experience the breathtaking view of Mount Fuji and its surroundings...",
+      rating: 4.7,
+    },
+  ];
 
   return (
     <div>
@@ -47,84 +114,28 @@ const Wishlist = () => {
         </div>
 
         <div className="flex flex-col flex-1 rounded-lg overflow-hidden shadow-lg bg-[#252527] p-5 m-5 lg:m-0 h-full lg:w-3/4 mt-20">
-          <div className="flex justify-between items-center border-white border-b-2 pb-5 rounded-b-lg">
-            <div className="flex flex-row gap-3 items-center">
-              <img src={Profile} alt="Profile" className="rounded-full w-20" />
-              <div className="flex flex-col gap-2">
-                <h1 className="font-inknut-antiqua text-3xl">User 1</h1>
-                <p className="font-quicksand">You have a writer role</p>
-              </div>
-            </div>
-            <div className="hidden lg:flex">
-              <button className="border-white border-2 text-white font-quicksand p-2 rounded-lg cursor-pointer">
-                <IoIosNotifications size={24} />
-              </button>
-            </div>
-          </div>
-
-          <h1 className="font-inknut-antiqua text-2xl text-center my-4">
+          <h1 className="text-center font-quicksand text-2xl">
             Wishlist Destination
           </h1>
+          <hr className="border-t-2 border-white my-3 rounded" />
 
-          <div className="flex flex-col gap-2">
-            <div className="flex flex-col w-xl">
-              <p className="font-quicksand text-white pb-2">Display Name</p>
-              <div className="flex gap-3 w-full">
-                <input
-                  type="text"
-                  // value={email}
-                  // onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Your Display Name"
-                  className="flex-3 p-3 font-quicksand rounded text-white border border-white focus:outline-none"
+          <div className="flex overflow-x-auto space-x-5 p-2 scrollbar-hide my-auto h-full">
+            {wishlistDestinations.map((destination) => (
+              <div className="flex-shrink-0 w-80">
+                <DestinationCard
+                  key={destination.id}
+                  id={destination.id}
+                  picture={destination.picture}
+                  name={destination.name}
+                  desc={destination.desc}
+                  rating={destination.rating}
+                  onclick={() =>
+                    console.log("Clicked on destination", destination.id)
+                  }
                 />
-                <button className="flex-1 p-3 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition">
-                  Edit
-                </button>
               </div>
-            </div>
-            <div className="flex flex-col w-xl">
-              <p className="font-quicksand text-white pb-2">Email</p>
-              <div className="flex gap-3 w-full">
-                <input
-                  type="email"
-                  // value={email}
-                  // onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Your Email"
-                  className="flex-3 p-3 font-quicksand rounded text-white border border-white focus:outline-none"
-                />
-                <button className="flex-1 p-3 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition">
-                  Edit
-                </button>
-              </div>
-            </div>
-            <div className="flex flex-col w-xl">
-              <p className="font-quicksand text-white pb-2">Password</p>
-              <div className="flex gap-3 w-full">
-                <div className="relative flex-1">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Password"
-                    className="w-full p-3 pr-10 font-quicksand rounded text-white border border-white bg-transparent focus:outline-none"
-                  />
-                  <button
-                    onClick={() => setShowPassword(!showPassword)}
-                    type="button"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white"
-                  >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
-                  </button>
-                </div>
-
-                <button className="w-38 p-3 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition">
-                  Edit
-                </button>
-              </div>
-            </div>
+            ))}
           </div>
-
-          <button className="w-38 mt-auto p-3 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition">
-            Logout
-          </button>
         </div>
       </div>
     </div>

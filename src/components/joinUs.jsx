@@ -2,13 +2,19 @@ import React from "react";
 import Image8 from "../assets/homePage/image8.webp";
 import LogoWoofi from "../assets/navbar/logo.webp";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { fadeInUp } from "../util/animation";
 
 const JoinUs = () => {
   return (
-    <div>
-      <div
+    <>
+      <motion.div
         className="relative flex flex-col items-center text-white py-12 bg-cover bg-center bg-no-repeat min-h-full"
         style={{ backgroundImage: `url(${Image8})` }}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+        variants={fadeInUp}
       >
         {/* Overlay Background */}
         <div className="absolute inset-0 bg-black opacity-40 z-10"></div>
@@ -38,8 +44,8 @@ const JoinUs = () => {
             Click Here
           </Link>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </>
   );
 };
 

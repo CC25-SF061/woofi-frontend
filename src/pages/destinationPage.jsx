@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../components/navbar";
 import SearchDestination from "../components/searchDestination";
+import DestinationMap from "../components/destination/destinationMap";
 import DestinationGroup from "../components/destination/destinationGroup";
 import JoinUs from "../components/joinUs";
 import Footer from "../components/footer";
@@ -74,7 +75,7 @@ const DestinationPage = () => {
   };
   
   const [destinationList, setDestinationList] = useState(destinations);
-  const [activeTags, setActiveTag] = useState([true, false, false]); // 0: Highest rating 1: Cheapest 2: Closest
+  const [activeTags, setActiveTag] = useState([true, false, false, false, false]); // 0: Highest Rating, 1: Wishlisted, 2: Newest, 3: Oldest, 4: Written by you
   
   useEffect(() => {
     onTagChange();
@@ -88,11 +89,13 @@ const DestinationPage = () => {
       <HeroSection
         backgroundImage={Image1}
         title="Explore the Best Destinations"
+        highlightedWord="Destinations"
         description="Explore the best places in Indonesia with complete information."
       />
       <div className="flex flex-col px-10 items-center bg-[#221122] w-full">
-        <SearchDestination></SearchDestination>
-        <DestinationGroup tags={[activeTags, setActiveTag]} destinations={destinationList}></DestinationGroup>
+        <SearchDestination />
+        <DestinationMap pos={[-1.748926, 120.0148634]} />
+        <DestinationGroup tags={[activeTags, setActiveTag]} destinations={destinationList} />
       </div>
       <JoinUs />
       <Footer />

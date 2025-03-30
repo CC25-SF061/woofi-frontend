@@ -21,6 +21,8 @@ import Profile from './pages/profilePages/profile';
 import Wishlist from './pages/profilePages/wishlist';
 import AddData from './pages/profilePages/addData';
 
+import Dashboard from './pages/adminPages/dashboard.jsx';
+
 import ScrollToTop from './scrollToTop';
 import PageWrapper from './components/loading/pageWrapper';
 import { Provider } from 'react-redux';
@@ -79,6 +81,10 @@ const App = () => {
                         <Route
                             path="/profile/add-data"
                             element={<AddData />}
+                        ></Route>
+                        <Route
+                            path="/admin"
+                            element={<Dashboard />}
                         ></Route>
                         <Route path="*" element={<NotFound />}></Route>
                     </Routes>

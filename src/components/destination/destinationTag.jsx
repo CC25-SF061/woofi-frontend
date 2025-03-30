@@ -17,8 +17,8 @@ const DestinationTag = ({name, order, activity}) => {
         whileHover={{ scale: 1.05 }}        
         className={
             isActive[order] ?
-            "rounded-md px-4 py-2 border-solid border-[2px] border-transparent bg-[#FFA666] box-border tracking-wider" :
-            "rounded-md px-4 py-2 border-solid border-[2px] border-white hover:bg-[#ffffff55] box-border tracking-wide"
+            "rounded-md px-4 py-2 border-solid border-[1px] border-transparent bg-[#FFA666] box-border tracking-wider" :
+            "rounded-md px-4 py-2 border-solid border-[1px] border-[#ffffffaa] hover:bg-[#ffffff55] box-border tracking-wide"
         } onMouseUp={onToggle} >
             <p className={
                 isActive[order] ?
