@@ -62,7 +62,7 @@ const DestinationCard = ({id, picture, name, desc, rating, onclick}) => {
             <div className='absolute bottom-3 right-3 flex flex-row'>
                 <div
                     className='text-white text-md font-light px-4 py-1 mt-1 ml-auto w-auto h-fit rounded-md border-solid border-[1px] border-[#ffffff88] tracking-wider cursor-pointer'
-                >See Detail</div>
+                >See Details</div>
             </div>
         </motion.div>
     );
