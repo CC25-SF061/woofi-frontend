@@ -1,26 +1,29 @@
 import React, { useState } from 'react';
 import Image1 from '../../assets/logIn/image5.webp';
 import BannerLogin from '../../components/bannerLogin';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import ErrorConstant from '../../util/ErrorConstant';
+import { useDispatch } from 'react-redux';
+import { setForgetPassword } from '../../stores/forgetPasswordReducer';
 
 const OtpPages = () => {
     const [otpCode, setOtpCode] = useState('');
     const params = useParams();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
     const handleSubmit = async (e) => {
         try {
             e.preventDefault();
             const data = Object.fromEntries(new FormData(e.target));
-            const response = await axios.post(
-                '/api/auth/verify-forget-password',
-                {
-                    hash: params.hash,
-                    otp: data.otp,
-                }
-            );
+            await axios.post('/api/auth/verify-forget-password', {
+                hash: params.hash,
+                otp: data.otp,
+            });
+            dispatch(setForgetPassword({ otp: data.otp, hash: params.hash }));
+            await navigate('/new-password');
         } catch (e) {
             console.log(e);
             const response = e?.response?.data?.payload;

@@ -10,12 +10,14 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import { useGoogleLogin } from '@react-oauth/google';
+import { useDispatch } from 'react-redux';
+import { setData } from '../../stores/userReducer';
 
 const Register = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [showPassword1, setShowPassword1] = useState(false);
     const navigate = useNavigate();
-
+    const dispatch = useDispatch();
     const [errState, setErrState] = useState({
         name: '',
         username: '',
@@ -81,9 +83,11 @@ const Register = () => {
         }
 
         try {
-            await axios.post('/api/auth/register', request);
+            const response = (await axios.post('/api/auth/register', request))
+                .data;
             e.target.reset();
-            navigate('/profile');
+            dispatch(setData(response.data));
+            await navigate('/profile');
         } catch (error) {
             if (
                 !(error instanceof AxiosError) ||
@@ -125,8 +129,10 @@ const Register = () => {
                     token: accessToken,
                 })
             ).data;
+            dispatch(setData(response.data));
             localStorage.setItem('token', response.data.token);
             //lakukan sesuatu jika berhasil kurang lebih sama dengan yang diatas
+            await navigate('/profile');
         } catch (e) {
             console.log(e);
         }
@@ -139,9 +145,9 @@ const Register = () => {
                         token: credentialsResponse.access_token,
                     })
                 ).data;
+                dispatch(setData(response.data));
                 localStorage.setItem('token', response.data.token);
-
-                //lakukan sesuatu jika berhasil
+                await navigate('/profile');
             } catch (e) {
                 if (!(e instanceof AxiosError)) {
                     return;
@@ -184,7 +190,9 @@ const Register = () => {
                             placeholder="Username"
                             name="username"
                             className={`w-full p-3 pr-12 font-quicksand rounded text-white border ${
-                                errState.username ? "border-red-500" : "border-white"
+                                errState.username
+                                    ? 'border-red-500'
+                                    : 'border-white'
                             } bg-transparent focus:outline-none focus:ring-2 focus:ring-[#FFA666]`}
                         />
                         <div className="min-h-[20px]">
@@ -202,7 +210,9 @@ const Register = () => {
                             placeholder="Display Name"
                             name="name"
                             className={`w-full p-3 pr-12 font-quicksand rounded text-white border ${
-                                errState.name ? "border-red-500" : "border-white"
+                                errState.name
+                                    ? 'border-red-500'
+                                    : 'border-white'
                             } bg-transparent focus:outline-none focus:ring-2 focus:ring-[#FFA666]`}
                         />
                         <div className="min-h-[20px]">
@@ -220,7 +230,9 @@ const Register = () => {
                             placeholder="Email"
                             name="email"
                             className={`w-full p-3 pr-12 font-quicksand rounded text-white border ${
-                                errState.email ? "border-red-500" : "border-white"
+                                errState.email
+                                    ? 'border-red-500'
+                                    : 'border-white'
                             } bg-transparent focus:outline-none focus:ring-2 focus:ring-[#FFA666]`}
                         />
                         <div className="min-h-[20px]">
@@ -238,7 +250,9 @@ const Register = () => {
                             name="password"
                             placeholder="Password"
                             className={`w-full p-3 pr-12 font-quicksand rounded text-white border ${
-                                errState.password ? "border-red-500" : "border-white"
+                                errState.password
+                                    ? 'border-red-500'
+                                    : 'border-white'
                             } bg-transparent focus:outline-none focus:ring-2 focus:ring-[#FFA666]`}
                         />
                         <button
@@ -263,7 +277,9 @@ const Register = () => {
                             placeholder="Password confirmation"
                             name="passwordConfirmation"
                             className={`w-full p-3 pr-12 font-quicksand rounded text-white border ${
-                                errState.passwordConfirmation ? "border-red-500" : "border-white"
+                                errState.passwordConfirmation
+                                    ? 'border-red-500'
+                                    : 'border-white'
                             } bg-transparent focus:outline-none focus:ring-2 focus:ring-[#FFA666]`}
                         />
                         <button

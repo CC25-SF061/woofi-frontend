@@ -7,20 +7,27 @@ import createAuthRefreshInterceptor from 'axios-auth-refresh';
 
 axios.defaults.baseURL = import.meta.env.VITE_SERVER_URL;
 const refreshAuthLogic = async (failedRequest) => {
-    const response = failedRequest.response.data;
-    if (response.message === 'Token expired') {
-        const refreshToken = (
-            await axios({
-                method: 'get',
-                url: '/api/auth/refresh-token',
-                withCredentials: true,
-            })
-        ).data;
-        localStorage.setItem('token', refreshToken.token);
-        return Promise.resolve();
+    try {
+        const response = failedRequest.response.data;
+        if (
+            response.message === 'Token expired' ||
+            response.message === 'Invalid token structure'
+        ) {
+            const refreshToken = (
+                await axios({
+                    method: 'get',
+                    url: '/api/auth/refresh-token',
+                    withCredentials: true,
+                })
+            ).data;
+            localStorage.setItem('token', refreshToken.token);
+            return Promise.resolve();
+        }
+        localStorage.setItem('token', null);
+        return Promise.reject();
+    } catch (e) {
+        return Promise.reject();
     }
-    localStorage.setItem('token', null);
-    return Promise.reject();
 };
 axios.interceptors.request.use(
     function (request) {

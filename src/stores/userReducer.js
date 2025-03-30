@@ -1,15 +1,26 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { showLoading, hideLoading } from './loadingReducer.js';
+import { nanoid } from 'nanoid';
+// import store from './store.js';
 
 export const fetchUserProfile = createAsyncThunk(
     'user/fetchUserProfile',
-    async (arg, { getState }) => {
+    async (arg, { getState, dispatch }) => {
         const state = getState();
-        if (!state.user.data.name) {
-            const response = (await axios.get('/api/user/profile')).data;
-            return response.data;
+        const keyLoading = nanoid();
+        if (!state.user.data.id && localStorage.getItem('token')) {
+            try {
+                dispatch(showLoading(keyLoading));
+                const response = (await axios.get('/api/user/profile')).data;
+                return response.data;
+            } catch (e) {
+                console.log(e);
+                return state.user.data;
+            } finally {
+                dispatch(hideLoading(keyLoading));
+            }
         }
-
         return state.user.data;
     }
 );
@@ -17,12 +28,28 @@ export const userSlice = createSlice({
     name: 'user',
     initialState: {
         data: {
+            profileImage: null,
+            username: null,
             name: null,
             email: null,
             id: null,
+            isVerified: null,
         },
     },
-    reducers: {},
+    reducers: {
+        setData: (state, action) => {
+            const { username, email, name, profileImage, isVerified, id } =
+                action.payload;
+            state.data = {
+                username,
+                email,
+                name,
+                profileImage,
+                isVerified,
+                id,
+            };
+        },
+    },
     extraReducers: (builder) => {
         builder.addCase(fetchUserProfile.fulfilled, (state, action) => {
             state.data = action.payload;
@@ -30,4 +57,5 @@ export const userSlice = createSlice({
     },
 });
 
+export const { setData } = userSlice.actions;
 export default userSlice.reducer;

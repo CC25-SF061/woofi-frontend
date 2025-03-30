@@ -9,11 +9,14 @@ import ErrorConstant from '../../util/ErrorConstant';
 import { ErrorToast } from '../../components/toast';
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 import { ToastContainer, toast } from 'react-toastify';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setData } from '../../stores/userReducer';
 
 const SignIn = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [invalidLoginState, setInvalidLoginState] = useState(null);
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const [errState, setErrState] = useState({
@@ -54,11 +57,12 @@ const SignIn = () => {
 
         const request = Object.fromEntries(new FormData(e.target));
         try {
-            await axios.post('/api/auth/login', request, {
+            const response = await axios.post('/api/auth/login', request, {
                 withCredentials: true,
             });
             //lakukan sesuatu ketika sukses
-            navigate("/profile");
+            dispatch(setData(response.data.data));
+            await navigate('/profile');
         } catch (e) {
             if (!(e instanceof AxiosError)) {
                 return;
@@ -86,8 +90,10 @@ const SignIn = () => {
                 { withCredentials: true }
             );
             localStorage.setItem('token', response.data.data.token);
+            dispatch(setData(response.data.data));
 
             //lakukan sesuatu jika berhasil
+            await navigate('/profile');
         } catch (e) {
             console.log(e);
         }
@@ -105,8 +111,10 @@ const SignIn = () => {
                 );
 
                 localStorage.setItem('token', response.data.data.token);
+                dispatch(setData(response.data.data));
+
                 //lakukan sesuatu jika berhasil kurang lebih sama dengan yang diatas
-                navigate("/profile");
+                await navigate('/profile');
             } catch (e) {
                 if (!(e instanceof AxiosError)) {
                     return;
@@ -142,7 +150,9 @@ const SignIn = () => {
                             placeholder="Email"
                             name="email"
                             className={`w-full p-3 pr-12 font-quicksand rounded text-white border ${
-                                errState.email ? "border-red-500" : "border-white"
+                                errState.email
+                                    ? 'border-red-500'
+                                    : 'border-white'
                             } bg-transparent focus:outline-none focus:ring-2 focus:ring-[#FFA666]`}
                         />
                         <div className="min-h-[20px]">
@@ -160,7 +170,9 @@ const SignIn = () => {
                             name="password"
                             placeholder="Password"
                             className={`w-full p-3 pr-12 font-quicksand rounded text-white border ${
-                                errState.password ? "border-red-500" : "border-white"
+                                errState.password
+                                    ? 'border-red-500'
+                                    : 'border-white'
                             } bg-transparent focus:outline-none focus:ring-2 focus:ring-[#FFA666]`}
                         />
                         <button
