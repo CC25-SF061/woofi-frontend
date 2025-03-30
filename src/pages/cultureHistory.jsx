@@ -32,7 +32,7 @@ const CultureHistory = () => {
           <h1 className="font-inknut-antiqua text-2xl w-fit mb-3">
             <span className="text-[#FFA666]">Cultural</span> Diversity
           </h1>
-          <hr className="border-t-2 border-white my-2" />
+          <hr className="border-t-2 border-white my-2 rounded" />
           <p className="font-quicksand mt-6 text-lg">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo
             soluta possimus facilis, tempora quisquam laboriosam sunt placeat
@@ -55,7 +55,7 @@ const CultureHistory = () => {
           <h1 className="font-inknut-antiqua text-2xl w-fit mb-3">
             Indonesian <span className="text-[#FFA666]">History</span>
           </h1>
-          <hr className="border-t-2 border-white my-2" />
+          <hr className="border-t-2 border-white my-2 rounded" />
           <p className="font-quicksand mt-6 text-lg">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam
             obcaecati eos asperiores fugit nisi necessitatibus maxime, possimus
