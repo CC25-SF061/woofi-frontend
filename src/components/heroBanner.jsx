@@ -4,7 +4,8 @@ import { Autoplay, Pagination, EffectFade } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
-
+import { motion } from "framer-motion";
+import { slideInLeft } from "../util/animation";
 const HeroBanner = ({
   backgroundImages = [],
   title,
@@ -15,7 +16,13 @@ const HeroBanner = ({
 
   return (
     <div className="relative w-full min-h-screen flex items-center justify-center">
-      <div className="absolute z-10 text-white px-8 lg:px-0">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+        variants={slideInLeft}
+        className="absolute z-10 text-white px-8 lg:px-0"
+      >
         <h1 className="mb-5 lg:text-5xl text-3xl font-inknut-antiqua uppercase">
           {titleParts.map((word, index) => (
             <span
@@ -27,7 +34,7 @@ const HeroBanner = ({
           ))}
         </h1>
         <p className="mb-5 lg:text-3xl text-xl font-quicksand">{description}</p>
-      </div>
+      </motion.div>
 
       <Swiper
         className="swiper absolute inset-0 w-full h-screen"

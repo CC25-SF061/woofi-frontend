@@ -9,7 +9,7 @@ const PageWrapper = ({ children }) => {
 
   useEffect(() => {
     setLoading(true);
-    const timeout = setTimeout(() => setLoading(false), 1000); // Simulasi loading selama 3 detik
+    const timeout = setTimeout(() => setLoading(false), 500); // Simulasi loading selama 3 detik
     return () => clearTimeout(timeout);
   }, [location]);
 

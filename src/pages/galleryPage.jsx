@@ -20,7 +20,8 @@ import "swiper/css";
 import "swiper/css/effect-fade";
 import "swiper/css/pagination";
 import { EffectFade, Autoplay, Pagination } from "swiper/modules";
-
+import { motion } from "framer-motion";
+import { fadeInUp } from "../util/animation";
 const images = [Image10, Image11, Image12];
 
 const galleryPage = () => {
@@ -33,7 +34,14 @@ const galleryPage = () => {
         highlightedWord="Gallery"
         description="Lorem Ipsum is simply dummy text of the printing and t"
       />
-      <div className="flex flex-col px-10 items-center bg-[#221122]">
+
+      <motion.div
+        className="flex flex-col px-10 items-center bg-[#221122]"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+        variants={fadeInUp}
+      >
         <div className="flex flex-col text-center items-center bg-[#252527] text-white px-7 py-12 gap-3 rounded-md">
           <h1 className="font-inknut-antiqua text-2xl">Title</h1>
           <p className="font-quicksand">
@@ -44,7 +52,13 @@ const galleryPage = () => {
           </p>
         </div>
 
-        <div className="relative w-full h-96 my-10 overflow-hidden rounded-xl">
+        <motion.div
+          className="relative w-full h-96 my-10 overflow-hidden rounded-xl"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          variants={fadeInUp}
+        >
           <Swiper
             modules={[EffectFade, Autoplay, Pagination]}
             effect="fade"
@@ -66,75 +80,81 @@ const galleryPage = () => {
               </SwiperSlide>
             ))}
           </Swiper>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+        <motion.div
+          className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          variants={fadeInUp}
+        >
           <div className="grid gap-4">
-            <div>
+            <div className="overflow-hidden">
               <img
-                className="h-auto max-w-full rounded-lg"
-                src={Image1}                
+                className="h-full hover:scale-105 transition-transform duration-300 w-full rounded-lg"
+                src={Image1}
                 alt=""
               />
             </div>
-            <div>
+            <div className="overflow-hidden">
               <img
-                className="h-auto max-w-full rounded-lg"
+                className="h-full hover:scale-105 transition-transform duration-300 w-full rounded-lg"
                 src={Image2}
                 alt=""
               />
             </div>
           </div>
           <div className="grid gap-4">
-            <div>
+            <div className="overflow-hidden">
               <img
-                className="h-auto max-w-full rounded-lg"
+                className="h-full hover:scale-105 transition-transform duration-300 w-full rounded-lg"
                 src={Image3}
                 alt=""
               />
             </div>
-            <div>
+            <div className="overflow-hidden">
               <img
-                className="h-auto max-w-full rounded-lg"
+                className="h-full hover:scale-105 transition-transform duration-300 w-full rounded-lg"
                 src={Image4}
                 alt=""
               />
             </div>
           </div>
           <div className="grid gap-4">
-            <div>
+            <div className="overflow-hidden">
               <img
-                className="h-auto max-w-full rounded-lg"
+                className="h-full hover:scale-105 transition-transform duration-300 w-full rounded-lg"
                 src={Image5}
                 alt=""
               />
             </div>
-            <div>
+            <div className="overflow-hidden">
               <img
-                className="h-auto max-w-full rounded-lg"
+                className="h-full hover:scale-105 transition-transform duration-300 w-full rounded-lg"
                 src={Image6}
                 alt=""
               />
             </div>
           </div>
           <div className="grid gap-4">
-            <div>
+            <div className="overflow-hidden">
               <img
-                className="h-auto max-w-full rounded-lg"
+                className="h-full hover:scale-105 transition-transform duration-300 w-full rounded-lg"
                 src={Image7}
                 alt=""
               />
             </div>
-            <div>
+            <div className="overflow-hidden">
               <img
-                className="h-auto max-w-full rounded-lg"
+                className="h-full hover:scale-105 transition-transform duration-300 w-full rounded-lg"
                 src={Image8}
                 alt=""
               />
             </div>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
       <JoinUs />
       <Footer />
     </div>

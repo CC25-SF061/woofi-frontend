@@ -1,4 +1,6 @@
 import React from "react";
+import { motion } from "framer-motion";
+import {slideInLeft } from "../util/animation";
 
 const heroSection = ({
   backgroundImage,
@@ -18,7 +20,13 @@ const heroSection = ({
       >
         <div className="hero-overlay"></div>
         <div className="hero-content text-neutral-content">
-          <div className="max-w-full px-8 lg:px-0">
+          <motion.div
+            className="max-w-full px-8 lg:px-0"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.1 }}
+            variants={slideInLeft}
+          >
             <h1 className="mb-5 lg:text-5xl text-3xl font-inknut-antiqua uppercase">
               {titleParts.map((word, index) => (
                 <span
@@ -32,7 +40,7 @@ const heroSection = ({
             <p className="mb-5 lg:text-3xl text-xl font-quicksand">
               {description}
             </p>
-          </div>
+          </motion.div>
         </div>
         <div
           className="absolute bottom-0 w-full"

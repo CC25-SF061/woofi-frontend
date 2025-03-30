@@ -7,6 +7,7 @@ export const fetchUserProfile = createAsyncThunk(
         const state = getState();
         if (!state.user.data.name) {
             const response = (await axios.get('/api/user/profile')).data;
+                console.log(response);
             return response.data;
         }
 

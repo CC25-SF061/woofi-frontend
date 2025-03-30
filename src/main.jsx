@@ -8,6 +8,7 @@ import createAuthRefreshInterceptor from 'axios-auth-refresh';
 axios.defaults.baseURL = import.meta.env.VITE_SERVER_URL;
 const refreshAuthLogic = async (failedRequest) => {
     const response = failedRequest.response.data;
+    console.log(response);
     if (response.message === 'Token expired') {
         const refreshToken = (
             await axios({
