@@ -59,8 +59,9 @@ const DestinationCard = ({ id, picture, name, desc, rating, onclick }) => {
         <h2 className="text-xl text-white tracking-wide truncate">{name}</h2>
         <p className="text-md text-[#aaa] line-clamp-3">{desc}</p>
       </div>
+      <div className="absolute bottom-3 w-full h-18" style={{background: 'linear-gradient(0deg, rgb(37, 37, 39) 0%, rgba(37, 37, 39, 0) 100%)'}}></div>
       <div className="absolute bottom-3 right-3">
-        <button className="text-white text-md font-light px-4 py-1 border border-[#ffffff88] rounded-md tracking-wider hover:bg-white hover:text-black transition-all">
+        <button className="text-white text-md font-light px-4 py-1 border border-[#ffffff88] rounded-md tracking-wider bg-[#252527] hover:bg-[#fff] hover:font-semibold hover:text-black transition-all">
           See Details
         </button>
       </div>
