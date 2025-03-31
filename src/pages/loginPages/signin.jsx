@@ -12,12 +12,15 @@ import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setData } from '../../stores/userReducer';
+import { FaSpinner } from 'react-icons/fa';
 
 const SignIn = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [invalidLoginState, setInvalidLoginState] = useState(null);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
+    const [loadingGoogle, setLoadingGoogle] = useState(false);
 
     const [errState, setErrState] = useState({
         password: null,
@@ -48,6 +51,7 @@ const SignIn = () => {
 
     const submit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
         setInvalidLoginState(null);
         setErrState((state) => ({
             ...state,
@@ -77,6 +81,8 @@ const SignIn = () => {
             if (err.errCode === ErrorConstant.ERR_INVALID_LOGIN) {
                 invalidLogin();
             }
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -101,6 +107,7 @@ const SignIn = () => {
 
     const googleLogin = useGoogleLogin({
         onSuccess: async (credentialResponse) => {
+            setLoadingGoogle(true);
             try {
                 const response = await axios.post(
                     '/api/auth/login/google',
@@ -123,6 +130,8 @@ const SignIn = () => {
                 if (response.errCode === ErrorConstant.ERR_USER_NOT_FOUND) {
                     await createUserGoogle(credentialResponse.access_token);
                 }
+            } finally {
+                setLoadingGoogle(false);
             }
         },
         onError: () => {
@@ -191,8 +200,15 @@ const SignIn = () => {
                         </div>
                     </div>
 
-                    <button className="w-full p-3 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition cursor-pointer">
-                        Login
+                    <button 
+                        className="w-full p-3 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition cursor-pointer flex justify-center font-bold"
+                        disabled={isLoading}
+                    >
+                        {isLoading ? (
+                            <FaSpinner className="animate-spin text-white text-2xl" />
+                        ) : (
+                            'Login'
+                        )}
                     </button>
 
                     <div className="w-full flex items-center my-4">
@@ -204,10 +220,16 @@ const SignIn = () => {
                     <button
                         onClick={googleLogin}
                         type="button"
-                        className="w-full flex items-center justify-center p-3 bg-white text-black font-quicksand rounded shadow hover:bg-gray-200 transition mb-4 cursor-pointer"
+                        className="w-full flex items-center justify-center p-3 bg-white text-black font-quicksand rounded shadow hover:bg-gray-300 transition mb-4 cursor-pointer font-bold"
+                        disabled={loadingGoogle}
                     >
-                        <FcGoogle className="text-2xl mr-2" /> Sign in with
-                        Google
+                        {loadingGoogle ? (
+                            <ImSpinner8 className="animate-spin text-xl" />
+                        ) : (
+                            <>
+                                <FcGoogle className="text-2xl mr-2" /> Sign in with Google
+                            </>
+                        )}
                     </button>
 
                     <Link

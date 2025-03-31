@@ -12,12 +12,15 @@ import { useNavigate } from 'react-router-dom';
 import { useGoogleLogin } from '@react-oauth/google';
 import { useDispatch } from 'react-redux';
 import { setData } from '../../stores/userReducer';
+import { FaSpinner } from 'react-icons/fa';
 
 const Register = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [showPassword1, setShowPassword1] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [isLoading, setIsLoading] = useState(false);
+    const [isGoogleLoading, setIsGoogleLoading] = useState(false);
     const [errState, setErrState] = useState({
         name: '',
         username: '',
@@ -53,6 +56,7 @@ const Register = () => {
 
     const submit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
         setErrState({
             name: '',
             username: '',
@@ -119,6 +123,8 @@ const Register = () => {
                 }));
                 showError('Username is already taken.');
             }
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -137,8 +143,10 @@ const Register = () => {
             console.log(e);
         }
     };
+
     const googleRegister = useGoogleLogin({
         onSuccess: async (credentialsResponse) => {
+            setIsGoogleLoading(true);
             try {
                 const response = (
                     await axios.post('/api/auth/register/google', {
@@ -160,6 +168,8 @@ const Register = () => {
                 ) {
                     await loginGoogle(credentialsResponse.access_token);
                 }
+            } finally {
+                setIsGoogleLoading(false);
             }
         },
         onError: () => {
@@ -298,8 +308,8 @@ const Register = () => {
                         </div>
                     </div>
 
-                    <button className="w-full p-3 bg-[#FFA666] text-black font-bold cursor-pointer font-quicksand rounded hover:bg-orange-500 transition">
-                        Register
+                    <button className="w-full p-3 bg-[#FFA666] text-black font-bold cursor-pointer font-quicksand rounded hover:bg-orange-500 transition flex justify-center items-center" disabled={isLoading}>
+                        {isLoading ? <FaSpinner className="animate-spin text-2xl" /> : 'Register'}
                     </button>
 
                     <div className="w-full flex items-center my-4">
@@ -311,10 +321,10 @@ const Register = () => {
                     <button
                         type="button"
                         onClick={googleRegister}
-                        className="w-full flex items-center justify-center p-3 bg-white text-black font-quicksand rounded shadow hover:bg-gray-200 transition mb-4 cursor-pointer"
+                        className="w-full flex font-bold items-center justify-center p-3 bg-white text-black font-quicksand rounded shadow hover:bg-gray-200 transition mb-4 cursor-pointer"
+                        disabled={isGoogleLoading}
                     >
-                        <FcGoogle className="text-2xl mr-2" />
-                        Register with Google
+                        {isGoogleLoading ? <FaSpinner className="animate-spin text-2xl" /> : <><FcGoogle className="text-2xl mr-2" /> Register with Google</>}
                     </button>
 
                     <p className="text-sm text-gray-400 mt-2">

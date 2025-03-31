@@ -10,6 +10,7 @@ import axios, { AxiosError } from "axios";
 import ErrorConstant from "../util/ErrorConstant";
 import { slideInUp } from "../util/animation";
 import { motion } from "framer-motion";
+import { FaSpinner } from "react-icons/fa";
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
@@ -25,6 +26,7 @@ const ContactUs = () => {
     reason: null,
     message: null,
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -48,6 +50,7 @@ const ContactUs = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
     const newErrState = { ...errState };
     let isValid = true;
@@ -64,6 +67,7 @@ const ContactUs = () => {
     setErrState(newErrState);
 
     if (!isValid) {
+      setIsSubmitting(false);
       return;
     }
 
@@ -81,7 +85,7 @@ const ContactUs = () => {
         position: "top-right",
       });
 
-      setFormData({ email: "", name: "", reason: "", message: "" }); // Reset form
+      setFormData({ email: "", name: "", reason: "", message: "" });
     } catch (e) {
       if (!(e instanceof AxiosError)) {
         return;
@@ -90,11 +94,16 @@ const ContactUs = () => {
 
       if (response?.errCode === ErrorConstant.ERR_INVALID_FIELD) {
         invalidFieldErr(response.fields);
+        toast.error("Please check the form fields for errors.", {
+          position: "top-right",
+        });
       } else {
-        toast.error("Something went wrong.", {
+        toast.error("Something went wrong. Please try again later.", {
           position: "top-right",
         });
       }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -201,8 +210,15 @@ const ContactUs = () => {
               </div>
             </div>
 
-            <button className="w-full mt-6 p-2 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition">
-              Submit
+            <button
+              className="w-full mt-6 p-2 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition cursor-pointer font-bold flex items-center justify-center"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <FaSpinner className="animate-spin text-2xl" />
+              ) : (
+                "Submit"
+              )}
             </button>
           </form>
 
