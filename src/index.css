@@ -41,3 +41,7 @@
   --font-julius-sans-one: 'JuliusSansOne', sans-serif;
   --font-inknut-antiqua: 'InknutAntiqua', serif;
 }
+
+html, body {
+  overflow-x: hidden;
+}

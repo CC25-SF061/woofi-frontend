@@ -4,13 +4,14 @@ export const fadeInUp = {
 };
 
 export const slideInLeft = {
-    hidden: { opacity: 0, x: -40 },
-    visible: { opacity: 1, x: 0, transition: { duration: 1, ease: "easeIn" } },
+    hidden: { opacity: 0, translateX: "-5%" },
+    visible: { opacity: 1, translateX: "0%", transition: { duration: 1, ease: "easeIn" } },
 };
 
+
 export const slideInRight = {
-    hidden: { opacity: 0, x: 40 },
-    visible: { opacity: 1, x: 0, transition: { duration: 1, ease: "easeIn" } },
+    hidden: { opacity: 0, translateX: "5%" },
+    visible: { opacity: 1, translateX: "0%", transition: { duration: 1, ease: "easeIn" } },
 };
 
 export const slideInUp = {
