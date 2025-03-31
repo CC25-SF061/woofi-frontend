@@ -17,7 +17,7 @@ const DestinationCard = ({ id, picture, name, desc, rating, onclick }) => {
   name = name.length > 27 ? name.substring(0, 24) + "..." : name;
 
   // Trimming long description
-  desc = desc.length > 93 ? desc.substring(0, 90) + "..." : desc;
+  desc = desc.length > 78 ? desc.substring(0, 75) + "..." : desc;
 
   return (
     <motion.div
@@ -26,7 +26,7 @@ const DestinationCard = ({ id, picture, name, desc, rating, onclick }) => {
       exit={{ opacity: 0, scale: 0.8 }}
       transition={{ duration: 0.25, ease: "backOut", delay: 0 }}
       whileHover={{ scale: 1.05 }}
-      className="relative bg-[#252527] font-quicksand rounded-lg w-full h-80 cursor-pointer shadow-[#18081825] shadow-lg overflow-hidden"
+      className="relative bg-[#252527] font-quicksand rounded-lg w-full h-85 cursor-pointer shadow-[#18081825] shadow-lg overflow-hidden"
       onMouseUpCapture={() => onclick(id)}
     >
       <div className="w-full h-40">
