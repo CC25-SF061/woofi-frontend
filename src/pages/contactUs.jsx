@@ -8,6 +8,8 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios, { AxiosError } from "axios";
 import ErrorConstant from "../util/ErrorConstant";
+import { slideInUp } from "../util/animation";
+import { motion } from "framer-motion";
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
@@ -99,7 +101,13 @@ const ContactUs = () => {
   return (
     <>
       <Navbar />
-      <section className="bg-[#221122] min-h-screen w-full flex items-center justify-center px-5 pb-5 pt-20 md:px-10 md:pb-10 md:pt-25">
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ amount: 0.2 }}
+        variants={slideInUp}
+        className="bg-[#221122] min-h-screen w-full flex items-center justify-center px-5 pb-5 pt-20 md:px-10 md:pb-10 md:pt-25"
+      >
         <div className="flex flex-col md:flex-row w-full max-w-5xl rounded-lg overflow-hidden shadow-lg bg-[#252527] min-h-[650px]">
           <form
             onSubmit={handleSubmit}
@@ -202,7 +210,7 @@ const ContactUs = () => {
             <BannerLogin imageSrc={Image1} />
           </div>
         </div>
-      </section>
+      </motion.section>
       <Footer />
       <ToastContainer />
     </>

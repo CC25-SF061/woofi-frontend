@@ -6,7 +6,7 @@ import HeroSection from "../components/heroSection";
 import Image1 from "../assets/cultureHistory/image1.webp";
 import JoinUs from "../components/joinUs";
 import CulturalDiversity from "../components/culture/culturalDiversity";
-import {fadeInUp } from "../util/animation";
+import {fadeInUp,slideInLeft,slideInRight } from "../util/animation";
 
 
 const CultureHistory = () => {
@@ -25,8 +25,8 @@ const CultureHistory = () => {
         className="relative bg-[#221122] text-white"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
-        variants={fadeInUp}
+        viewport={{ amount: 0.1 }}
+        variants={slideInLeft}
       >
         <div className="px-6 md:px-10 pt-20 pb-30">
           <h1 className="font-inknut-antiqua text-2xl w-fit mb-3">
@@ -48,8 +48,8 @@ const CultureHistory = () => {
         className="relative bg-[#252527] text-white"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
-        variants={fadeInUp}
+        viewport={{ amount: 0.1 }}
+        variants={slideInRight}
       >
         <div className="px-6 md:px-10 pt-20 pb-30 text-right">
           <h1 className="font-inknut-antiqua text-2xl w-fit mb-3">
