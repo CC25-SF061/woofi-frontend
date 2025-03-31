@@ -41,13 +41,13 @@ const Header = () => {
         <div className="bg-white h-10 w-[1px] mr-5"></div>
         <h1 className="text-2xl text-[#d2d2d2] tracking-wider">{name}</h1>
 
-        <div className="flex flex-row ml-auto gap-2">
+        <div className="flex flex-row ml-auto gap-3">
           <button onClick={showNotifs}>
-            <img src={LogoNotif} alt="Notification Icon" className="w-11 h-11 cursor-pointer" />
+            <img src={LogoNotif} alt="Notification Icon" className="w-9 h-9 cursor-pointer" />
           </button>
           <Link
             to="/profile"
-            className="flex items-center justify-center pb-2 cursor-pointer"
+            className="flex items-center justify-center cursor-pointer"
             >
             <img src={LogoProfile} alt="Profile Icon" className="w-9 h-9" />
           </Link>
