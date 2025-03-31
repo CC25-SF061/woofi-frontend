@@ -4,7 +4,7 @@ import { FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
 import logo from "../assets/navbar/finalLogo.webp";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfile } from "../stores/userReducer";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { slideInRight } from "../util/animation";
 
 const Navbar = () => {
@@ -40,111 +40,114 @@ const Navbar = () => {
   }, [mobileMenuOpen]);
 
   return (
-    <div
-      className={`fixed top-0 left-0 w-full transition-all duration-300 shadow-md z-50 py-4 ${
-        isScrolled
-          ? "bg-[#252527] shadow-lg"
-          : "bg-transparent backdrop-blur-md"
-      }`}
-    >
-      <div className="flex justify-between items-center px-6 font-quicksand text-white">
-        {/* Logo */}
-        <Link to="/">
-          <img src={logo} alt="Logo" className="lg:w-48 w-38 h-auto mr-2" />
-        </Link>
+    <div className="">
+      <div
+        className={`fixed top-0 left-0 w-full transition-all duration-300 shadow-md z-50 py-4 ${
+          isScrolled
+            ? "bg-[#252527] shadow-lg"
+            : "bg-transparent backdrop-blur-md"
+        }`}
+      >
+        <div className="flex justify-between items-center px-6 font-quicksand text-white">
+          {/* Logo */}
+          <Link to="/">
+            <img src={logo} alt="Logo" className="lg:w-48 w-38 h-auto mr-2" />
+          </Link>
 
-        {/* Hamburger Menu Button */}
-        <button
-          className="lg:hidden flex items-center gap-1 hover:text-gray-300 transition"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        >
-          {mobileMenuOpen ? (
-            <FaTimes className="text-2xl transform transition-transform duration-300" />
-          ) : (
-            <FaBars className="text-xl transform transition-transform duration-300" />
-          )}
-        </button>
-
-        {/* Desktop Menu */}
-        <div className="hidden lg:flex items-center space-x-6">
-          {/* ... (Desktop menu items sama seperti sebelumnya) */}
-          {/* Menu */}
-          <div className="hidden lg:flex items-center space-x-6">
-            <Link
-              to="/"
-              className={`hover:text-gray-300 transition ${
-                location.pathname === "/" ? "text-[#FFA666] font-bold" : ""
-              }`}
-            >
-              Home
-            </Link>
-
-            <Link
-              to="/destination"
-              className={`hover:text-gray-300 transition ${
-                location.pathname === "/destination"
-                  ? "text-[#FFA666] font-bold"
-                  : ""
-              }`}
-            >
-              Destination
-            </Link>
-
-            <Link
-              to="/culture"
-              className={`hover:text-gray-300 transition ${
-                location.pathname === "/culture"
-                  ? "text-[#FFA666] font-bold"
-                  : ""
-              }`}
-            >
-              Culture
-            </Link>
-
-            <Link
-              to="/gallery"
-              className={`hover:text-gray-300 transition ${
-                location.pathname === "/gallery"
-                  ? "text-[#FFA666] font-bold"
-                  : ""
-              }`}
-            >
-              Gallery
-            </Link>
-
-            <Link
-              to="/contact-us"
-              className={`hover:text-gray-300 transition ${
-                location.pathname === "/contact-us"
-                  ? "text-[#FFA666] font-bold"
-                  : ""
-              }`}
-            >
-              Contact Us
-            </Link>
-
-            {!user.id ? (
-              <Link
-                to="/sign-in"
-                className="px-4 py-2 border border-[#FFA666] rounded-md hover:bg-[#FFA666] hover:text-black transition"
-              >
-                Sign In
-              </Link>
+          {/* Hamburger Menu Button */}
+          <button
+            className="lg:hidden flex items-center gap-1 hover:text-gray-300 transition"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? (
+              <FaTimes className="text-2xl transform transition-transform duration-300" />
             ) : (
-              <Link to="/profile" className="flex items-center gap-2">
-                <img
-                  src={user.profileImage || "/default-avatar.png"} // Gunakan gambar default jika tidak ada
-                  alt="Profile"
-                  className="w-8 h-8 rounded-full border border-gray-300"
-                />
-              </Link>
+              <FaBars className="text-xl transform transition-transform duration-300" />
             )}
+          </button>
+
+          {/* Desktop Menu */}
+          <div className="hidden lg:flex items-center space-x-6">
+            {/* ... (Desktop menu items sama seperti sebelumnya) */}
+            {/* Menu */}
+            <div className="hidden lg:flex items-center space-x-6">
+              <Link
+                to="/"
+                className={`hover:text-gray-300 transition ${
+                  location.pathname === "/" ? "text-[#FFA666] font-bold" : ""
+                }`}
+              >
+                Home
+              </Link>
+
+              <Link
+                to="/destination"
+                className={`hover:text-gray-300 transition ${
+                  location.pathname === "/destination"
+                    ? "text-[#FFA666] font-bold"
+                    : ""
+                }`}
+              >
+                Destination
+              </Link>
+
+              <Link
+                to="/culture"
+                className={`hover:text-gray-300 transition ${
+                  location.pathname === "/culture"
+                    ? "text-[#FFA666] font-bold"
+                    : ""
+                }`}
+              >
+                Culture
+              </Link>
+
+              <Link
+                to="/gallery"
+                className={`hover:text-gray-300 transition ${
+                  location.pathname === "/gallery"
+                    ? "text-[#FFA666] font-bold"
+                    : ""
+                }`}
+              >
+                Gallery
+              </Link>
+
+              <Link
+                to="/contact-us"
+                className={`hover:text-gray-300 transition ${
+                  location.pathname === "/contact-us"
+                    ? "text-[#FFA666] font-bold"
+                    : ""
+                }`}
+              >
+                Contact Us
+              </Link>
+
+              {!user.id ? (
+                <Link
+                  to="/sign-in"
+                  className="px-4 py-2 border border-[#FFA666] rounded-md hover:bg-[#FFA666] hover:text-black transition"
+                >
+                  Sign In
+                </Link>
+              ) : (
+                <Link to="/profile" className="flex items-center gap-2">
+                  <img
+                    src={user.profileImage || "/default-avatar.png"} // Gunakan gambar default jika tidak ada
+                    alt="Profile"
+                    className="w-8 h-8 rounded-full border border-gray-300"
+                  />
+                </Link>
+              )}
+            </div>
           </div>
         </div>
-
+      </div>
+      <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            className="lg:hidden fixed inset-0 z-50 flex justify-end"
+            className="lg:hidden fixed inset-0 z-40 flex justify-end"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, transition: { duration: 0.3 } }}
@@ -159,7 +162,7 @@ const Navbar = () => {
 
             {/* Mobile Menu */}
             <motion.div
-              className="overflow-y-auto w-1/2 max-w-sm h-screen shadow-xl fixed right-0 bg-[#252527] text-white"
+              className="overflow-y-auto w-1/2 max-w-sm h-screen shadow-xl fixed right-0 bg-[#252527] text-white mt-15 pt-10"
               initial={{ x: "100%" }}
               animate={{ x: 0, transition: { duration: 0.4, ease: "easeOut" } }}
               exit={{
@@ -168,14 +171,6 @@ const Navbar = () => {
               }}
             >
               {/* Tombol Close */}
-              <div className="flex justify-end p-6">
-                <button
-                  className="hover:text-gray-300 transition"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <FaTimes className="text-2xl" />
-                </button>
-              </div>
 
               {/* Navigasi Menu */}
               <ul className="space-y-6 px-6">
@@ -241,7 +236,7 @@ const Navbar = () => {
             </motion.div>
           </motion.div>
         )}
-      </div>
+      </AnimatePresence>
     </div>
   );
 };
