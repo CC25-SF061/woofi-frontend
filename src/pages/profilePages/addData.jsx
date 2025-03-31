@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Profile from "../../assets/navbar/Icon.webp";
 import Sidebar from "../../components/profile/sidebar";
 import { HiX } from "react-icons/hi";
 import { RiMenu2Line } from "react-icons/ri";
@@ -115,27 +114,15 @@ const AddData = () => {
           <Sidebar />
         </div>
 
-        <div className="flex flex-col flex-1 rounded-lg overflow-hidden shadow-lg bg-[#252527] p-5 m-5 lg:m-0 h-full lg:w-3/4 mt-20">
-          <div className="flex justify-between items-center border-white border-b-2 pb-5 rounded-b-lg">
-            <div className="flex flex-row gap-3 items-center">
-              <img src={Profile} alt="Profile" className="rounded-full w-20" />
-              <div className="flex flex-col gap-2">
-                <h1 className="font-inknut-antiqua text-3xl">User 1</h1>
-                <p className="font-quicksand">You have a writer role</p>
-              </div>
-            </div>
-            <div className="hidden lg:flex">
-              <button className="border-white border-2 text-white font-quicksand p-2 rounded-lg cursor-pointer">
-                <IoIosNotifications size={24} />
-              </button>
-            </div>
+        <div className="flex flex-col flex-1 rounded-lg overflow-hidden shadow-lg bg-[#252527] m-5 lg:m-0 h-full lg:w-3/4 mt-20">
+          <div className="p-3 w-full shadow-md z-10">
+            <h1 className="text-center font-quicksand text-2xl">
+              Add Data Destination
+            </h1>
+            <hr className="border-t-2 border-white my-3 rounded" />
           </div>
 
-          <h1 className="font-inknut-antiqua text-2xl text-center my-4">
-            Add Destination
-          </h1>
-
-          <div className="overflow-y-auto">
+          <div className="overflow-y-auto p-3 ">
             <div className="flex flex-col lg:flex-row lg:gap-10">
               <div className="flex-1 flex flex-col lg:gap-2">
                 <div className="flex flex-col mb-2 lg:mb-0">
