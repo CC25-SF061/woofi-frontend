@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Navbar from "../components/navbar";
 import SearchDestination from "../components/searchDestination";
 import DestinationMap from "../components/destination/destinationMap";
@@ -71,15 +71,31 @@ const destinations = [
 const DestinationPage = () => {
 
   const onTagChange = () => {
+    if(activeTags[2] && activeTags[3]) { // both Newest & Oldest tag activation alternation mechanism
+      let newTags = [...activeTags];
+
+      if(prevActiveTags.current[2]) newTags[2] = false;
+      else newTags[3] = false;
+
+      prevActiveTags.current = newTags;
+      setActiveTag(newTags);
+
+      return;
+    }
+
     // TODO : API Recall and Refresh view
+    
+    prevActiveTags.current = activeTags;
   };
   
   const [destinationList, setDestinationList] = useState(destinations);
   const [mapDisplay, setMapDisplay] = useState({ pos: [-1.748926, 120.0148634], zoom: 5 });
   const [activeTags, setActiveTag] = useState([true, false, false, false, false]); // 0: Highest Rating, 1: Wishlisted, 2: Newest, 3: Oldest, 4: Written by you
-  
+  const prevActiveTags = useRef(activeTags);
+
   useEffect(() => {
     onTagChange();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTags]);
 
   return (
