@@ -5,7 +5,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
 import { motion } from "framer-motion";
-import { slideInLeft } from "../util/animation";
+import { slideInUp } from "../util/animation";
 const HeroBanner = ({
   backgroundImages = [],
   title,
@@ -19,8 +19,8 @@ const HeroBanner = ({
       <motion.div
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
-        variants={slideInLeft}
+        viewport={{ staggerChildren: 0.15, once: true, amount: 0.1 }}
+        variants={slideInUp}
         className="absolute z-10 text-white px-8 lg:px-0"
       >
         <h1 className="mb-5 lg:text-5xl text-3xl font-inknut-antiqua uppercase">
