@@ -47,9 +47,11 @@ const ForgetPassword = () => {
         setIsLoading(true);
 
         try {
-            const response = await axios.post('/api/auth/forget-password', {
-                email,
-            });
+            const response = (
+                await axios.post('/api/auth/forget-password', {
+                    email,
+                })
+            ).data;
             dispatch(setForgetEmail(email));
 
             toast.success(
