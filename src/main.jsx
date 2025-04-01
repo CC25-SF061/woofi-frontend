@@ -20,7 +20,7 @@ const refreshAuthLogic = async (failedRequest) => {
                     withCredentials: true,
                 })
             ).data;
-            localStorage.setItem('token', refreshToken.token);
+            localStorage.setItem('token', refreshToken.data.token);
             return Promise.resolve();
         }
         localStorage.setItem('token', null);
