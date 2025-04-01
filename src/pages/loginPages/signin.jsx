@@ -224,7 +224,7 @@ const SignIn = () => {
                         disabled={loadingGoogle}
                     >
                         {loadingGoogle ? (
-                            <ImSpinner8 className="animate-spin text-xl" />
+                            <FaSpinner className="animate-spin text-xl" />
                         ) : (
                             <>
                                 <FcGoogle className="text-2xl mr-2" /> Sign in with Google

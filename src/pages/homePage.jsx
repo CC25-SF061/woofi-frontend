@@ -7,14 +7,13 @@ import Image1 from "../assets/homePage/whatWoofi.webp";
 import Image2 from "../assets/homePage/image2.webp";
 import Image3 from "../assets/homePage/image3.webp";
 import Image4 from "../assets/homePage/image4.webp";
-import Image5 from "../assets/homePage/image5.webp";
-import Image6 from "../assets/homePage/image6.webp";
-import Image7 from "../assets/homePage/image7.webp";
+
 import SeeDetail from "../components/seeDetail";
 import JoinUs from "../components/joinUs";
 import { slideInLeft, slideInRight, fadeInUp } from "../util/animation";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import TopDestination from "../components/home/topDestination";
 
 const backgroundImages = [
   "/src/assets/homePage/borobudur.webp",
@@ -166,50 +165,7 @@ const home = () => {
         </motion.div>
       </div>
 
-      {/* Top Destination */}
-
-      <motion.div
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ amount: 0.1 }}
-        variants={fadeInUp}
-        className="relative flex flex-col items-center justify-center gap-4 py-12 px-8 lg:px-0 bg-[#252527] text-white"
-      >
-        <h1 className="font-inknut-antiqua lg:text-4xl text-2xl">
-          <span className="text-[#FFA666]">Top</span> Destination
-        </h1>
-        <p className="font-quicksand lg:text-2xl text-xl text-center">
-          Lorem Ipsum is simply dummy text of the printing and t
-        </p>
-
-        <div className="lg:w-5xl">
-          <Link
-            to="/destination"
-            className="underline underline-offset-2 font-quicksand mb-4"
-          >
-            See More Destination
-          </Link>
-          <div className="flex flex-col lg:flex-row items-center gap-5">
-            <SeeDetail
-              image={Image5}
-              title="Bromo Mountain"
-              description="Lorem Ipsum is simply dummy text of the printing and f"
-            />
-
-            <SeeDetail
-              image={Image6}
-              title="Raja Ampat"
-              description="Lorem Ipsum is simply dummy text of the printing and f"
-            />
-
-            <SeeDetail
-              image={Image7}
-              title="Komodo Island"
-              description="Lorem Ipsum is simply dummy text of the printing and f"
-            />
-          </div>
-        </div>
-      </motion.div>
+      <TopDestination/>
 
       <div
         className="absolute bottom-0 w-full"
