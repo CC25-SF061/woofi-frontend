@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import Profile from "../../assets/navbar/Icon.webp";
-import Notification from "../../assets/profile/ic--baseline-notifications-none.svg";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/profile/sidebar";
+import DestinationCard from "../../components/destination/DestinationCard";
 import { HiX } from "react-icons/hi";
 import { RiMenu2Line } from "react-icons/ri";
 import { IoIosNotifications } from "react-icons/io";
-import DestinationCard from "../../components/destination/DestinationCard";
+
+// Import gambar destinasi
 import Image1 from "../../assets/cultureHistory/traditions/traditions3.webp";
 import Image2 from "../../assets/cultureHistory/traditional-dance/Dance3.webp";
 import Image3 from "../../assets/cultureHistory/traditional-dance/Dance3.webp";
@@ -18,65 +18,70 @@ import Image8 from "../../assets/cultureHistory/traditional-dance/Dance3.webp";
 
 const Wishlist = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const navigate = useNavigate();
 
   const wishlistDestinations = [
     {
       id: 1,
-      picture: [Image1],
+      images: [Image1],
       name: "Bali Beach Paradise",
-      desc: "Enjoy the stunning beaches and vibrant culture of Bali...",
-      rating: 4.5,
+      detail: "Enjoy the stunning beaches and vibrant culture of Bali...",
+      avgRating: 4.5,
     },
     {
       id: 2,
-      picture: [Image2],
+      images: [Image2],
       name: "Mount Fuji Adventure",
-      desc: "Experience the breathtaking view of Mount Fuji and its surroundings...",
-      rating: 4.7,
+      detail: "Experience the breathtaking view of Mount Fuji and its surroundings...",
+      avgRating: 4.7,
     },
     {
       id: 3,
-      picture: [Image3],
-      name: "Mount Fuji Adventure",
-      desc: "Experience the breathtaking view of Mount Fuji and its surroundings...",
-      rating: 4.7,
+      images: [Image3],
+      name: "Tokyo City Lights",
+      detail: "Explore the dazzling nightlife and towering skyscrapers of Tokyo...",
+      avgRating: 4.8,
     },
     {
       id: 4,
-      picture: [Image4],
-      name: "Mount Fuji Adventure",
-      desc: "Experience the breathtaking view of Mount Fuji and its surroundings...",
-      rating: 4.7,
+      images: [Image4],
+      name: "Santorini Escape",
+      detail: "Relax in the beautiful white-washed houses with stunning sea views...",
+      avgRating: 4.6,
     },
     {
       id: 5,
-      picture: [Image5],
-      name: "Mount Fuji Adventure",
-      desc: "Experience the breathtaking view of Mount Fuji and its surroundings...",
-      rating: 4.7,
+      images: [Image5],
+      name: "Grand Canyon Hike",
+      detail: "Take an adventure through the vast and stunning Grand Canyon...",
+      avgRating: 4.9,
     },
     {
       id: 6,
-      picture: [Image6],
-      name: "Mount Fuji Adventure",
-      desc: "Experience the breathtaking view of Mount Fuji and its surroundings...",
-      rating: 4.7,
+      images: [Image6],
+      name: "Paris Romantic Getaway",
+      detail: "Experience the charm and romance of Paris with its historic landmarks...",
+      avgRating: 4.8,
     },
     {
       id: 7,
-      picture: [Image7],
-      name: "Mount Fuji Adventure",
-      desc: "Experience the breathtaking view of Mount Fuji and its surroundings...",
-      rating: 4.7,
+      images: [Image7],
+      name: "Swiss Alps Adventure",
+      detail: "Enjoy skiing and breathtaking mountain views in the Swiss Alps...",
+      avgRating: 4.7,
     },
     {
       id: 8,
-      picture: [Image8],
-      name: "Mount Fuji Adventure",
-      desc: "Experience the breathtaking view of Mount Fuji and its surroundings...",
-      rating: 4.7,
+      images: [Image8],
+      name: "New York City Vibes",
+      detail: "Discover the heart of the Big Apple with its bustling streets and iconic landmarks...",
+      avgRating: 4.6,
     },
   ];
+
+  const onCardClick = (id) => {
+    navigate(`/destination/${id}`);
+  };
 
   return (
     <div>
@@ -113,6 +118,7 @@ const Wishlist = () => {
           <Sidebar />
         </div>
 
+        {/* Wishlist Destination List */}
         <div className="flex flex-col flex-1 rounded-lg overflow-hidden shadow-lg bg-[#252527] m-5 lg:m-0 h-full lg:w-3/4 mt-20 overflow-y-auto">
           <div className="w-full max-w-6xl flex flex-col items-center relative">
             <div className="mb-5 sticky top-0 bg-[#252527] p-3 pb-0 w-full shadow-md z-10">
@@ -122,23 +128,19 @@ const Wishlist = () => {
               <hr className="border-t-2 border-white my-3 rounded" />
             </div>
 
+            {/* Destination Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 w-full px-5 pb-5">
-              {wishlistDestinations.map((destination) => (
-                <div
-                  key={destination.id}
-                  className="flex flex-col "
-                >
-                  <DestinationCard
-                    id={destination.id}
-                    picture={destination.picture}
-                    name={destination.name}
-                    desc={destination.desc}
-                    rating={destination.rating}
-                    onclick={() =>
-                      console.log("Clicked on destination", destination.id)
-                    }
-                  />
-                </div>
+              {wishlistDestinations.map((element, order) => (
+                <DestinationCard
+                  key={order}
+                  id={element.id}
+                  order={order}
+                  picture={element.images[0]}
+                  name={element.name}
+                  detail={element.detail}
+                  rating={element.avgRating}
+                  onclick={onCardClick}
+                />
               ))}
             </div>
           </div>
