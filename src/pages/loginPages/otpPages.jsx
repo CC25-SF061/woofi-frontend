@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Image1 from '../../assets/logIn/image5.webp';
 import BannerLogin from '../../components/bannerLogin';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -15,9 +15,22 @@ const OtpPages = () => {
     const [otpCode, setOtpCode] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
+    const [timer,setTimer] = useState(30);
+    const [canResend,setCanResend] = useState(false); 
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const email = useSelector((state) => state.forgetPassword.email);
+
+    useEffect(() => {
+        if (timer > 0) {
+            const countdown = setInterval(() => {
+                setTimer((prev) => prev - 1);
+            }, 1000);
+            return () => clearInterval(countdown);
+        } else {
+            setCanResend(true);
+        }
+    }, [timer]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -79,6 +92,10 @@ const OtpPages = () => {
         // setOtpCode('');
     };
 
+    const handleResendOTP = async(e)=>{
+        setCanResend(false);
+        setTimer(30);
+    }
     return (
         <div className="bg-[#221122] min-h-screen w-full flex items-center justify-center p-5 md:p-10">
             <div className="flex flex-col md:flex-row w-full max-w-5xl rounded-lg overflow-hidden shadow-lg bg-[#252527] min-h-[650px]">
@@ -132,6 +149,14 @@ const OtpPages = () => {
                         ) : (
                             'Submit'
                         )}
+                    </button>
+                    <button
+                        type="button"
+                        className="w-full p-3 mt-3 bg-gray-600 text-white font-bold cursor-pointer font-quicksand rounded hover:bg-gray-500 transition"
+                        disabled={!canResend}
+                        onClick={handleResendOTP}
+                    >
+                        {canResend ? 'Resend OTP' : `Resend OTP in ${timer}s`}
                     </button>
                     <p className="text-sm text-gray-400 mt-2 text-center">
                         Don't have an account yet?
