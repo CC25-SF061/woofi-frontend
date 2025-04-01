@@ -13,9 +13,8 @@ import { useSelector } from 'react-redux';
 
 const OtpPages = () => {
     const [otpCode, setOtpCode] = useState('');
-    const [isLoading, setIsLoading] = useState(false); 
+    const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
-    const params = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const email = useSelector((state) => state.forgetPassword.email);
@@ -35,13 +34,17 @@ const OtpPages = () => {
             e.preventDefault();
             const data = Object.fromEntries(new FormData(e.target));
             await axios.post('/api/auth/verify-forget-password', {
-                hash: params.hash,
+                hash: localStorage.getItem('passToken'),
                 otp: data.otp,
             });
-            dispatch(setForgetPassword({ otp: data.otp, hash: params.hash }));
+            dispatch(
+                setForgetPassword({
+                    otp: data.otp,
+                    hash: localStorage.getItem('passToken'),
+                })
+            );
             await navigate('/new-password');
         } catch (e) {
-            console.log(e);
             const response = e?.response?.data?.payload;
             if (
                 response.errCode === ErrorConstant.ERR_INVALID_FIELD ||
@@ -94,9 +97,12 @@ const OtpPages = () => {
                         We have sent an OTP Code
                     </p>
                     <p className="text-xl text-center md:text-sm font-quicksand text-white mb-6">
-                        to <span className="font-bold text-[#FFA666]">{email}</span>
+                        to{' '}
+                        <span className="font-bold text-[#FFA666]">
+                            {email}
+                        </span>
                     </p>
-                    <div className='w-full'>
+                    <div className="w-full">
                         <input
                             type="text"
                             placeholder="Enter OTP Code"
@@ -104,9 +110,7 @@ const OtpPages = () => {
                             value={otpCode}
                             onChange={(e) => setOtpCode(e.target.value)}
                             className={`w-full p-3 pr-12 font-quicksand rounded text-white border ${
-                                error 
-                                ? 'border-red-500' 
-                                : 'border-white'
+                                error ? 'border-red-500' : 'border-white'
                             } bg-transparent focus:outline-none focus:ring-2 focus:ring-[#FFA666]`}
                         />
                         <div className="min-h-[20px]">

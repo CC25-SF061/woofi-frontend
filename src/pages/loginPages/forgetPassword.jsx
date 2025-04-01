@@ -37,24 +37,32 @@ const ForgetPassword = () => {
 
         setErrState({ email: '' });
         if (attempts >= 3) {
-            toast.error('Too many attempts. Try again later.', { position: 'top-right', autoClose: 5000 });
+            toast.error('Too many attempts. Try again later.', {
+                position: 'top-right',
+                autoClose: 5000,
+            });
             return;
         }
 
         setIsLoading(true);
 
         try {
-            const response = await axios.post('/api/auth/forget-password', { email });
+            const response = await axios.post('/api/auth/forget-password', {
+                email,
+            });
             dispatch(setForgetEmail(email));
 
-            toast.success('If this email is registered, a reset link has been sent.', {
-                position: 'top-right',
-                autoClose: 3000,
-            });
-
+            toast.success(
+                'If this email is registered, a reset link has been sent.',
+                {
+                    position: 'top-right',
+                    autoClose: 3000,
+                }
+            );
+            localStorage.setItem('passToken', response.data.hash);
             setTimeout(() => {
-                navigate(`/otp-code/${response.data.hash}`);
-            }, 1500);
+                navigate(`/otp-code`);
+            }, 1000);
         } catch (e) {
             setAttempts(attempts + 1);
             const response = e?.response?.data?.payload;
@@ -62,7 +70,10 @@ const ForgetPassword = () => {
             if (response?.errCode === ErrorConstant.ERR_INVALID_FIELD) {
                 setErrState({ email: 'Email is invalid' });
             } else {
-                toast.error('Something went wrong. Please try again later.', { position: 'top-right', autoClose: 3000 });
+                toast.error('Something went wrong. Please try again later.', {
+                    position: 'top-right',
+                    autoClose: 3000,
+                });
             }
         } finally {
             setIsLoading(false);
@@ -76,7 +87,10 @@ const ForgetPassword = () => {
                     <BannerLogin imageSrc={Image1} />
                 </div>
 
-                <form onSubmit={handleSubmit} className="w-full md:w-1/2 flex flex-col justify-center items-center px-6 py-10 md:px-8 flex-grow">
+                <form
+                    onSubmit={handleSubmit}
+                    className="w-full md:w-1/2 flex flex-col justify-center items-center px-6 py-10 md:px-8 flex-grow"
+                >
                     <h1 className="text-2xl md:text-3xl font-inknut-antiqua text-white mb-6 text-center">
                         Forgot Password
                     </h1>
@@ -92,9 +106,9 @@ const ForgetPassword = () => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             className={`w-full p-3 pr-12 font-quicksand rounded text-white border ${
-                                errState.email 
-                                ? 'border-red-500' 
-                                : 'border-white'
+                                errState.email
+                                    ? 'border-red-500'
+                                    : 'border-white'
                             } bg-transparent focus:outline-none focus:ring-2 focus:ring-[#FFA666]`}
                         />
                         <div className="min-h-[20px]">
