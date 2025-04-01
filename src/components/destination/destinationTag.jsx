@@ -17,13 +17,13 @@ const DestinationTag = ({name, order, activity}) => {
         whileHover={{ scale: 1.05 }}        
         className={
             isActive[order] ?
-            "rounded-md px-4 py-2 border-solid border-[1px] border-transparent bg-[#FFA666] box-border tracking-wider" :
-            "rounded-md px-4 py-2 border-solid border-[1px] border-[#ffffffaa] hover:bg-[#ffffff55] box-border tracking-wide"
+            "rounded-md px-1 sm:px-2 py-1 md:px-4 md:py-2 border-solid border-[1px] border-transparent bg-[#FFA666] box-border tracking-tight md:tracking-wider" :
+            "rounded-md px-1 sm:px-2 py-1 md:px-4 md:py-2 border-solid border-[1px] border-[#ffffffaa] hover:bg-[#ffffff55] box-border md:tracking-wide"
         } onMouseUp={onToggle} >
             <p className={
                 isActive[order] ?
-                "text-white text-lg font-quicksand font-bold" :
-                "text-white text-lg font-quicksand"
+                "text-white text-xs md:text-lg font-quicksand font-bold" :
+                "text-white text-xs md:text-lg font-quicksand"
             }>
                 {name}
             </p>

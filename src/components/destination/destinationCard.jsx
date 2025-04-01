@@ -13,9 +13,6 @@ const DestinationCard = ({ id, picture, name, desc, rating, onclick }) => {
   // Decompound description paragraph
   desc = desc.replaceAll(/([\n]+[\w.,/ ]+)/g, "...");
 
-  // Trimming long title
-  name = name.length > 27 ? name.substring(0, 24) + "..." : name;
-
   // Trimming long description
   desc = desc.length > 78 ? desc.substring(0, 75) + "..." : desc;
 
@@ -26,7 +23,7 @@ const DestinationCard = ({ id, picture, name, desc, rating, onclick }) => {
       exit={{ opacity: 0, scale: 0.8 }}
       transition={{ duration: 0.25, ease: "backOut", delay: 0 }}
       whileHover={{ scale: 1.05 }}
-      className="relative bg-[#252527] font-quicksand rounded-lg w-full h-85 cursor-pointer shadow-[#18081825] shadow-lg overflow-hidden"
+      className="relative bg-[#252527] font-quicksand rounded-lg mx-auto w-73 sm:w-85 md:mx-0 md:w-full h-85 cursor-pointer shadow-[#18081825] shadow-lg overflow-hidden"
       onMouseUpCapture={() => onclick(id)}
     >
       <div className="w-full h-40">
@@ -56,12 +53,12 @@ const DestinationCard = ({ id, picture, name, desc, rating, onclick }) => {
             alt="Wishlist"
           />
         </div>
-        <h2 className="text-xl text-white tracking-wide truncate">{name}</h2>
-        <p className="text-md text-[#aaa] line-clamp-3">{desc}</p>
+        <h2 className="text-lg md:text-xl text-white tracking-wide truncate">{name}</h2>
+        <p className="text-md text-[#aaa] font-light line-clamp-3">{desc}</p>
       </div>
       <div className="absolute bottom-3 w-full h-18" style={{background: 'linear-gradient(0deg, rgb(37, 37, 39) 0%, rgba(37, 37, 39, 0) 100%)'}}></div>
       <div className="absolute bottom-3 right-3">
-        <button className="text-white text-md font-light px-4 py-1 border border-[#ffffff88] rounded-md tracking-wider bg-[#252527] hover:bg-[#fff] hover:font-semibold hover:text-black transition-all">
+        <button className="text-white text-xs md:text-md font-light px-4 py-1 border border-[#ffffff88] rounded-md tracking-wider bg-[#252527] hover:bg-[#fff] hover:font-semibold hover:text-black transition-all">
           See Details
         </button>
       </div>
