@@ -26,8 +26,9 @@ const ForgetPassword = () => {
                 position: 'top-right',
                 autoClose: 3000,
             });
+            localStorage.setItem('passToken', response.data.hash);
             setTimeout(() => {
-                navigate(`/otp-code/${response.data.hash}`);
+                navigate(`/otp-code`);
             }, 1000);
         } catch (e) {
             const response = e?.response?.data?.payload;

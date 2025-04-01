@@ -65,10 +65,7 @@ const App = () => {
                             path="/forget-password"
                             element={<ForgetPassword />}
                         ></Route>
-                        <Route
-                            path="/otp-code/:hash"
-                            element={<OtpPages />}
-                        ></Route>
+                        <Route path="/otp-code" element={<OtpPages />}></Route>
                         <Route
                             path="/new-password"
                             element={<NewPassword />}
@@ -82,10 +79,7 @@ const App = () => {
                             path="/profile/add-data"
                             element={<AddData />}
                         ></Route>
-                        <Route
-                            path="/admin"
-                            element={<Dashboard />}
-                        ></Route>
+                        <Route path="/admin" element={<Dashboard />}></Route>
                         <Route path="*" element={<NotFound />}></Route>
                     </Routes>
                 </Router>

@@ -11,7 +11,6 @@ import { setForgetPassword } from '../../stores/forgetPasswordReducer';
 
 const OtpPages = () => {
     const [otpCode, setOtpCode] = useState('');
-    const params = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const handleSubmit = async (e) => {
@@ -19,13 +18,17 @@ const OtpPages = () => {
             e.preventDefault();
             const data = Object.fromEntries(new FormData(e.target));
             await axios.post('/api/auth/verify-forget-password', {
-                hash: params.hash,
+                hash: localStorage.getItem('passToken'),
                 otp: data.otp,
             });
-            dispatch(setForgetPassword({ otp: data.otp, hash: params.hash }));
+            dispatch(
+                setForgetPassword({
+                    otp: data.otp,
+                    hash: localStorage.getItem('passToken'),
+                })
+            );
             await navigate('/new-password');
         } catch (e) {
-            console.log(e);
             const response = e?.response?.data?.payload;
             if (
                 response.errCode === ErrorConstant.ERR_INVALID_FIELD ||
