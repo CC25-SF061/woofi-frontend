@@ -7,14 +7,14 @@ import { motion } from "framer-motion";
 
 import countStars from "../../util/starRating";
 
-const DestinationCard = ({ id, picture, name, desc, rating, onclick }) => {
+const DestinationCard = ({ id, picture, name, detail, rating, onclick }) => {
   const { whole_rating, has_half_rating, empty_rating } = countStars(rating);
 
   // Decompound description paragraph
-  desc = desc.replaceAll(/([\n]+[\w.,/ ]+)/g, "...");
+  detail = detail.replaceAll(/([\n]+[\w.,/ ]+)/g, "...");
 
   // Trimming long description
-  desc = desc.length > 78 ? desc.substring(0, 75) + "..." : desc;
+  detail = detail.length > 78 ? detail.substring(0, 75) + "..." : detail;
 
   return (
     <motion.div
@@ -54,7 +54,7 @@ const DestinationCard = ({ id, picture, name, desc, rating, onclick }) => {
           />
         </div>
         <h2 className="text-lg md:text-xl text-white tracking-wide truncate">{name}</h2>
-        <p className="text-md text-[#aaa] font-light line-clamp-3">{desc}</p>
+        <p className="text-md text-[#aaa] font-light line-clamp-3">{detail}</p>
       </div>
       <div className="absolute bottom-3 w-full h-18" style={{background: 'linear-gradient(0deg, rgb(37, 37, 39) 0%, rgba(37, 37, 39, 0) 100%)'}}></div>
       <div className="absolute bottom-3 right-3">

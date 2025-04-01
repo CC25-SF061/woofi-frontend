@@ -10,7 +10,7 @@ import { motion } from "framer-motion";
 
 import countStars from "../../../util/starRating";
 
-const DestinationGroup = ({name, images, location, avgRating, countRating, isWishlist}) => {
+const DestinationGroup = ({name, images, location, province, avgRating, countRating, isWishlist}) => {
 
 	const [rating, setRating] = useState(avgRating);
 	const [wishlist, setWishlist] = useState(isWishlist);
@@ -47,7 +47,10 @@ const DestinationGroup = ({name, images, location, avgRating, countRating, isWis
 			</div>
 			<DestinationCollage images={images} onClick={handleShowMoreImages}></DestinationCollage>
 			<div className="flex flex-row">
-				<h2 className="text-white text-sm font-quicksand md:text-2xl">{location}</h2>
+				<div className="font-quicksand text-sm md:text-2xl pr-8">
+					<p className="text-white">{location}</p>
+					<p className="text-[#bbb] font-light">{province}</p>
+				</div>
 				<div className="flex flex-col ml-auto">
 					<div className="flex flex-row gap-2 md:gap-4">
 						{
