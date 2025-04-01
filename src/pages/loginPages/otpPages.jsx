@@ -8,12 +8,28 @@ import axios from 'axios';
 import ErrorConstant from '../../util/ErrorConstant';
 import { useDispatch } from 'react-redux';
 import { setForgetPassword } from '../../stores/forgetPasswordReducer';
+import { FaSpinner } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
 
 const OtpPages = () => {
     const [otpCode, setOtpCode] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const email = useSelector((state) => state.forgetPassword.email);
+
     const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+
+        if (!otpCode.trim()) {
+            setError('OTP field cannot be empty');
+            return;
+        }
+
+        setIsLoading(true);
+
         try {
             e.preventDefault();
             const data = Object.fromEntries(new FormData(e.target));
@@ -45,6 +61,8 @@ const OtpPages = () => {
                     autoClose: 3000,
                 });
             }
+        } finally {
+            setIsLoading(false); // Matikan loading setelah selesai
         }
 
         // if (!otpCode.trim()) {
@@ -79,19 +97,41 @@ const OtpPages = () => {
                         We have sent an OTP Code
                     </p>
                     <p className="text-xl text-center md:text-sm font-quicksand text-white mb-6">
-                        to your registered email
+                        to{' '}
+                        <span className="font-bold text-[#FFA666]">
+                            {email}
+                        </span>
                     </p>
-                    <input
-                        type="text"
-                        placeholder="Enter OTP Code"
-                        name="otp"
-                        className="w-full p-3 font-quicksand mb-4 rounded text-white border border-white bg-transparent focus:outline-none"
-                    />
+                    <div className="w-full">
+                        <input
+                            type="text"
+                            placeholder="Enter OTP Code"
+                            name="otp"
+                            value={otpCode}
+                            onChange={(e) => setOtpCode(e.target.value)}
+                            className={`w-full p-3 pr-12 font-quicksand rounded text-white border ${
+                                error ? 'border-red-500' : 'border-white'
+                            } bg-transparent focus:outline-none focus:ring-2 focus:ring-[#FFA666]`}
+                        />
+                        <div className="min-h-[20px]">
+                            {error && (
+                                <div className="error text-red-500 text-sm">
+                                    {error}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
                     <button
                         type="submit"
-                        className="w-full p-3 bg-[#FFA666] text-black font-bold cursor-pointer font-quicksand rounded hover:bg-orange-500 transition"
+                        className="w-full p-3 bg-[#FFA666] text-black font-bold cursor-pointer font-quicksand rounded hover:bg-orange-500 transition flex justify-center items-center mt-2"
+                        disabled={isLoading}
                     >
-                        Submit
+                        {isLoading ? (
+                            <FaSpinner className="animate-spin text-2xl" />
+                        ) : (
+                            'Submit'
+                        )}
                     </button>
                     <p className="text-sm text-gray-400 mt-2 text-center">
                         Don't have an account yet?

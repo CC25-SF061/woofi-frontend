@@ -75,12 +75,11 @@ const DestinationPage = () => {
   };
   
   const [destinationList, setDestinationList] = useState(destinations);
+  const [mapDisplay, setMapDisplay] = useState({ pos: [-1.748926, 120.0148634], zoom: 5 });
   const [activeTags, setActiveTag] = useState([true, false, false, false, false]); // 0: Highest Rating, 1: Wishlisted, 2: Newest, 3: Oldest, 4: Written by you
   
   useEffect(() => {
     onTagChange();
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTags]);
 
   return (
@@ -94,7 +93,7 @@ const DestinationPage = () => {
       />
       <div className="flex flex-col px-10 items-center bg-[#221122] w-full">
         <SearchDestination />
-        <DestinationMap pos={[-1.748926, 120.0148634]} />
+        <DestinationMap pos={mapDisplay.pos} zoom={mapDisplay.zoom} />
         <DestinationGroup tags={[activeTags, setActiveTag]} destinations={destinationList} />
       </div>
       <JoinUs />

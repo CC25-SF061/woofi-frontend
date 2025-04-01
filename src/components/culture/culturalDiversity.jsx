@@ -12,14 +12,14 @@ const CulturalDiversity = () => {
   const displayedData = culturalData[selectedCategory] || [];
 
   return (
-    <motion.section 
-      className="lg:w-full lg:justify-center md:px-10 lg:flex bg-[#221122] text-white"
-      initial="hidden"
-      whileInView="visible"
-      viewport={{once: true,amount:0.1}}
-      variants={fadeInUp}
-     >
-      <div className="lg:max-w-5xl py-20 lg:px-8">
+    <section className="lg:w-full lg:justify-center md:px-10 lg:flex bg-[#221122] text-white">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ amount: 0.1 }}
+        variants={fadeInUp}
+        className="lg:max-w-5xl py-20 lg:px-8"
+      >
         <h1 className="font-inknut-antiqua text-3xl text-center">
           <span className="text-[#FFA666]">Cultural Diversity</span> of
           Indonesia
@@ -31,9 +31,7 @@ const CulturalDiversity = () => {
             <motion.button
               key={category}
               className={`lg:px-6 px-4 py-2 text-lg font-quicksand hover:underline transition-all tracking-wide cursor-pointer ${
-                selectedCategory === category
-                  ? "font-bold text-[#FFA666]"
-                  : ""
+                selectedCategory === category ? "font-bold text-[#FFA666]" : ""
               }`}
               onClick={() => setSelectedCategory(category)}
               whileTap={{ scale: 0.9 }}
@@ -88,8 +86,8 @@ const CulturalDiversity = () => {
           item={selectedItem}
           onClose={() => setSelectedItem(null)}
         />
-      </div>
-    </motion.section>
+      </motion.div>
+    </section>
   );
 };
 

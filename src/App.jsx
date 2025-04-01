@@ -22,6 +22,8 @@ import Wishlist from './pages/profilePages/wishlist';
 import AddData from './pages/profilePages/addData';
 
 import Dashboard from './pages/adminPages/dashboard.jsx';
+import UsersDashboard from './pages/adminPages/user_dashboard.jsx';
+import PostsDashboard from './pages/adminPages/post_dashboard.jsx';
 
 import ScrollToTop from './scrollToTop';
 import PageWrapper from './components/loading/pageWrapper';
@@ -80,6 +82,14 @@ const App = () => {
                             element={<AddData />}
                         ></Route>
                         <Route path="/admin" element={<Dashboard />}></Route>
+                        <Route
+                            path="/admin/users"
+                            element={<UsersDashboard />}
+                        ></Route>
+                        <Route
+                            path="/admin/posts"
+                            element={<PostsDashboard />}
+                        ></Route>
                         <Route path="*" element={<NotFound />}></Route>
                     </Routes>
                 </Router>

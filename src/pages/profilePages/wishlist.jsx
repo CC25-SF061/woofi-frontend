@@ -113,28 +113,34 @@ const Wishlist = () => {
           <Sidebar />
         </div>
 
-        <div className="flex flex-col flex-1 rounded-lg overflow-hidden shadow-lg bg-[#252527] p-5 m-5 lg:m-0 h-full lg:w-3/4 mt-20">
-          <h1 className="text-center font-quicksand text-2xl">
-            Wishlist Destination
-          </h1>
-          <hr className="border-t-2 border-white my-3 rounded" />
+        <div className="flex flex-col flex-1 rounded-lg overflow-hidden shadow-lg bg-[#252527] m-5 lg:m-0 h-full lg:w-3/4 mt-20 overflow-y-auto">
+          <div className="w-full max-w-6xl flex flex-col items-center relative">
+            <div className="mb-5 sticky top-0 bg-[#252527] p-3 pb-0 w-full shadow-md z-10">
+              <h1 className="text-center font-quicksand text-2xl">
+                Wishlist Destination
+              </h1>
+              <hr className="border-t-2 border-white my-3 rounded" />
+            </div>
 
-          <div className="flex overflow-x-auto space-x-5 p-2 scrollbar-hide my-auto h-full">
-            {wishlistDestinations.map((destination) => (
-              <div className="flex-shrink-0 w-80">
-                <DestinationCard
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 w-full px-5 pb-5">
+              {wishlistDestinations.map((destination) => (
+                <div
                   key={destination.id}
-                  id={destination.id}
-                  picture={destination.picture}
-                  name={destination.name}
-                  desc={destination.desc}
-                  rating={destination.rating}
-                  onclick={() =>
-                    console.log("Clicked on destination", destination.id)
-                  }
-                />
-              </div>
-            ))}
+                  className="flex flex-col "
+                >
+                  <DestinationCard
+                    id={destination.id}
+                    picture={destination.picture}
+                    name={destination.name}
+                    desc={destination.desc}
+                    rating={destination.rating}
+                    onclick={() =>
+                      console.log("Clicked on destination", destination.id)
+                    }
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

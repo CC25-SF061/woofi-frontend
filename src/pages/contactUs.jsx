@@ -8,6 +8,9 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios, { AxiosError } from "axios";
 import ErrorConstant from "../util/ErrorConstant";
+import { slideInUp } from "../util/animation";
+import { motion } from "framer-motion";
+import { FaSpinner } from "react-icons/fa";
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
@@ -23,6 +26,7 @@ const ContactUs = () => {
     reason: null,
     message: null,
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -46,6 +50,7 @@ const ContactUs = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
     const newErrState = { ...errState };
     let isValid = true;
@@ -62,6 +67,7 @@ const ContactUs = () => {
     setErrState(newErrState);
 
     if (!isValid) {
+      setIsSubmitting(false);
       return;
     }
 
@@ -79,7 +85,7 @@ const ContactUs = () => {
         position: "top-right",
       });
 
-      setFormData({ email: "", name: "", reason: "", message: "" }); // Reset form
+      setFormData({ email: "", name: "", reason: "", message: "" });
     } catch (e) {
       if (!(e instanceof AxiosError)) {
         return;
@@ -88,18 +94,29 @@ const ContactUs = () => {
 
       if (response?.errCode === ErrorConstant.ERR_INVALID_FIELD) {
         invalidFieldErr(response.fields);
+        toast.error("Please check the form fields for errors.", {
+          position: "top-right",
+        });
       } else {
-        toast.error("Something went wrong.", {
+        toast.error("Something went wrong. Please try again later.", {
           position: "top-right",
         });
       }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
     <>
       <Navbar />
-      <section className="bg-[#221122] min-h-screen w-full flex items-center justify-center px-5 pb-5 pt-20 md:px-10 md:pb-10 md:pt-25">
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ amount: 0.2 }}
+        variants={slideInUp}
+        className="bg-[#221122] min-h-screen w-full flex items-center justify-center px-5 pb-5 pt-20 md:px-10 md:pb-10 md:pt-25"
+      >
         <div className="flex flex-col md:flex-row w-full max-w-5xl rounded-lg overflow-hidden shadow-lg bg-[#252527] min-h-[650px]">
           <form
             onSubmit={handleSubmit}
@@ -193,8 +210,15 @@ const ContactUs = () => {
               </div>
             </div>
 
-            <button className="w-full mt-6 p-2 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition">
-              Submit
+            <button
+              className="w-full mt-6 p-2 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition cursor-pointer font-bold flex items-center justify-center"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <FaSpinner className="animate-spin text-2xl" />
+              ) : (
+                "Submit"
+              )}
             </button>
           </form>
 
@@ -202,7 +226,7 @@ const ContactUs = () => {
             <BannerLogin imageSrc={Image1} />
           </div>
         </div>
-      </section>
+      </motion.section>
       <Footer />
       <ToastContainer />
     </>

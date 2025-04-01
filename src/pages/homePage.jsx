@@ -7,11 +7,13 @@ import Image1 from "../assets/homePage/whatWoofi.webp";
 import Image2 from "../assets/homePage/image2.webp";
 import Image3 from "../assets/homePage/image3.webp";
 import Image4 from "../assets/homePage/image4.webp";
-import Image5 from "../assets/homePage/image5.webp";
-import Image6 from "../assets/homePage/image6.webp";
-import Image7 from "../assets/homePage/image7.webp";
+
 import SeeDetail from "../components/seeDetail";
 import JoinUs from "../components/joinUs";
+import { slideInLeft, slideInRight, fadeInUp } from "../util/animation";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import TopDestination from "../components/home/topDestination";
 
 const backgroundImages = [
   "/src/assets/homePage/borobudur.webp",
@@ -42,7 +44,13 @@ const home = () => {
         ></div>
 
         <div className="flex flex-col lg:flex-row items-center justify-center px-8 py-20 lg:py-0 gap-8 lg:gap-0 lg:px-0">
-          <div className="flex flex-col items-center justify-center lg:w-1/3 text-center px-8">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ amount: 0.1 }}
+            variants={slideInLeft}
+            className="flex flex-col items-center justify-center lg:w-1/3 text-center px-8"
+          >
             <h1 className="text-white lg:text-2xl text-xl font-inknut-antiqua">
               What is <span className="text-[#FFA666]">Woofi?</span>
             </h1>
@@ -50,9 +58,15 @@ const home = () => {
             <p className="text-white max-w-xs font-quicksand">
               Lorem Ipsum is simply dummy text of the printing and t
             </p>
-          </div>
+          </motion.div>
 
-          <div className="relative lg:w-1/3 h-full flex justify-center">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ amount: 0.1 }}
+            variants={fadeInUp}
+            className="relative lg:w-1/3 h-full flex justify-center"
+          >
             <div className="relative w-full h-full">
               <img
                 src={Image1}
@@ -66,9 +80,15 @@ const home = () => {
               alt="Logo Woofi"
               className="h-auto w-38 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 "
             />
-          </div>
+          </motion.div>
 
-          <div className="flex flex-col items-center justify-center lg:w-1/3 text-center px-8">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ amount: 0.1 }}
+            variants={slideInRight}
+            className="flex flex-col items-center justify-center lg:w-1/3 text-center px-8"
+          >
             <h1 className="text-white lg:text-2xl text-xl font-inknut-antiqua">
               Why Choose <span className="text-[#FFA666]">Woofi?</span>
             </h1>
@@ -76,7 +96,7 @@ const home = () => {
             <p className="text-white max-w-xs font-quicksand">
               Lorem Ipsum is simply dummy text of the printing and t
             </p>
-          </div>
+          </motion.div>
         </div>
 
         <div
@@ -91,7 +111,13 @@ const home = () => {
 
       {/* Explore your favorite dentination */}
       <div className="relative flex flex-col lg:flex-row w-full min-h-screen items-center justify-center bg-[#221122] px-8 gap-8 lg:gap-8 py-12 pt-0 lg:pt-12">
-        <div className="flex flex-col items-center justify-center lg:w-2/5 text-center text-white gap-6">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ amount: 0.1 }}
+          variants={slideInLeft}
+          className="flex flex-col items-center justify-center lg:w-2/5 text-center text-white gap-6"
+        >
           <img src={LogoWoofi} alt="Logo Woofi" className="w-38" />
           <hr className="w-full border-t-2 border-white" />
           <h2 className="font-inknut-antiqua lg:text-3xl text-xl">
@@ -104,8 +130,15 @@ const home = () => {
           <button className="font-quicksand text-lg p-2 border-2 border-white rounded-md border-solid">
             Start Exploring
           </button>
-        </div>
-        <div className="flex lg:w-3/5 flex-col lg:flex-row h-full items-center gap-4">
+        </motion.div>
+
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ amount: 0.1 }}
+          variants={slideInRight}
+          className="flex lg:w-3/5 flex-col lg:flex-row h-full items-center gap-4"
+        >
           <div className="relative w-xs lg:w-1/3 h-full rounded-lg overflow-hidden">
             <img
               src={Image2}
@@ -129,50 +162,19 @@ const home = () => {
             />
             <div className="absolute inset-0 bg-black opacity-40"></div>
           </div>
-        </div>
+        </motion.div>
       </div>
 
-      {/* Top Destination */}
-      <div className="relative flex flex-col items-center justify-center gap-4 py-12 px-8 lg:px-0 bg-[#252527] text-white">
-        <h1 className="font-inknut-antiqua lg:text-4xl text-2xl">
-          <span className="text-[#FFA666]">Top</span> Destination
-        </h1>
-        <p className="font-quicksand lg:text-2xl text-xl text-center">
-          Lorem Ipsum is simply dummy text of the printing and t
-        </p>
-        <div className="lg:w-5xl">
-          <p className="underline underline-offset-2 font-quicksand mb-4">
-            See More Destination
-          </p>
-          <div className="flex flex-col lg:flex-row items-center gap-5">
-            <SeeDetail
-              image={Image5}
-              title="Bromo Mountain"
-              description="Lorem Ipsum is simply dummy text of the printing and f"
-            />
+      <TopDestination/>
 
-            <SeeDetail
-              image={Image6}
-              title="Raja Ampat"
-              description="Lorem Ipsum is simply dummy text of the printing and f"
-            />
-
-            <SeeDetail
-              image={Image7}
-              title="Komodo Island"
-              description="Lorem Ipsum is simply dummy text of the printing and f"
-            />
-          </div>
-        </div>
-        <div
-          className="absolute bottom-0 w-full"
-          style={{
-            background:
-              "linear-gradient(to top, #221122 0%, rgba(34, 17, 34, 0.00) 61%)",
-            height: "30%",
-          }}
-        ></div>
-      </div>
+      <div
+        className="absolute bottom-0 w-full"
+        style={{
+          background:
+            "linear-gradient(to top, #221122 0%, rgba(34, 17, 34, 0.00) 61%)",
+          height: "30%",
+        }}
+      ></div>
 
       <JoinUs></JoinUs>
       <Footer></Footer>

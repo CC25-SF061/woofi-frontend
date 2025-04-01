@@ -13,7 +13,7 @@ const JoinUs = () => {
         style={{ backgroundImage: `url(${Image8})` }}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
+        viewport={{ amount: 0.1 }}
         variants={fadeInUp}
       >
         {/* Overlay Background */}

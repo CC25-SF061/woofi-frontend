@@ -6,44 +6,77 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import ErrorConstant from '../../util/ErrorConstant';
+import { FaSpinner } from 'react-icons/fa';
+import { useDispatch } from 'react-redux';
+import { setForgetEmail } from '../../stores/forgetPasswordReducer';
 
 const ForgetPassword = () => {
     const [email, setEmail] = useState('');
+    const [errState, setErrState] = useState({ email: '' });
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
+    const [attempts, setAttempts] = useState(0);
+    const dispatch = useDispatch();
+
+    const isValidEmail = (email) => {
+        return /\S+@\S+\.\S+/.test(email);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        try {
-            const form = Object.fromEntries(new FormData(e.target));
-            const response = (
-                await axios.post('/api/auth/forget-password', {
-                    email: form.email,
-                })
-            ).data;
+        if (!email) {
+            setErrState({ email: 'Email is required' });
+            return;
+        }
 
-            toast.success('Password reset link sent successfully', {
+        if (!isValidEmail(email)) {
+            setErrState({ email: 'Invalid email format' });
+            return;
+        }
+
+        setErrState({ email: '' });
+        if (attempts >= 3) {
+            toast.error('Too many attempts. Try again later.', {
                 position: 'top-right',
-                autoClose: 3000,
+                autoClose: 5000,
             });
+            return;
+        }
+
+        setIsLoading(true);
+
+        try {
+            const response = await axios.post('/api/auth/forget-password', {
+                email,
+            });
+            dispatch(setForgetEmail(email));
+
+            toast.success(
+                'If this email is registered, a reset link has been sent.',
+                {
+                    position: 'top-right',
+                    autoClose: 3000,
+                }
+            );
             localStorage.setItem('passToken', response.data.hash);
             setTimeout(() => {
                 navigate(`/otp-code`);
             }, 1000);
         } catch (e) {
+            setAttempts(attempts + 1);
             const response = e?.response?.data?.payload;
-            if (!response.errCode === ErrorConstant.ERR_INVALID_FIELD) {
-                toast.error('Email is invalid', {
-                    position: 'top-right',
-                    autoClose: 3000,
-                });
-                return;
+
+            if (response?.errCode === ErrorConstant.ERR_INVALID_FIELD) {
+                setErrState({ email: 'Email is invalid' });
             } else {
-                toast.error('Something went wrong', {
+                toast.error('Something went wrong. Please try again later.', {
                     position: 'top-right',
                     autoClose: 3000,
                 });
             }
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -62,21 +95,43 @@ const ForgetPassword = () => {
                         Forgot Password
                     </h1>
                     <p className="text-xl text-center md:text-lg font-quicksand text-white mb-6">
-                        We will send password reset code on your email
+                        We will send a password reset code to your email
                     </p>
-                    <input
-                        type="email"
-                        placeholder="Email"
-                        name="email"
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="w-full p-3 font-quicksand mb-4 rounded text-white border border-white bg-transparent focus:outline-none"
-                    />
+
+                    <div className="w-full relative">
+                        <input
+                            type="email"
+                            placeholder="Email"
+                            name="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className={`w-full p-3 pr-12 font-quicksand rounded text-white border ${
+                                errState.email
+                                    ? 'border-red-500'
+                                    : 'border-white'
+                            } bg-transparent focus:outline-none focus:ring-2 focus:ring-[#FFA666]`}
+                        />
+                        <div className="min-h-[20px]">
+                            {errState.email && (
+                                <div className="error text-red-500 text-sm">
+                                    {errState.email}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
                     <button
                         type="submit"
-                        className="w-full p-3 bg-[#FFA666] text-black font-bold cursor-pointer font-quicksand rounded hover:bg-orange-500 transition"
+                        className="w-full p-3 bg-[#FFA666] text-black font-bold cursor-pointer font-quicksand rounded hover:bg-orange-500 transition flex justify-center items-center mt-2"
+                        disabled={isLoading}
                     >
-                        Send reset code
+                        {isLoading ? (
+                            <FaSpinner className="animate-spin text-2xl" />
+                        ) : (
+                            'Send reset code'
+                        )}
                     </button>
+
                     <p className="text-sm text-gray-400 mt-2 text-center">
                         Don't have an account yet?
                         <span className="text-[#FFA666] font-quicksand underline ml-1">

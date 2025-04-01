@@ -35,14 +35,14 @@ const galleryPage = () => {
         description="Lorem Ipsum is simply dummy text of the printing and t"
       />
 
-      <motion.div
-        className="flex flex-col px-10 items-center bg-[#221122]"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
-        variants={fadeInUp}
-      >
-        <div className="flex flex-col text-center items-center bg-[#252527] text-white px-7 py-12 gap-3 rounded-md">
+      <div className="flex flex-col px-10 items-center bg-[#221122]">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ amount: 0.1 }}
+          variants={fadeInUp}
+          className="flex flex-col text-center items-center bg-[#252527] text-white px-7 py-12 gap-3 rounded-md"
+        >
           <h1 className="font-inknut-antiqua text-2xl">Title</h1>
           <p className="font-quicksand">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa quae
@@ -50,14 +50,14 @@ const galleryPage = () => {
             non animi itaque molestiae dolorem maxime rem, eos mollitia ut
             debitis!
           </p>
-        </div>
+        </motion.div>
 
         <motion.div
-          className="relative w-full h-96 my-10 overflow-hidden rounded-xl"
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.1 }}
+          viewport={{ amount: 0.1 }}
           variants={fadeInUp}
+          className="relative w-full h-96 my-10 overflow-hidden rounded-xl"
         >
           <Swiper
             modules={[EffectFade, Autoplay, Pagination]}
@@ -83,11 +83,11 @@ const galleryPage = () => {
         </motion.div>
 
         <motion.div
-          className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10"
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.1 }}
+          viewport={{ amount: 0.1 }}
           variants={fadeInUp}
+          className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10"
         >
           <div className="grid gap-4">
             <div className="overflow-hidden">
@@ -154,7 +154,7 @@ const galleryPage = () => {
             </div>
           </div>
         </motion.div>
-      </motion.div>
+      </div>
       <JoinUs />
       <Footer />
     </div>

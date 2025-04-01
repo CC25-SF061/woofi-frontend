@@ -1,0 +1,27 @@
+import React from "react";
+import LogoUsers from "../../assets/icons/admin/users.svg";
+import LogoDatabase from "../../assets/icons/admin/database.svg";
+import LogoHome from "../../assets/profile/material-symbols--home-outline-rounded.svg";
+import { Link } from "react-router-dom";
+
+const Dashboard = () => {
+  const users_count="24.3k";
+  const destinations_count="554";
+
+  return (
+    <div className="flex flex-row items-stretch justify-center p-5 pt-40 h-fit gap-4 w-full font-quicksand">
+      <div className="flex flex-col items-center p-7 px-12 gap-1 rounded-md shadow-lg bg-[#252527] text-[#aaa] text-lg">
+        <img src={LogoUsers} alt="Users Icon" className="w-8 mb-3" />
+        <p>Active Users</p>
+        <p className="font-semibold text-4xl tracking-wider">{users_count}</p>
+      </div>
+      <div className="flex flex-col items-center p-7 px-12 gap-1 rounded-md shadow-lg bg-[#252527] text-[#aaa] text-lg">
+        <img src={LogoDatabase} alt="Database Icon" className="w-7 mb-2" />
+        <p>Destinations</p>
+        <p className="font-semibold text-4xl tracking-wider">{destinations_count}</p>
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;

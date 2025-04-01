@@ -1,15 +1,15 @@
 import React from 'react';
 import SidebarAdmin from '../../components/admin/sidebar';
 import HeaderAdmin from '../../components/admin/header';
-import DashboardAdmin from '../../components/admin/dashboard';
+import UsersData from '../../components/admin/user_data';
 
 const Dashboard = () => {
   return (
-    <div className='w-full h-full bg-[#221122] flex lg:h-screen text-white'>
+    <div className='w-full bg-[#221122] flex text-white'>
       <SidebarAdmin/>
       <HeaderAdmin/>
       <div className='pl-50 w-full'>
-        <DashboardAdmin/>
+        <UsersData/>
       </div>
     </div>
   )
