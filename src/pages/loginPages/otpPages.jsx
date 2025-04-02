@@ -40,7 +40,10 @@ const OtpPages = () => {
             setError('OTP field cannot be empty');
             return;
         }
-
+        toast.success('OTP verified successfully', {
+            position: 'top-right',
+            autoClose: 3000,
+        });
         setIsLoading(true);
 
         try {
@@ -56,6 +59,10 @@ const OtpPages = () => {
                     hash: localStorage.getItem('passToken'),
                 })
             );
+            // toast.success('OTP resend successfully', {
+            //     position: 'top-right',
+            //     autoClose: 3000,
+            // });
             await navigate('/new-password');
         } catch (e) {
             const response = e?.response?.data?.payload;
@@ -77,19 +84,6 @@ const OtpPages = () => {
         } finally {
             setIsLoading(false); // Matikan loading setelah selesai
         }
-
-        // if (!otpCode.trim()) {
-        //     toast.error('OTP field cannot be empty', {
-        //         position: 'top-right',
-        //         autoClose: 3000,
-        //     });
-        //     return;
-        // }
-        // toast.success('OTP verified successfully', {
-        //     position: 'top-right',
-        //     autoClose: 3000,
-        // });
-        // setOtpCode('');
     };
 
     const handleResendOTP = async (e) => {
@@ -99,6 +93,10 @@ const OtpPages = () => {
             await axios.post('/api/auth/resend-otp', {
                 hash: localStorage.getItem('passToken'),
             });
+            toast.success('OTP resend successfully', {
+                position: 'top-right',
+                autoClose: 3000,
+            });
         } catch (e) {
             toast.error('Something went wrong', {
                 position: 'top-right',
@@ -106,6 +104,7 @@ const OtpPages = () => {
             });
         }
     };
+    
     return (
         <div className="bg-[#221122] min-h-screen w-full flex items-center justify-center p-5 md:p-10">
             <div className="flex flex-col md:flex-row w-full max-w-5xl rounded-lg overflow-hidden shadow-lg bg-[#252527] min-h-[650px]">
