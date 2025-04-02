@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import SearchIcon from "../assets/icons/search.svg";
+import React, { useEffect, useState } from "react";
+// import SearchIcon from "../assets/icons/search.svg";
 import GrayBottomArrow from "../assets/icons/arrow_b_gray.svg";
 
 const provincesTemplate = [
@@ -76,7 +76,7 @@ const SearchDestination = ({ handleSubmit }) => {
           <div className="bg-[#ffffff55] h-[2px] w-full mt-4 mb-3 md:w-0 md:invisible"></div>
           <input id="destinationName" name="destinationName" className="bg-[#252527] w-full text-base text-nowrap md:text-xl px-5 py-2 text-white font-quicksand placeholder-[#ffffff32] shadow-lg shadow-[#00000032] rounded-[10px]" type="text" placeholder="Look up Destination" required></input>
           <button type="submit" className="flex flex-col items-center border-[#ffffff55] md:border-white p-2 mt-3 md:mt-0 md:ml-2 border-solid border-[1px] md:border-2 md:aspect-square rounded-[8px] hover:bg-[#ffffff22] w-full md:w-fit" onSubmit={handleSubmit}>
-            <img src={SearchIcon} className="w-5 md:w-10" />
+            {/* <img src={SearchIcon} className="w-5 md:w-10" /> */}
           </button>
         </div>
       </form>
