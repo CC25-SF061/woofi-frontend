@@ -71,7 +71,24 @@ const Profile = () => {
         </h1>
 
         {!editSection && (
-          <div className="flex flex-col gap-2 h-full">
+          <div className="flex flex-col gap-2 h-full overflow-y-auto">
+            <div className="flex flex-col lg:w-xl">
+              <p className="font-quicksand text-white pb-2">Username</p>
+              <div className="flex flex-col lg:flex-row gap-3 w-full">
+                <input
+                  type="text"
+                  placeholder="Your Username"
+                  className="flex-3 p-3 font-quicksand rounded text-white border border-white focus:outline-none"
+                  disabled
+                />
+                <button
+                  className="flex-1 lg:p-3 py-1 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition cursor-pointer"
+                  onClick={() => setEditSection("Username")}
+                >
+                  Edit
+                </button>
+              </div>
+            </div>
             <div className="flex flex-col lg:w-xl">
               <p className="font-quicksand text-white pb-2">Display Name</p>
               <div className="flex flex-col lg:flex-row gap-3 w-full">
@@ -83,7 +100,7 @@ const Profile = () => {
                 />
                 <button
                   className="flex-1 lg:p-3 py-1 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition cursor-pointer"
-                  onClick={() => setEditSection("Username")}
+                  onClick={() => setEditSection("Display Name")}
                 >
                   Edit
                 </button>
@@ -132,7 +149,7 @@ const Profile = () => {
                 </button>
               </div>
             </div>
-            <button className="w-38 lg:mt-auto mt-10 p-3 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition cursor-pointer">
+            <button className="w-38 mt-10 p-3 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition cursor-pointer">
               Logout
             </button>
           </div>

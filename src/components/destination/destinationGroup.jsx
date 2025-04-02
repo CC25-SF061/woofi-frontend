@@ -34,10 +34,10 @@ const DestinationGroup = ({tags, destinations}) => {
       </div>
 
       {/* The Cards */}
-      <div className='mt-8 mb-15 grid justify-stretch items-stretch 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-5 caret-transparent'>
+      <div className='mt-8 mb-10 grid justify-stretch items-stretch 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-5 caret-transparent'>
         {
           destinations.map((element, order) => {
-            return <DestinationCard key={order} id={element.id} order={order} picture={element.images[0]} name={element.name} detail={element.detail} rating={element.avgRating} onclick={onCardClick}></DestinationCard>
+            return <DestinationCard key={order} id={element.id} order={order} picture={element.image[0]} name={element.name} detail={element.detail} isWishlisted={element.isWishlisted} rating={element.avgRating} onclick={onCardClick}></DestinationCard>
           })
         }
       </div>

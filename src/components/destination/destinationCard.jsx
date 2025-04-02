@@ -3,18 +3,16 @@ import StarFull from "../../assets/icons/ratestar/full.svg";
 import StarHalf from "../../assets/icons/ratestar/half.svg";
 import StarEmpty from "../../assets/icons/ratestar/empty.svg";
 import WishlistEmpty from "../../assets/icons/wishlist/empty.svg";
+import WishlistFill from "../../assets/icons/wishlist/full.svg";
 import { motion } from "framer-motion";
 
 import countStars from "../../util/starRating";
 
-const DestinationCard = ({ id, picture, name, detail, rating, onclick }) => {
+const DestinationCard = ({ id, picture, name, detail, isWishlisted, rating, onclick }) => {
   const { whole_rating, has_half_rating, empty_rating } = countStars(rating);
 
   // Decompound description paragraph
   detail = detail.replaceAll(/([\n]+[\w.,/ ]+)/g, "...");
-
-  // Trimming long description
-  detail = detail.length > 78 ? detail.substring(0, 75) + "..." : detail;
 
   return (
     <motion.div
@@ -48,7 +46,7 @@ const DestinationCard = ({ id, picture, name, detail, rating, onclick }) => {
           </div>
           <img
             className="ml-auto"
-            src={WishlistEmpty}
+            src={isWishlisted ? WishlistFill : WishlistEmpty}
             width="21"
             alt="Wishlist"
           />
@@ -58,7 +56,7 @@ const DestinationCard = ({ id, picture, name, detail, rating, onclick }) => {
       </div>
       <div className="absolute bottom-3 w-full h-18" style={{background: 'linear-gradient(0deg, rgb(37, 37, 39) 0%, rgba(37, 37, 39, 0) 100%)'}}></div>
       <div className="absolute bottom-3 right-3">
-        <button className="text-white text-xs md:text-md font-light px-4 py-1 border border-[#ffffff88] rounded-md tracking-wider bg-[#252527] hover:bg-[#fff] hover:font-semibold hover:text-black transition-all">
+        <button className="text-white text-xs md:text-base font-light px-4 py-1 border border-[#ffffff88] rounded-md tracking-wider bg-[#252527] hover:bg-[#fff] hover:font-semibold hover:text-black transition-all">
           See Details
         </button>
       </div>

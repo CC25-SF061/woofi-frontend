@@ -5,6 +5,8 @@
  */
 
 export default function calcRateStars(value) {
+    if(!value) return {whole_rating: 0, has_half_rating: false, empty_rating: 5};
+
     const lowest_half = 0.46;
     const highest_half = 0.76;
 

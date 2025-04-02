@@ -10,7 +10,7 @@ import { motion } from "framer-motion";
 
 import countStars from "../../../util/starRating";
 
-const DestinationGroup = ({name, images, location, province, avgRating, countRating, isWishlist}) => {
+const DestinationGroup = ({name, image, location, province, avgRating, countRating, isWishlist}) => {
 
 	const [rating, setRating] = useState(avgRating);
 	const [wishlist, setWishlist] = useState(isWishlist);
@@ -45,7 +45,7 @@ const DestinationGroup = ({name, images, location, province, avgRating, countRat
 					Show all Views
 				</motion.div>
 			</div>
-			<DestinationCollage images={images} onClick={handleShowMoreImages}></DestinationCollage>
+			<DestinationCollage image={image} onClick={handleShowMoreImages}></DestinationCollage>
 			<div className="flex flex-row">
 				<div className="font-quicksand text-sm md:text-2xl pr-8">
 					<p className="text-white">{location}</p>
@@ -57,6 +57,7 @@ const DestinationGroup = ({name, images, location, province, avgRating, countRat
 							Array.from({length: whole_rating}).map((_, i) => {
 								return (
 									<motion.div
+										key={i}
 										animate={{ opacity: 1, scale: 1 }}
 										transition={{ duration: 0.25, ease: "backOut", delay: 0 }}
 										whileHover={{ scale: 1.15 }}
@@ -72,6 +73,7 @@ const DestinationGroup = ({name, images, location, province, avgRating, countRat
 						{
 							has_half_rating ? (
 								<motion.div
+									key={whole_rating+1}
 									animate={{ opacity: 1, scale: 1 }}
 									transition={{ duration: 0.25, ease: "backOut", delay: 0 }}
 									whileHover={{ scale: 1.15 }}
@@ -87,6 +89,7 @@ const DestinationGroup = ({name, images, location, province, avgRating, countRat
 							Array.from({length: empty_rating}).map((_, i) => {
 								return (
 									<motion.div
+										key={whole_rating+i+ (has_half_rating? 1 : 0)}
 										animate={{ opacity: 1, scale: 1 }}
 										transition={{ duration: 0.25, ease: "backOut", delay: 0 }}
 										whileHover={{ scale: 1.15 }}

@@ -1,75 +1,43 @@
 import React, { useEffect, useRef, useState } from "react";
+
 import Navbar from "../components/navbar";
 import SearchDestination from "../components/searchDestination";
 import DestinationMap from "../components/destination/destinationMap";
 import DestinationGroup from "../components/destination/destinationGroup";
+import PageIndexer from "../components/destination/destinationPageIndexer";
 import JoinUs from "../components/joinUs";
 import Footer from "../components/footer";
 import HeroSection from "../components/heroSection";
+
 import Image1 from "../assets/gallery/image1.webp";
 import Image2 from "../assets/gallery/image2.webp";
 import Image3 from "../assets/gallery/lompatBatu.webp";
 import Image4 from "../assets/gallery/rambuSolo.webp";
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/effect-fade";
 import "swiper/css/pagination";
 import { EffectFade, Autoplay, Pagination } from "swiper/modules";
+import { showLoading, hideLoading } from "../stores/loadingReducer";
 
-const destinations = [
-  {
-    id: "ncOA22d8",
-    images: [Image2, Image1, Image2],
-    rating: 2.65,
-    name: "Wayank Wayank Wayank Wayank  ",
-    detail: "Wayank Lorem Ipsum jirWayank Lorem Ipsum jirWayank Lorem Ipsum jirWayank Lorem Ipsum jirWayank Lorem Ipsum jirWayank Lorem Ipsum jir",
-    wishlisted: false,
-    countRating: 6,
-    avgRating: 2.5,
-    province: "Nusa Tenggara Selatan",
-    location: "Jl. Kartini No.133, Dauh Puri Kaja, Kec. Denpasar Utara, Kota Denpasar, 80231",
-    writer: "Kak Gung Wah",
-  },
-  {
-    id: "vQox27X1",
-    images: [Image3],
-    rating: 3.86,
-    name: "OMAYGAT",
-    detail: "LOMPATAN SUPERRRR",
-    wishlisted: false,
-    countRating: 6,
-    avgRating: 2.5,
-    province: "Papua Nugini",
-    location: "Jl. Kartini No.133, Dauh Puri Kaja, Kec. Denpasar Utara, Kota Denpasar, 80231",
-    writer: "Kak Sulih",
-  },
-  {
-    id: "vzox27X1",
-    images: [Image3],
-    rating: 3.75,
-    name: "OMAYGAT",
-    detail: "LOMPATAN SUPERRRR",
-    wishlisted: false,
-    countRating: 6,
-    avgRating: 2.5,
-    province: "Kalimantan",
-    location: "Jl. Kartini No.133, Dauh Puri Kaja, Kec. Denpasar Utara, Kota Denpasar, 80231",
-    writer: "Dik Yana",
-  },
-  {
-    id: "vQox7X1",
-    images: [Image3],
-    rating: 2.5,
-    name: "OMAYGAT",
-    detail: "LOMPATAN",
-    wishlisted: false,
-    countRating: 6,
-    avgRating: 2.5,
-    province: "Kalimantan",
-    location: "Jl. Kartini No.133, Dauh Puri Kaja, Kec. Denpasar Utara, Kota Denpasar, 80231",
-    writer: "Mr blabla lorem ipsum dolor sit anj",
-  }
-]
+import axios from "axios";
+import ErrorConstants from "../util/errorConstant";
+
+
+const emptyDestination = { // TODO: REMOVE
+  id: "null",
+  image: "...",
+  rating: null,
+  name: "Undefined",
+  detail: "Undefined",
+  isWishlisted: false,
+  countRating: 0,
+  avgRating: 0,
+  province: "Undefined",
+  location: "Undefined",
+  writer: "Unknown",
+};
 
 
 const DestinationPage = () => {
@@ -91,16 +59,48 @@ const DestinationPage = () => {
     
     prevActiveTags.current = activeTags;
   };
+
+  const onSearchSubmit = e => {
+    e.preventDefault();
+  }
+
+  useEffect(() => {
+    return async () => {
+      await axios.get('/api/destinations') // TODO: LOADING
+        .then(v => {
+          setDestinationList(v.data.data);
+        })
+        .catch(console.err);
+    }
+  }, []);
   
-  const [destinationList, setDestinationList] = useState(destinations);
+  const [destinationList, setDestinationList] = useState([]);
+  const [destinationDisplay, setDestinationDisplay] = useState([]);
+  const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [mapDisplay, setMapDisplay] = useState({ pos: [-1.748926, 120.0148634], zoom: 5 });
   const [activeTags, setActiveTag] = useState([true, false, false, false, false]); // 0: Highest Rating, 1: Wishlisted, 2: Newest, 3: Oldest, 4: Written by you
   const prevActiveTags = useRef(activeTags);
+  const maxPages = useRef(0);
 
   useEffect(() => {
     onTagChange();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTags]);
+
+  const maxCardsToIndexable = 8;
+  useEffect(() => { // Index pages
+    if(destinationList.length <= maxCardsToIndexable) {
+      return;
+    }
+    const pagesCount = Math.ceil(destinationList.length / maxCardsToIndexable);
+
+    setCurrentPageIndex(0);
+    maxPages.current = pagesCount;
+  }, [destinationList]);
+
+  useEffect(() => {
+    setDestinationDisplay(destinationList.slice(currentPageIndex*maxCardsToIndexable,(currentPageIndex+1)*maxCardsToIndexable));
+  }, [currentPageIndex]);
 
   return (
     <div>
@@ -112,9 +112,10 @@ const DestinationPage = () => {
         description="Explore the best places in Indonesia with complete information."
       />
       <div className="flex flex-col px-10 items-center bg-[#221122] w-full">
-        <SearchDestination />
+        <SearchDestination handleSubmit={onSearchSubmit}/>
         <DestinationMap pos={mapDisplay.pos} zoom={mapDisplay.zoom} />
-        <DestinationGroup tags={[activeTags, setActiveTag]} destinations={destinationList} />
+        <DestinationGroup tags={[activeTags, setActiveTag]} destinations={destinationDisplay} />
+        {maxPages.current > 0 ? <PageIndexer current={{get:currentPageIndex,set:setCurrentPageIndex}} count={maxPages} /> : null}
       </div>
       <JoinUs />
       <Footer />
