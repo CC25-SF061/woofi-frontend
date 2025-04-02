@@ -1,11 +1,11 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image1 from '../../assets/logIn/image5.webp';
 import BannerLogin from '../../components/bannerLogin';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
-import ErrorConstant from '../../util/ErrorConstant';
+import ErrorConstant from '../../util/ErrorConstant.js';
 import { useDispatch } from 'react-redux';
 import { setForgetPassword } from '../../stores/forgetPasswordReducer';
 import { FaSpinner } from 'react-icons/fa';
@@ -15,8 +15,8 @@ const OtpPages = () => {
     const [otpCode, setOtpCode] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
-    const [timer,setTimer] = useState(30);
-    const [canResend,setCanResend] = useState(false); 
+    const [timer, setTimer] = useState(30);
+    const [canResend, setCanResend] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const email = useSelector((state) => state.forgetPassword.email);
@@ -92,10 +92,20 @@ const OtpPages = () => {
         // setOtpCode('');
     };
 
-    const handleResendOTP = async(e)=>{
-        setCanResend(false);
-        setTimer(30);
-    }
+    const handleResendOTP = async (e) => {
+        try {
+            setCanResend(false);
+            setTimer(30);
+            await axios.post('/api/auth/resend-otp', {
+                hash: localStorage.getItem('passToken'),
+            });
+        } catch (e) {
+            toast.error('Something went wrong', {
+                position: 'top-right',
+                autoClose: 3000,
+            });
+        }
+    };
     return (
         <div className="bg-[#221122] min-h-screen w-full flex items-center justify-center p-5 md:p-10">
             <div className="flex flex-col md:flex-row w-full max-w-5xl rounded-lg overflow-hidden shadow-lg bg-[#252527] min-h-[650px]">
