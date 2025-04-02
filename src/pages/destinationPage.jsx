@@ -15,61 +15,34 @@ import "swiper/css";
 import "swiper/css/effect-fade";
 import "swiper/css/pagination";
 import { EffectFade, Autoplay, Pagination } from "swiper/modules";
+import axios from "axios";
 
-const destinations = [
-  {
-    id: "ncOA22d8",
-    images: [Image2, Image1, Image2],
-    rating: 2.65,
-    name: "Wayank Wayank Wayank Wayank  ",
-    detail: "Wayank Lorem Ipsum jirWayank Lorem Ipsum jirWayank Lorem Ipsum jirWayank Lorem Ipsum jirWayank Lorem Ipsum jirWayank Lorem Ipsum jir",
-    wishlisted: false,
-    countRating: 6,
-    avgRating: 2.5,
-    province: "Nusa Tenggara Selatan",
-    location: "Jl. Kartini No.133, Dauh Puri Kaja, Kec. Denpasar Utara, Kota Denpasar, 80231",
-    writer: "Kak Gung Wah",
-  },
-  {
-    id: "vQox27X1",
-    images: [Image3],
-    rating: 3.86,
-    name: "OMAYGAT",
-    detail: "LOMPATAN SUPERRRR",
-    wishlisted: false,
-    countRating: 6,
-    avgRating: 2.5,
-    province: "Papua Nugini",
-    location: "Jl. Kartini No.133, Dauh Puri Kaja, Kec. Denpasar Utara, Kota Denpasar, 80231",
-    writer: "Kak Sulih",
-  },
-  {
-    id: "vzox27X1",
-    images: [Image3],
-    rating: 3.75,
-    name: "OMAYGAT",
-    detail: "LOMPATAN SUPERRRR",
-    wishlisted: false,
-    countRating: 6,
-    avgRating: 2.5,
-    province: "Kalimantan",
-    location: "Jl. Kartini No.133, Dauh Puri Kaja, Kec. Denpasar Utara, Kota Denpasar, 80231",
-    writer: "Dik Yana",
-  },
-  {
-    id: "vQox7X1",
-    images: [Image3],
-    rating: 2.5,
-    name: "OMAYGAT",
-    detail: "LOMPATAN",
-    wishlisted: false,
-    countRating: 6,
-    avgRating: 2.5,
-    province: "Kalimantan",
-    location: "Jl. Kartini No.133, Dauh Puri Kaja, Kec. Denpasar Utara, Kota Denpasar, 80231",
-    writer: "Mr blabla lorem ipsum dolor sit anj",
-  }
-]
+const TemplateDestination = { // TODO: REMOVE
+  id: "ncOA22d8",
+  image: [Image2, Image1, Image2],
+  rating: 2.65,
+  name: "Wayank Wayank Wayank Wayank  ",
+  detail: "Wayank Lorem Ipsum jirWayank Lorem Ipsum jirWayank Lorem Ipsum jirWayank Lorem Ipsum jirWayank Lorem Ipsum jirWayank Lorem Ipsum jir",
+  isWishlisted: false,
+  countRating: 6,
+  avgRating: 2.5,
+  province: "Nusa Tenggara Selatan",
+  location: "Jl. Kartini No.133, Dauh Puri Kaja, Kec. Denpasar Utara, Kota Denpasar, 80231",
+  writer: "Kak Gung Wah",
+};
+const emptyDestination = {
+  id: "null",
+  image: "...",
+  rating: null,
+  name: "Undefined",
+  detail: "Undefined",
+  isWishlisted: false,
+  countRating: 0,
+  avgRating: 0,
+  province: "Undefined",
+  location: "Undefined",
+  writer: "Unknown",
+};
 
 
 const DestinationPage = () => {
@@ -91,8 +64,18 @@ const DestinationPage = () => {
     
     prevActiveTags.current = activeTags;
   };
+
+  useEffect(() => {
+    return async () => {
+      await axios.get('/api/destinations') // TODO: LOADING
+        .then(v => {
+          setDestinationList(v.data.data);
+        })
+        .catch(console.err);
+    }
+  }, []);
   
-  const [destinationList, setDestinationList] = useState(destinations);
+  const [destinationList, setDestinationList] = useState([emptyDestination]);
   const [mapDisplay, setMapDisplay] = useState({ pos: [-1.748926, 120.0148634], zoom: 5 });
   const [activeTags, setActiveTag] = useState([true, false, false, false, false]); // 0: Highest Rating, 1: Wishlisted, 2: Newest, 3: Oldest, 4: Written by you
   const prevActiveTags = useRef(activeTags);
