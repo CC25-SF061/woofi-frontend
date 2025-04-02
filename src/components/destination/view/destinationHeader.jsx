@@ -54,9 +54,10 @@ const DestinationGroup = ({name, image, location, province, avgRating, countRati
 				<div className="flex flex-col ml-auto">
 					<div className="flex flex-row gap-2 md:gap-4">
 						{
-							Array.from({length: whole_rating}).map((_, i) => { // Fix Keyerror
+							Array.from({length: whole_rating}).map((_, i) => {
 								return (
 									<motion.div
+										key={i}
 										animate={{ opacity: 1, scale: 1 }}
 										transition={{ duration: 0.25, ease: "backOut", delay: 0 }}
 										whileHover={{ scale: 1.15 }}
@@ -72,6 +73,7 @@ const DestinationGroup = ({name, image, location, province, avgRating, countRati
 						{
 							has_half_rating ? (
 								<motion.div
+									key={whole_rating+1}
 									animate={{ opacity: 1, scale: 1 }}
 									transition={{ duration: 0.25, ease: "backOut", delay: 0 }}
 									whileHover={{ scale: 1.15 }}
@@ -87,6 +89,7 @@ const DestinationGroup = ({name, image, location, province, avgRating, countRati
 							Array.from({length: empty_rating}).map((_, i) => {
 								return (
 									<motion.div
+										key={whole_rating+i+ (has_half_rating? 1 : 0)}
 										animate={{ opacity: 1, scale: 1 }}
 										transition={{ duration: 0.25, ease: "backOut", delay: 0 }}
 										whileHover={{ scale: 1.15 }}
