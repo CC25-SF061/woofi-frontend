@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/profile/sidebar";
-import DestinationCard from "../../components/destination/DestinationCard";
+import DestinationCard from "../../components/destination/destinationCard";
 import { HiX } from "react-icons/hi";
 import { RiMenu2Line } from "react-icons/ri";
 import { IoIosNotifications } from "react-icons/io";
 
-// Import gambar destinasi
 import Image1 from "../../assets/cultureHistory/traditions/traditions3.webp";
 import Image2 from "../../assets/cultureHistory/traditional-dance/Dance3.webp";
 import Image3 from "../../assets/cultureHistory/traditional-dance/Dance3.webp";
@@ -86,7 +85,6 @@ const Wishlist = () => {
   return (
     <div>
       <div className="w-full bg-[#221122] flex lg:h-screen items-center justify-center p-5 lg:p-10 gap-5 text-white">
-        {/* Header Mobile */}
         <div className="lg:hidden p-5 fixed z-60 top-0 w-full bg-[#252527] flex justify-between items-center shadow-xl">
           <button
             className="bg-[#FFA666] p-2 rounded-lg text-black cursor-pointer"
@@ -99,7 +97,6 @@ const Wishlist = () => {
           </button>
         </div>
 
-        {/* Sidebar */}
         <div
           className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#252527] transform transition-transform duration-300 ease-in-out shadow-lg lg:hidden lg:translate-x-0 ${
             isSidebarOpen ? "translate-x-0" : "-translate-x-full"
@@ -118,7 +115,6 @@ const Wishlist = () => {
           <Sidebar />
         </div>
 
-        {/* Wishlist Destination List */}
         <div className="flex flex-col flex-1 rounded-lg overflow-hidden shadow-lg bg-[#252527] m-5 lg:m-0 h-full lg:w-3/4 mt-20 overflow-y-auto">
           <div className="w-full max-w-6xl flex flex-col items-center relative">
             <div className="mb-5 sticky top-0 bg-[#252527] p-3 pb-0 w-full shadow-md z-10">
@@ -128,8 +124,7 @@ const Wishlist = () => {
               <hr className="border-t-2 border-white my-3 rounded" />
             </div>
 
-            {/* Destination Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 w-full px-5 pb-5">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 w-full px-5 pb-5">
               {wishlistDestinations.map((element, order) => (
                 <DestinationCard
                   key={order}
