@@ -12,14 +12,14 @@ axios.defaults.baseURL = import.meta.env.VITE_SERVER_URL;
 axios.interceptors.request.use(
     function (request) {
         request.headers['Authorization'] = `Bearer ${localStorage.getItem(
-            'token'
+            'token',
         )}`;
 
         return request;
     },
     function (error) {
         return Promise.reject(error);
-    }
+    },
 );
 
 createRoot(document.getElementById('root')).render(
@@ -27,5 +27,5 @@ createRoot(document.getElementById('root')).render(
         <Provider store={store}>
             <App />
         </Provider>
-    </StrictMode>
+    </StrictMode>,
 );
