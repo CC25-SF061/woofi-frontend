@@ -10,7 +10,7 @@ import { motion } from "framer-motion";
 
 import countStars from "../../../util/starRating";
 
-const DestinationGroup = ({name, images, location, province, avgRating, countRating, isWishlist}) => {
+const DestinationGroup = ({name, image, location, province, avgRating, countRating, isWishlist}) => {
 
 	const [rating, setRating] = useState(avgRating);
 	const [wishlist, setWishlist] = useState(isWishlist);
@@ -45,7 +45,7 @@ const DestinationGroup = ({name, images, location, province, avgRating, countRat
 					Show all Views
 				</motion.div>
 			</div>
-			<DestinationCollage images={images} onClick={handleShowMoreImages}></DestinationCollage>
+			<DestinationCollage image={image} onClick={handleShowMoreImages}></DestinationCollage>
 			<div className="flex flex-row">
 				<div className="font-quicksand text-sm md:text-2xl pr-8">
 					<p className="text-white">{location}</p>
@@ -54,7 +54,7 @@ const DestinationGroup = ({name, images, location, province, avgRating, countRat
 				<div className="flex flex-col ml-auto">
 					<div className="flex flex-row gap-2 md:gap-4">
 						{
-							Array.from({length: whole_rating}).map((_, i) => {
+							Array.from({length: whole_rating}).map((_, i) => { // Fix Keyerror
 								return (
 									<motion.div
 										animate={{ opacity: 1, scale: 1 }}
