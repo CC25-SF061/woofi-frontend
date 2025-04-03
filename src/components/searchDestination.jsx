@@ -79,7 +79,7 @@ const SearchDestination = ({ handleSubmit, selectedHandler, provinces }) => {
                     </div>
 
                     {dropdownOpen && filteredProvinces.length > 0 && (
-                        <ul className="absolute left-0 mt-1 w-full bg-[#252527] text-white border border-[#FFA666] rounded-sm shadow-md shadow-stone-950 z-10">
+                        <ul className="absolute left-0 mt-1 w-full bg-[#252527] text-white border border-[#FFA666] rounded-sm shadow-md shadow-stone-950 z-10 max-h-80 overflow-y-auto">
                             {filteredProvinces.map((p) => (
                                 <li
                                     key={p.name}
