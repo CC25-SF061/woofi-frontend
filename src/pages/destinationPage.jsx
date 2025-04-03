@@ -26,6 +26,7 @@ import ErrorConstants from '../util/errorConstant';
 import { toast, ToastContainer } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 
+const maxCardsToIndexable = 8;
 const DestinationPage = () => {
     const dispatch = useDispatch();
 
@@ -82,7 +83,7 @@ const DestinationPage = () => {
             try {
                 dispatch(showLoading('DestinationPageLoading'));
                 const response = (await axios.get('/api/destinations')).data;
-                setDestinationList(response.data || []);
+                setDestinationList(response.data);
             } catch (e) {
                 if (!(e instanceof AxiosError)) {
                     return toast.error(
@@ -108,21 +109,20 @@ const DestinationPage = () => {
     }, []);
 
     useEffect(() => {
+        // Tag changes
         onTagChange();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeTags]);
 
-    const maxCardsToIndexable = 8;
     useEffect(() => {
-        // Index pages
+        // Index pages & rerender when destinationList refresh
+        setCurrentPageIndex(0);
         if (destinationList.length <= maxCardsToIndexable) {
             return;
         }
         const pagesCount = Math.ceil(
             destinationList.length / maxCardsToIndexable,
         );
-
-        setCurrentPageIndex(0);
         maxPages.current = pagesCount;
     }, [destinationList]);
 
@@ -134,8 +134,7 @@ const DestinationPage = () => {
                 (currentPageIndex + 1) * maxCardsToIndexable,
             ),
         );
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentPageIndex]);
+    }, [currentPageIndex, destinationList]);
 
     const onProvinceSelected = (province) => {
         setMapDisplay((state) => ({
@@ -150,7 +149,6 @@ const DestinationPage = () => {
         // Get available provinces
         return async () => {
             try {
-                // dispatch(showLoading('DestinationPageLoading'));
                 const response = await axios.get('/api/geolocation/provinces');
                 setProvinces(response.data.data || []);
             } catch (e) {
@@ -170,8 +168,6 @@ const DestinationPage = () => {
                         },
                     );
                 }
-            } finally {
-                // dispatch(hideLoading('DestinationPageLoading'));
             }
         };
     }, []);
