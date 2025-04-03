@@ -37,11 +37,14 @@ const DestinationViewPage = () => {
                         'Something went wrong, Please try again later.',
                         {
                             position: 'top-right',
-                        }
+                        },
                     );
                 }
                 const response = e.response;
-                if (!response || response.data.payload.code !== ErrorConstant.ERR_NOT_FOUND) {
+                if (
+                    !response ||
+                    response.data.payload.code !== ErrorConstant.ERR_NOT_FOUND
+                ) {
                     await navigate('/not-found');
                 }
             } finally {
@@ -63,15 +66,16 @@ const DestinationViewPage = () => {
                         [
                             new URL(
                                 destination.image,
-                                ' https://kesavamas.my.id'
+                                ' https://kesavamas.my.id',
                             ).href,
                         ],
                     ]}
                     location={destination.location}
                     province={destination.province}
-                    avgRating={destination.rating.toFixed(1) || 0}
+                    avgRating={destination?.rating?.toFixed(1) || 0}
                     countRating={destination.ratingCount || 0}
                     isWishlist={destination.isWishlisted}
+                    personalRating={destination.personalRating || 0}
                 />
                 <DestinationContent
                     name={destination.name}

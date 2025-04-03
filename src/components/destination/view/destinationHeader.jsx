@@ -23,8 +23,9 @@ const DestinationGroup = ({
     avgRating,
     countRating,
     isWishlist,
+    personalRating,
 }) => {
-    const [rating, setRating] = useState(avgRating);
+    const [rating, setRating] = useState(personalRating);
     const [wishlist, setWishlist] = useState(isWishlist);
     const userId = useSelector((state) => state.user.data.id);
     const navigate = useNavigate();
@@ -81,8 +82,20 @@ const DestinationGroup = ({
         }
     }
 
-    function handleRating(value) {
-        setRating(value); // TODO: Send data to backend (int; 1 2 3 4 5)
+    async function handleRating(value) {
+        try {
+            if (!userId) {
+                document.getElementById('modal-not-login').showModal();
+                return;
+            }
+            setRating(value);
+            await axios.post(`/api/destination/rating/${id}`, { score: value });
+        } catch (e) {
+            toast.error('Something went wrong', {
+                position: 'top-right',
+                autoClose: 3000,
+            });
+        }
     }
 
     return (
@@ -96,7 +109,7 @@ const DestinationGroup = ({
                         </button>
                     </form>
                     <h3 className="font-bold text-lg">You are not login</h3>
-                    <p className="py-4">Login to wishlist</p>
+                    <p className="py-4">Login to continue</p>
                     <button
                         className="btn btn-neutral"
                         onClick={handleLoginNavigation}
@@ -199,7 +212,7 @@ const DestinationGroup = ({
                                             1 +
                                                 i +
                                                 whole_rating +
-                                                (has_half_rating ? 1 : 0)
+                                                (has_half_rating ? 1 : 0),
                                         )
                                     }
                                 >
