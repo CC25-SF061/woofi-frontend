@@ -16,6 +16,7 @@ const AddData = () => {
         description: '',
         imageLink: '',
         location: '',
+        province: '',
     });
     const [errors, setErrors] = useState({});
 
@@ -39,6 +40,9 @@ const AddData = () => {
         }
         if (!formData.location.trim()) {
             validationErrors.location = 'Location field cannot be empty!';
+        }
+        if (!formData.province.trim()) {
+            validationErrors.province = 'Province field cannot be empty!';
         }
 
         return validationErrors;
@@ -65,8 +69,11 @@ const AddData = () => {
             description: '',
             imageLink: '',
             location: '',
+            province: '',
         });
         setErrors({});
+        setSelectedImage(null);
+        setFileName('');
     };
 
     const handleImageChange = (event) => {
@@ -177,6 +184,30 @@ const AddData = () => {
                                         )}
                                     </div>
                                 </div>
+                                <div className="flex flex-col mb-2 lg:mb-0 mt-auto">
+                                    <p className="font-quicksand text-white pb-2">
+                                        Province
+                                    </p>
+                                    <input
+                                        type="text"
+                                        name="province"
+                                        value={formData.province}
+                                        onChange={handleChange}
+                                        placeholder="Input Province"
+                                        className={`flex-3 p-3 font-quicksand rounded text-white border ${
+                                            errors.province
+                                                ? 'border-red-500'
+                                                : 'border-white'
+                                        } bg-transparent focus:outline-none focus:ring focus:ring-[#FFA666]`}
+                                    />
+                                    <div className="min-h-[20px]">
+                                        {errors.province && (
+                                            <div className="text-red-500 text-sm">
+                                                {errors.province}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
 
                             <div className="flex-1 flex flex-col lg:gap-2">
@@ -188,12 +219,12 @@ const AddData = () => {
                                     <div className="flex items-center justify-center w-full">
                                         <label
                                             htmlFor="dropzone-file"
-                                            className={`flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 
-                        ${
-                            errors.imageLink
-                                ? 'border-red-500 dark:hover:border-red-700'
-                                : 'border-gray-300 dark:border-gray-600 dark:hover:border-gray-500'
-                        }`}
+                                            className={`flex flex-col items-center justify-center w-full h-58 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 
+                                            ${
+                                                errors.imageLink
+                                                    ? 'border-red-500 dark:hover:border-red-700'
+                                                    : 'border-gray-300 dark:border-gray-600 dark:hover:border-gray-500'
+                                            }`}
                                         >
                                             {selectedImage ? (
                                                 <img
@@ -239,11 +270,13 @@ const AddData = () => {
                                             />
                                         </label>
                                     </div>
-                                    {fileName && (
-                                        <p className="mt-1 text-sm text-gray-500 text-center">
-                                            {fileName}
-                                        </p>
-                                    )}
+                                    <div className='min-h-[20px]'>
+                                        {fileName && (
+                                            <p className="text-sm text-gray-500 text-center">
+                                                {fileName}
+                                            </p>
+                                        )}
+                                    </div>
 
                                     <div className="min-h-[20px]">
                                         {errors.imageLink && (

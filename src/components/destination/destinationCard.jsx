@@ -85,7 +85,7 @@ const DestinationCard = ({
             exit={{ opacity: 0, scale: 0.8 }}
             transition={{ duration: 0.25, ease: 'backOut', delay: 0 }}
             whileHover={{ scale: 1.05 }}
-            className="relative bg-[#252527] font-quicksand rounded-lg mx-auto w-73 sm:w-85 md:w-full h-85 shadow-lg overflow-hidden flex flex-col"
+            className="relative bg-[#252527] font-quicksand rounded-lg mx-auto w-73 sm:w-85 md:w-full h-95 shadow-lg overflow-hidden flex flex-col"
         >
             <dialog id="modal-not-login" className="modal">
                 <div className="modal-box">
@@ -175,7 +175,7 @@ const DestinationCard = ({
             </div>
 
             {/* Footer Section */}
-            <div className="flex justify-between items-center px-3 py-2 bg-[#252527] relative">
+            <div className="flex justify-between items-center px-3 py-2 pb-6 bg-[#252527] relative">
                 {optionsIcon && (
                     <div className="relative">
                         <button
