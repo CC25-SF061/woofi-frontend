@@ -40,16 +40,14 @@ const DestinationGroup = ({
             return;
         }
         if (!wishlist) {
-            await addWhislist();
+            await addWishlist();
         }
         if (wishlist) {
-            await removeWhislist();
+            await removeWishlist();
         }
     }
-    function handleShowMoreImages() {
-        // TODO: Navigate to image previews page
-    }
-    async function addWhislist() {
+
+    async function addWishlist() {
         try {
             setWishlist(true);
             await axios.post(`/api/user/wishlist/${id}`);
@@ -70,7 +68,7 @@ const DestinationGroup = ({
         }
     }
 
-    async function removeWhislist() {
+    async function removeWishlist() {
         try {
             setWishlist(false);
             await axios.delete(`/api/user/wishlist/${id}`);
@@ -136,17 +134,8 @@ const DestinationGroup = ({
                         width="28"
                     />
                 </motion.div>
-                <motion.div
-                    className="p-1 px-4 ml-auto text-white font-light text-sm border-[1px] border-white border-solid rounded-lg cursor-pointer hover:bg-[#ffffff44] caret-transparent text-nowrap"
-                    onMouseUp={handleShowMoreImages}
-                >
-                    Show all Views
-                </motion.div>
             </div>
-            <DestinationCollage
-                image={image}
-                onClick={handleShowMoreImages}
-            ></DestinationCollage>
+            <DestinationCollage image={image}></DestinationCollage>
             <div className="flex flex-row">
                 <div className="font-quicksand text-sm md:text-2xl pr-8">
                     <p className="text-white">{location}</p>

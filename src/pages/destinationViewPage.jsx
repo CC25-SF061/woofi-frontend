@@ -66,7 +66,7 @@ const DestinationViewPage = () => {
                         [
                             new URL(
                                 destination.image,
-                                ' https://kesavamas.my.id',
+                                import.meta.env.VITE_STATIC_ASSET_BASE_URL,
                             ).href,
                         ],
                     ]}

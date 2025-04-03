@@ -6,11 +6,16 @@ import Sidebar from '../../components/profile/sidebar';
 import { HiX } from 'react-icons/hi';
 import { RiMenu2Line } from 'react-icons/ri';
 import { IoIosNotifications } from 'react-icons/io';
+import { useSelector } from 'react-redux';
 
 const Profile = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [editSection, setEditSection] = useState(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const user = useSelector((state) => state.user.data);
+    const [username, setUsername] = useState(user.username);
+    const [name, setName] = useState(user.name);
+    const [email, setEmail] = useState(user.email);
 
     return (
         <div className="w-full bg-[#221122] flex lg:h-screen items-center justify-center p-5 lg:p-10 gap-5 text-white">
@@ -60,11 +65,9 @@ const Profile = () => {
                         />
                         <div className="flex flex-col gap-2">
                             <h1 className="font-inknut-antiqua text-3xl">
-                                User 1
+                                {user.username}
                             </h1>
-                            <p className="font-quicksand">
-                                You have a writer role
-                            </p>
+                            <p className="font-quicksand">{user.name}</p>
                         </div>
                     </div>
                     <div className="hidden lg:flex">
@@ -89,9 +92,12 @@ const Profile = () => {
                             <div className="flex flex-col lg:flex-row gap-3 w-full">
                                 <input
                                     type="text"
+                                    value={username}
+                                    onChange={(e) =>
+                                        setUsername(e.target.value)
+                                    }
                                     placeholder="Your Username"
                                     className="flex-3 p-3 font-quicksand rounded text-white border border-white focus:outline-none"
-                                    disabled
                                 />
                                 <button
                                     className="flex-1 lg:p-3 py-1 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition cursor-pointer"
@@ -110,7 +116,8 @@ const Profile = () => {
                                     type="text"
                                     placeholder="Your Display Name"
                                     className="flex-3 p-3 font-quicksand rounded text-white border border-white focus:outline-none"
-                                    disabled
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
                                 />
                                 <button
                                     className="flex-1 lg:p-3 py-1 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition cursor-pointer"
@@ -131,7 +138,8 @@ const Profile = () => {
                                     type="email"
                                     placeholder="Your Email"
                                     className="flex-3 p-3 font-quicksand rounded text-white border border-white focus:outline-none"
-                                    disabled
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                 />
                                 <button
                                     className="flex-1 lg:p-3 py-1 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition cursor-pointer"
@@ -153,7 +161,6 @@ const Profile = () => {
                                         }
                                         placeholder="Password"
                                         className="w-full p-3 pr-10 font-quicksand rounded text-white border border-white bg-transparent focus:outline-none"
-                                        disabled
                                     />
                                     <button
                                         type="button"

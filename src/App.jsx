@@ -36,52 +36,43 @@ import createAuthRefreshInterceptor from 'axios-auth-refresh';
 
 const App = () => {
     const dispatch = useDispatch();
-    const refreshAuthLogic = async (failedRequest) => {
-        try {
-            const response = failedRequest.response.data;
-            if (
-                response.message === 'Token expired' ||
-                response.message === 'Invalid token structure'
-            ) {
-                const refreshToken = (
-                    await axios({
-                        method: 'get',
-                        url: '/api/auth/refresh-token',
-                        withCredentials: true,
-                    })
-                ).data;
-                localStorage.setItem('token', refreshToken.data.token);
-                return Promise.resolve();
+
+    axios.interceptors.response.use(
+        (response) => response,
+        async (error) => {
+            const originalRequest = error.config;
+            if (error.response.status === 401 && !originalRequest._retry) {
+                originalRequest._retry = true;
+                try {
+                    const refreshToken = (
+                        await axios({
+                            method: 'get',
+                            url: '/api/auth/refresh-token',
+                            withCredentials: true,
+                        })
+                    ).data;
+                    localStorage.setItem('token', refreshToken.data.token);
+                    return axios(originalRequest);
+                } catch (e) {
+                    localStorage.setItem('token', null);
+
+                    dispatch(
+                        setData({
+                            profileImage: null,
+                            username: null,
+                            name: null,
+                            email: null,
+                            id: null,
+                            isVerified: null,
+                        }),
+                    );
+                    return Promise.reject(error);
+                }
             }
-            localStorage.setItem('token', null);
-            dispatch(
-                setData({
-                    profileImage: null,
-                    username: null,
-                    name: null,
-                    email: null,
-                    id: null,
-                    isVerified: null,
-                })
-            );
-            return Promise.reject();
-        } catch (e) {
-            dispatch(
-                setData({
-                    profileImage: null,
-                    username: null,
-                    name: null,
-                    email: null,
-                    id: null,
-                    isVerified: null,
-                })
-            );
-            return Promise.reject();
-        }
-    };
-    createAuthRefreshInterceptor(axios, refreshAuthLogic);
-    createAuthRefreshInterceptor(axios, refreshAuthLogic);
-    createAuthRefreshInterceptor(axios, refreshAuthLogic);
+
+            return Promise.reject(error);
+        },
+    );
 
     return (
         <GoogleOAuthProvider
@@ -116,7 +107,11 @@ const App = () => {
                     ></Route>
                     <Route
                         path="/profile/wishlist"
-                        element={<Wishlist />}
+                        element={
+                            <AuthGuard>
+                                <Wishlist />
+                            </AuthGuard>
+                        }
                     ></Route>
                     <Route
                         path="/profile"
@@ -130,7 +125,10 @@ const App = () => {
                         path="/profile/add-data"
                         element={<AddData />}
                     ></Route>
-                    <Route path="/profile/data-destination" element={<DataDestination />}></Route>
+                    <Route
+                        path="/profile/data-destination"
+                        element={<DataDestination />}
+                    ></Route>
                     <Route path="/admin" element={<Dashboard />}></Route>
                     <Route
                         path="/admin/users"
