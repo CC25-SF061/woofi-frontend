@@ -58,12 +58,11 @@ const DestinationPage = () => {
             try {
                 dispatch(showLoading('DestinationPageLoading'));
                 const response = (await axios.get('/api/destinations')).data;
-                setDestinationList(response.data || null);
-                console.log(response.data);
+                setDestinationList(response.data || []);
             } catch (e) {
                 if (!(e instanceof AxiosError)) {
                     return toast.error(
-                        'Something went wrong, Please try again later.',
+                        'Something went wrong while getting destinations, Please try again later.',
                         {
                             position: 'top-right',
                         },
@@ -71,7 +70,7 @@ const DestinationPage = () => {
                 }
                 if (e.code === 'ERR_NETWORK') {
                     return toast.error(
-                        'Connection offline, Please try again later.',
+                        'Connection offline while getting destinations, Please try again later.',
                         {
                             position: 'top-right',
                         },
@@ -87,7 +86,7 @@ const DestinationPage = () => {
     const [destinationList, setDestinationList] = useState([]);
     const [destinationDisplay, setDestinationDisplay] = useState([]);
     const [currentPageIndex, setCurrentPageIndex] = useState(0);
-    const [provinces, setProvinces] = useState();
+    const [provinces, setProvinces] = useState([]);
     const [mapDisplay, setMapDisplay] = useState({
         pos: [-1.748926, 120.0148634],
         zoom: 5,
@@ -124,6 +123,7 @@ const DestinationPage = () => {
     }, [destinationList]);
 
     useEffect(() => {
+        // Display Destinations
         setDestinationDisplay(
             destinationList.slice(
                 currentPageIndex * maxCardsToIndexable,
@@ -143,19 +143,34 @@ const DestinationPage = () => {
         }));
     };
     useEffect(() => {
-        (async () => {
-            const provinces = await axios.get('/api/geolocation/provinces');
-            setProvinces(provinces.data.data);
-        })();
-    }, []);
-    useEffect(() => {
+        // Get available provinces
         return async () => {
-            await axios
-                .get('/api/destinations') // TODO: LOADING
-                .then((v) => {
-                    setDestinationList(v.data.data);
-                })
-                .catch(console.err);
+            try {
+                // dispatch(showLoading('DestinationPageLoading'));
+                const response = await axios.get(
+                    '/api/geolocation/prresponsevinces',
+                );
+                setProvinces(response.data.data || []);
+            } catch (e) {
+                if (!(e instanceof AxiosError)) {
+                    return toast.error(
+                        'Something went wrong while getting provinces, Please try again later.',
+                        {
+                            position: 'top-right',
+                        },
+                    );
+                }
+                if (e.code === 'ERR_NETWORK') {
+                    return toast.error(
+                        'Connection offline while getting provinces, Please try again later.',
+                        {
+                            position: 'top-right',
+                        },
+                    );
+                }
+            } finally {
+                // dispatch(hideLoading('DestinationPageLoading'));
+            }
         };
     }, []);
 

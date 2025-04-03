@@ -4,10 +4,10 @@ import { FaSearch, FaChevronDown } from 'react-icons/fa';
 
 let num = 1;
 const SearchDestination = ({ selectedHandler, provinces }) => {
-    const [province, setProvince] = useState();
-    // const [provinces, setProvinces] = useState();
+    const [province, setProvince] = useState('');
     const [filteredProvinces, setFilteredProvinces] = useState(provinces);
     const [dropdownOpen, setDropdownOpen] = useState(false);
+
     const handleProvinceChange = (e) => {
         const value = e.target.value;
         setProvince({
@@ -24,9 +24,11 @@ const SearchDestination = ({ selectedHandler, provinces }) => {
             setFilteredProvinces(provinces);
         }
     };
+
     useEffect(() => {
         setFilteredProvinces(provinces);
     }, [provinces]);
+    
     const handleSelectProvince = (selectedProvince) => {
         setProvince(selectedProvince);
         selectedHandler(selectedProvince);
