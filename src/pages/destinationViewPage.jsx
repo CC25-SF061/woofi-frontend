@@ -29,7 +29,7 @@ const DestinationViewPage = () => {
                 dispatch(showLoading('DestinationViewPageLoading'));
                 const response = (
                     await axios.get(`/api/destination/${destinationId}`)
-                ).data; // TODO: LOADING
+                ).data;
                 setDestination(response.data || null);
             } catch (e) {
                 if (!(e instanceof AxiosError)) {
@@ -40,8 +40,8 @@ const DestinationViewPage = () => {
                         }
                     );
                 }
-                const response = e.response.data;
-                if (response.payload.code !== ErrorConstant.ERR_NOT_FOUND) {
+                const response = e.response;
+                if (!response || response.data.payload.code !== ErrorConstant.ERR_NOT_FOUND) {
                     await navigate('/not-found');
                 }
             } finally {

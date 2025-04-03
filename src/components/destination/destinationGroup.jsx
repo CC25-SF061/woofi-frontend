@@ -2,11 +2,14 @@ import { React, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DestinationFilter from './destinationTag';
 import DestinationCard from './destinationCard';
+import { motion } from "framer-motion";
+import { useSelector } from 'react-redux';
 
-const DestinationGroup = ({tags, destinations}) => {
+const DestinationGroup = ({tags, destinations, maxIndexable}) => {
 
   const containerRef = useRef(null);
   const navigate = useNavigate();
+  const loading = useSelector((state) => state.loading.loading);
 
   const [activeTags, setActiveTag] = tags;
 
@@ -36,8 +39,17 @@ const DestinationGroup = ({tags, destinations}) => {
       {/* The Cards */}
       <div className='mt-8 mb-10 grid justify-stretch items-stretch 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-5 caret-transparent'>
         {
+          loading.length === 0 ?
           destinations.map((element, order) => {
             return <DestinationCard key={order} id={element.id} order={order} picture={element.image[0]} name={element.name} detail={element.detail} isWishlisted={element.isWishlisted} rating={element.avgRating} onclick={onCardClick}></DestinationCard>
+          }) :
+          Array.from({length:maxIndexable}).map((_, order) => {
+            return <motion.div  initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.8 }}
+                                transition={{ ease: "backOut", delay: 0 }}
+                                whileHover={{ scale: 1.05 }}
+                                key={order} className="skeleton duration-75 border-solid border-[#252527] border-[2px] w-73 sm:w-85 mx-auto md:mx-0 md:w-full h-85 cursor-not-allowed shadow-[#18081825] shadow-lg"></motion.div>
           })
         }
       </div>
