@@ -27,6 +27,29 @@ import { toast, ToastContainer } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 
 const DestinationPage = () => {
+    const dispatch = useDispatch();
+
+    const [destinationList, setDestinationList] = useState([]);
+    const [destinationDisplay, setDestinationDisplay] = useState([]);
+    const [currentPageIndex, setCurrentPageIndex] = useState(0);
+    const [provinces, setProvinces] = useState([]);
+    const [mapDisplay, setMapDisplay] = useState({
+        pos: [-1.748926, 120.0148634],
+        zoom: 5,
+        name: '',
+        isSelected: false,
+    });
+    const [activeTags, setActiveTag] = useState([
+        true,
+        false,
+        false,
+        false,
+        false,
+    ]); // 0: Highest Rating, 1: Wishlisted, 2: Newest, 3: Oldest, 4: Written by you
+
+    const prevActiveTags = useRef(activeTags);
+    const maxPages = useRef(0);
+
     const onTagChange = () => {
         if (activeTags[2] && activeTags[3]) {
             // both Newest & Oldest tag activation alternation mechanism
@@ -46,10 +69,11 @@ const DestinationPage = () => {
         prevActiveTags.current = activeTags;
     };
 
-    const dispatch = useDispatch();
-
-    const onSearchSubmit = (e) => {
-        e.preventDefault();
+    const onSearchSubmit = (province, destination) => {
+        // TODO : API Recall, Refrsh destination list & display
+        console.log(
+            `searching province : ${province.name} & destination : ${destination.name}`,
+        );
     };
 
     useEffect(() => {
@@ -82,26 +106,6 @@ const DestinationPage = () => {
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    const [destinationList, setDestinationList] = useState([]);
-    const [destinationDisplay, setDestinationDisplay] = useState([]);
-    const [currentPageIndex, setCurrentPageIndex] = useState(0);
-    const [provinces, setProvinces] = useState([]);
-    const [mapDisplay, setMapDisplay] = useState({
-        pos: [-1.748926, 120.0148634],
-        zoom: 5,
-        name: '',
-        isSelected: false,
-    });
-    const [activeTags, setActiveTag] = useState([
-        true,
-        false,
-        false,
-        false,
-        false,
-    ]); // 0: Highest Rating, 1: Wishlisted, 2: Newest, 3: Oldest, 4: Written by you
-    const prevActiveTags = useRef(activeTags);
-    const maxPages = useRef(0);
 
     useEffect(() => {
         onTagChange();
@@ -147,9 +151,7 @@ const DestinationPage = () => {
         return async () => {
             try {
                 // dispatch(showLoading('DestinationPageLoading'));
-                const response = await axios.get(
-                    '/api/geolocation/prresponsevinces',
-                );
+                const response = await axios.get('/api/geolocation/provinces');
                 setProvinces(response.data.data || []);
             } catch (e) {
                 if (!(e instanceof AxiosError)) {
