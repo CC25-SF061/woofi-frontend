@@ -20,6 +20,7 @@ import NewPassword from './pages/loginPages/newPassword.jsx';
 import Profile from './pages/profilePages/profile';
 import Wishlist from './pages/profilePages/wishlist';
 import AddData from './pages/profilePages/addData';
+import DataDestination from './pages/profilePages/dataDestination.jsx';
 
 import Dashboard from './pages/adminPages/dashboard.jsx';
 import UsersDashboard from './pages/adminPages/user_dashboard.jsx';
@@ -129,6 +130,7 @@ const App = () => {
                         path="/profile/add-data"
                         element={<AddData />}
                     ></Route>
+                    <Route path="/profile/data-destination" element={<DataDestination />}></Route>
                     <Route path="/admin" element={<Dashboard />}></Route>
                     <Route
                         path="/admin/users"
