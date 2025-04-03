@@ -149,23 +149,23 @@ const DataDestination = () => {
 
       {selectedItemToEdit && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 bg-opacity-80 backdrop-blur-md z-50 font-quicksand">
-          <div className="relative p-4 w-full max-w-lg bg-white rounded-lg shadow-lg dark:bg-gray-700 
-            max-h-[80vh] overflow-y-auto"> {/* Tambahkan max-h dan overflow-y-auto */}
+          <div className="relative p-4 py-0 w-full max-w-lg bg-white rounded-lg shadow-lg dark:bg-gray-700 max-h-[90vh] overflow-y-auto">
 
-            <div className="flex items-center justify-between border-b p-4 rounded-t dark:border-gray-600">
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                Edit Destination
-              </h3>
-              <button
-                onClick={() => setSelectedItemToEdit(null)}
-                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-sm text-xl cursor-pointer"
-              >
-                <IoClose />
-              </button>
+            <div className="sticky top-0 bg-white dark:bg-gray-700 z-10 p-4 pt-8 border-b rounded-t dark:border-gray-600">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                  Edit Destination
+                </h3>
+                <button
+                  onClick={() => setSelectedItemToEdit(null)}
+                  className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-sm text-xl cursor-pointer"
+                >
+                  <IoClose />
+                </button>
+              </div>
             </div>
 
             <div className="p-4 space-y-4">
-              {/* Edit Name */}
               <label className="block text-gray-700 dark:text-gray-300">Destination Name:</label>
               <input
                 type="text"
@@ -176,7 +176,6 @@ const DataDestination = () => {
                 className="w-full p-2 border border-gray-300 rounded dark:bg-gray-600 dark:text-white"
               />
 
-              {/* Edit Location */}
               <label className="block text-gray-700 dark:text-gray-300">Location:</label>
               <input
                 type="text"
@@ -187,7 +186,6 @@ const DataDestination = () => {
                 className="w-full p-2 border border-gray-300 rounded dark:bg-gray-600 dark:text-white"
               />
 
-              {/* Edit Description */}
               <label className="block text-gray-700 dark:text-gray-300">Description:</label>
               <textarea
                 value={selectedItemToEdit.detail}
@@ -197,24 +195,22 @@ const DataDestination = () => {
                 className="w-full p-2 border border-gray-300 rounded dark:bg-gray-600 dark:text-white"
               />
 
-              {/* Edit Image (Upload File) */}
               <label className="block text-gray-700 dark:text-gray-300">Image:</label>
               <div className="flex items-center justify-center w-full">
-                  <label for="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                          <svg className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
-                          </svg>
-                          <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
-                      </div>
-                      <input id="dropzone-file" type="file" className="hidden" />
-                  </label>
-              </div> 
+                <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                  <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                    <svg className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                      <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                    </svg>
+                    <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or drag and drop</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                  </div>
+                  <input id="dropzone-file" type="file" className="hidden" />
+                </label>
+              </div>
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex items-center justify-end p-4 border-t border-gray-200 rounded-b dark:border-gray-600 gap-3">
+            <div className="sticky bottom-0 bg-white dark:bg-gray-700 z-10 p-4 pb-8 border-t border-gray-200 rounded-b dark:border-gray-600 flex items-center justify-end gap-3">
               <button
                 onClick={() => setSelectedItemToEdit(null)}
                 className="py-2.5 px-5 text-sm font-medium text-gray-900 bg-white rounded-lg hover:bg-gray-300 cursor-pointer"

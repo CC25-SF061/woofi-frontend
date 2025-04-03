@@ -26,7 +26,31 @@ import ErrorConstants from '../util/errorConstant';
 import { toast, ToastContainer } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 
+const maxCardsToIndexable = 8;
 const DestinationPage = () => {
+    const dispatch = useDispatch();
+
+    const [destinationList, setDestinationList] = useState([]);
+    const [destinationDisplay, setDestinationDisplay] = useState([]);
+    const [currentPageIndex, setCurrentPageIndex] = useState(0);
+    const [provinces, setProvinces] = useState([]);
+    const [mapDisplay, setMapDisplay] = useState({
+        pos: [-1.748926, 120.0148634],
+        zoom: 5,
+        name: '',
+        isSelected: false,
+    });
+    const [activeTags, setActiveTag] = useState([
+        true,
+        false,
+        false,
+        false,
+        false,
+    ]); // 0: Highest Rating, 1: Wishlisted, 2: Newest, 3: Oldest, 4: Written by you
+
+    const prevActiveTags = useRef(activeTags);
+    const maxPages = useRef(0);
+
     const onTagChange = () => {
         if (activeTags[2] && activeTags[3]) {
             // both Newest & Oldest tag activation alternation mechanism
@@ -46,10 +70,11 @@ const DestinationPage = () => {
         prevActiveTags.current = activeTags;
     };
 
-    const dispatch = useDispatch();
-
-    const onSearchSubmit = (e) => {
-        e.preventDefault();
+    const onSearchSubmit = (province, destination) => {
+        // TODO : API Recall, Refrsh destination list & display
+        console.log(
+            `searching province : ${province.name} & destination : ${destination.name}`,
+        );
     };
 
     useEffect(() => {
@@ -58,12 +83,11 @@ const DestinationPage = () => {
             try {
                 dispatch(showLoading('DestinationPageLoading'));
                 const response = (await axios.get('/api/destinations')).data;
-                setDestinationList(response.data || null);
-                console.log(response.data);
+                setDestinationList(response.data);
             } catch (e) {
                 if (!(e instanceof AxiosError)) {
                     return toast.error(
-                        'Something went wrong, Please try again later.',
+                        'Something went wrong while getting destinations, Please try again later.',
                         {
                             position: 'top-right',
                         },
@@ -71,7 +95,7 @@ const DestinationPage = () => {
                 }
                 if (e.code === 'ERR_NETWORK') {
                     return toast.error(
-                        'Connection offline, Please try again later.',
+                        'Connection offline while getting destinations, Please try again later.',
                         {
                             position: 'top-right',
                         },
@@ -84,54 +108,33 @@ const DestinationPage = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const [destinationList, setDestinationList] = useState([]);
-    const [destinationDisplay, setDestinationDisplay] = useState([]);
-    const [currentPageIndex, setCurrentPageIndex] = useState(0);
-    const [provinces, setProvinces] = useState();
-    const [mapDisplay, setMapDisplay] = useState({
-        pos: [-1.748926, 120.0148634],
-        zoom: 5,
-        name: '',
-        isSelected: false,
-    });
-    const [activeTags, setActiveTag] = useState([
-        true,
-        false,
-        false,
-        false,
-        false,
-    ]); // 0: Highest Rating, 1: Wishlisted, 2: Newest, 3: Oldest, 4: Written by you
-    const prevActiveTags = useRef(activeTags);
-    const maxPages = useRef(0);
-
     useEffect(() => {
+        // Tag changes
         onTagChange();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeTags]);
 
-    const maxCardsToIndexable = 8;
     useEffect(() => {
-        // Index pages
+        // Index pages & rerender when destinationList refresh
+        setCurrentPageIndex(0);
         if (destinationList.length <= maxCardsToIndexable) {
             return;
         }
         const pagesCount = Math.ceil(
             destinationList.length / maxCardsToIndexable,
         );
-
-        setCurrentPageIndex(0);
         maxPages.current = pagesCount;
     }, [destinationList]);
 
     useEffect(() => {
+        // Display Destinations
         setDestinationDisplay(
             destinationList.slice(
                 currentPageIndex * maxCardsToIndexable,
                 (currentPageIndex + 1) * maxCardsToIndexable,
             ),
         );
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentPageIndex]);
+    }, [currentPageIndex, destinationList]);
 
     const onProvinceSelected = (province) => {
         setMapDisplay((state) => ({
@@ -143,19 +146,29 @@ const DestinationPage = () => {
         }));
     };
     useEffect(() => {
-        (async () => {
-            const provinces = await axios.get('/api/geolocation/provinces');
-            setProvinces(provinces.data.data);
-        })();
-    }, []);
-    useEffect(() => {
+        // Get available provinces
         return async () => {
-            await axios
-                .get('/api/destinations') // TODO: LOADING
-                .then((v) => {
-                    setDestinationList(v.data.data);
-                })
-                .catch(console.err);
+            try {
+                const response = await axios.get('/api/geolocation/provinces');
+                setProvinces(response.data.data || []);
+            } catch (e) {
+                if (!(e instanceof AxiosError)) {
+                    return toast.error(
+                        'Something went wrong while getting provinces, Please try again later.',
+                        {
+                            position: 'top-right',
+                        },
+                    );
+                }
+                if (e.code === 'ERR_NETWORK') {
+                    return toast.error(
+                        'Connection offline while getting provinces, Please try again later.',
+                        {
+                            position: 'top-right',
+                        },
+                    );
+                }
+            }
         };
     }, []);
 

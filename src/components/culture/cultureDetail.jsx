@@ -16,10 +16,10 @@ const backdropVariants = {
 const CultureDetail = ({ item, onClose }) => {
   useEffect(() => {
     if (item) {
-      document.body.style.overflow = "hidden"; // Matikan scroll saat modal terbuka
+      document.body.style.overflow = "hidden"; 
     }
     return () => {
-      document.body.style.overflow = "auto"; // Pulihkan scroll saat modal ditutup
+      document.body.style.overflow = "auto"; 
     };
   }, [item]);
 
@@ -38,7 +38,7 @@ const CultureDetail = ({ item, onClose }) => {
       >
         {/* Modal */}
         <motion.div
-          className="bg-[#252527] rounded-lg shadow-lg p-12 max-w-2xl max-h-[500px] w-full relative"
+          className="bg-[#252527] rounded-lg shadow-lg p-8 max-w-2xl max-h-[600px] w-full relative"
           variants={modalVariants}
           initial="hidden"
           animate="visible"

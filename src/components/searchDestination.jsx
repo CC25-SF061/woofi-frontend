@@ -2,12 +2,12 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { FaSearch, FaChevronDown } from 'react-icons/fa';
 
-let num = 1;
-const SearchDestination = ({ selectedHandler, provinces }) => {
-    const [province, setProvince] = useState();
-    // const [provinces, setProvinces] = useState();
+const SearchDestination = ({ handleSubmit, selectedHandler, provinces }) => {
+    const [province, setProvince] = useState({ name: '' });
+    const [destination, setDestination] = useState({ name: '' });
     const [filteredProvinces, setFilteredProvinces] = useState(provinces);
     const [dropdownOpen, setDropdownOpen] = useState(false);
+
     const handleProvinceChange = (e) => {
         const value = e.target.value;
         setProvince({
@@ -24,9 +24,11 @@ const SearchDestination = ({ selectedHandler, provinces }) => {
             setFilteredProvinces(provinces);
         }
     };
+
     useEffect(() => {
         setFilteredProvinces(provinces);
     }, [provinces]);
+
     const handleSelectProvince = (selectedProvince) => {
         setProvince(selectedProvince);
         selectedHandler(selectedProvince);
@@ -38,7 +40,13 @@ const SearchDestination = ({ selectedHandler, provinces }) => {
     };
 
     return (
-        <form className="flex flex-col text-center items-center bg-[#252527] text-white px-5 md:px-8 py-5 gap-3 rounded-md w-full">
+        <form
+            className="flex flex-col text-center items-center bg-[#252527] text-white px-5 md:px-8 py-5 gap-3 rounded-md w-full"
+            onSubmit={(e) => {
+                e.preventDefault();
+                handleSubmit(province, destination);
+            }}
+        >
             <label
                 htmlFor="province"
                 className="font-quicksand text-sm sm:text-md text-nowrap md:text-xl rounded-md w-full tracking-tight sm:tracking-wide"
@@ -71,7 +79,7 @@ const SearchDestination = ({ selectedHandler, provinces }) => {
                     </div>
 
                     {dropdownOpen && filteredProvinces.length > 0 && (
-                        <ul className="absolute left-0 mt-1 w-full bg-[#252527] text-white border border-[#FFA666] rounded-sm shadow-md shadow-stone-950 z-10">
+                        <ul className="absolute left-0 mt-1 w-full bg-[#252527] text-white border border-[#FFA666] rounded-sm shadow-md shadow-stone-950 z-10 max-h-80 overflow-y-auto">
                             {filteredProvinces.map((p) => (
                                 <li
                                     key={p.name}
@@ -91,6 +99,10 @@ const SearchDestination = ({ selectedHandler, provinces }) => {
                         name="destinationName"
                         className="bg-[#252527] w-full text-nowrap px-5 py-2 pr-12 text-white font-quicksand placeholder-[#ffffff32] shadow-md shadow-stone-950 rounded-lg"
                         type="text"
+                        value={destination.name}
+                        onChange={(e) => {
+                            setDestination({ name: e.target.value.trim() });
+                        }}
                         placeholder="Look up Destination"
                     />
                     <button

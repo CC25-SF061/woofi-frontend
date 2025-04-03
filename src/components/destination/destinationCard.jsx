@@ -179,7 +179,11 @@ const DestinationCard = ({
                 {optionsIcon && (
                     <div className="relative">
                         <button
-                            className="text-white cursor-pointer p-1 rounded-full bg-[#252527] hover:bg-gray-700"
+                            className={`text-white cursor-pointer p-1 rounded-full bg-[#252527] ${
+                                dropdownOpen
+                                    ? 'bg-gray-700'
+                                    : 'hover:bg-gray-700'
+                            }`}
                             onClick={() => setDropdownOpen(!dropdownOpen)}
                         >
                             {optionsIcon}
