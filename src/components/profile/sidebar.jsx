@@ -51,6 +51,16 @@ const Sidebar = () => {
             >
               Wishlist
             </Link>
+            <Link
+              to="/profile/data-destination"
+              className={`py-1 hover:text-gray-300 transition ${
+                location.pathname === "/profile/data-destination"
+                  ? "text-[#FFA666] font-bold"
+                  : ""
+              }`}
+            >
+              Data Destination
+            </Link>
           </div>
         </div>
 
