@@ -9,7 +9,7 @@ import countStars from '../../util/starRating';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import axios, { AxiosError } from 'axios';
-import errorConstant from '../../util/errorConstant';
+import ErrorConstant from '../../util/ErrorConstant.js';
 
 const DestinationCard = ({
     id,
@@ -52,7 +52,7 @@ const DestinationCard = ({
                 });
             }
             const response = e.response.data.payload;
-            if (response.errCode !== errorConstant.ERR_WISHLIST_ALREADY_EXIST) {
+            if (response.errCode !== ErrorConstant.ERR_WISHLIST_ALREADY_EXIST) {
                 return toast.error('Something went wrong', {
                     position: 'top-right',
                     autoClose: 3000,

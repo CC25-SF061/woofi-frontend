@@ -1,5 +1,4 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FaSearch, FaChevronDown } from 'react-icons/fa';
 
 const SearchDestination = ({ handleSubmit, selectedHandler, provinces }) => {
@@ -7,7 +6,7 @@ const SearchDestination = ({ handleSubmit, selectedHandler, provinces }) => {
     const [destination, setDestination] = useState({ name: '' });
     const [filteredProvinces, setFilteredProvinces] = useState(provinces);
     const [dropdownOpen, setDropdownOpen] = useState(false);
-
+    const inputDropdown = useRef(null);
     const handleProvinceChange = (e) => {
         const value = e.target.value;
         setProvince({
@@ -24,7 +23,6 @@ const SearchDestination = ({ handleSubmit, selectedHandler, provinces }) => {
             setFilteredProvinces(provinces);
         }
     };
-
     useEffect(() => {
         setFilteredProvinces(provinces);
     }, [provinces]);
@@ -33,9 +31,11 @@ const SearchDestination = ({ handleSubmit, selectedHandler, provinces }) => {
         setProvince(selectedProvince);
         selectedHandler(selectedProvince);
         setDropdownOpen(false);
+        setFilteredProvinces(provinces);
     };
 
     const toggleDropdown = () => {
+        if (!dropdownOpen) inputDropdown.current.focus();
         setDropdownOpen((prev) => !prev);
     };
 
@@ -62,6 +62,7 @@ const SearchDestination = ({ handleSubmit, selectedHandler, provinces }) => {
                             className="bg-[#252527] w-full text-nowrap px-5 py-2 text-white font-quicksand placeholder-[#ffffff32] shadow-md shadow-stone-950 rounded-sm"
                             type="text"
                             placeholder="Search Province"
+                            ref={inputDropdown}
                             value={province?.name || ''}
                             onChange={handleProvinceChange}
                         />

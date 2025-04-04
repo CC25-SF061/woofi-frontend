@@ -4,18 +4,11 @@ import Navbar from '../components/navbar';
 import DestinationViewHeader from '../components/destination/view/destinationHeader';
 import DestinationContent from '../components/destination/view/destinationContent';
 import Footer from '../components/footer';
-
-import NotFound from './notFound';
 import { showLoading, hideLoading } from '../stores/loadingReducer';
-
-import Image1 from '../assets/gallery/image1.webp';
-import Image2 from '../assets/gallery/image2.webp';
-import Image3 from '../assets/gallery/lompatBatu.webp';
-import Image4 from '../assets/gallery/rambuSolo.webp';
 import axios, { AxiosError } from 'axios';
 import { useDispatch } from 'react-redux';
 import { toast, ToastContainer } from 'react-toastify';
-import ErrorConstant from '../util/errorConstant';
+import ErrorConstant from '../util/ErrorConstant.js';
 
 const DestinationViewPage = () => {
     const { destinationId } = useParams();

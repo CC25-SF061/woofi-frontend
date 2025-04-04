@@ -12,7 +12,7 @@ import countStars from '../../../util/starRating';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
-import errorConstant from '../../../util/errorConstant';
+import ErrorConstant from '../../../util/errorConstant';
 
 const DestinationGroup = ({
     id,
@@ -59,7 +59,7 @@ const DestinationGroup = ({
                 });
             }
             const response = e.response.data.payload;
-            if (response.errCode !== errorConstant.ERR_WISHLIST_ALREADY_EXIST) {
+            if (response.errCode !== ErrorConstant.ERR_WISHLIST_ALREADY_EXIST) {
                 return toast.error('Something went wrong', {
                     position: 'top-right',
                     autoClose: 3000,

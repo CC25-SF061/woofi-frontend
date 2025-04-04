@@ -32,7 +32,6 @@ import AuthGuard from './components/authGuard.jsx';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setData } from './stores/userReducer.js';
-import createAuthRefreshInterceptor from 'axios-auth-refresh';
 
 const App = () => {
     const dispatch = useDispatch();
@@ -54,7 +53,7 @@ const App = () => {
                     ).data;
                     localStorage.setItem('token', refreshToken.data.token);
                     return axios(originalRequest);
-                } catch (e) {
+                } catch (_) {
                     localStorage.setItem('token', null);
 
                     dispatch(

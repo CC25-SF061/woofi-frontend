@@ -1,0 +1,6 @@
+export default {
+    NEWEST: 'NEWEST',
+    OLDEST: 'OLDEST',
+    HIGHEST_RATING: 'HIGHEST_RATING',
+    WRITTEN_BY_YOU: 'WRITTEN_BY_YOU',
+};

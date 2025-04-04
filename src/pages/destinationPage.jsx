@@ -8,25 +8,17 @@ import PageIndexer from '../components/destination/destinationPageIndexer';
 import JoinUs from '../components/joinUs';
 import Footer from '../components/footer';
 import HeroSection from '../components/heroSection';
-
 import Image1 from '../assets/gallery/image1.webp';
-import Image2 from '../assets/gallery/image2.webp';
-import Image3 from '../assets/gallery/lompatBatu.webp';
-import Image4 from '../assets/gallery/rambuSolo.webp';
-
-import { Swiper, SwiperSlide } from 'swiper/react';
 import { motion } from 'framer-motion';
 import 'swiper/css';
 import 'swiper/css/effect-fade';
 import 'swiper/css/pagination';
-import { EffectFade, Autoplay, Pagination } from 'swiper/modules';
 import { showLoading, hideLoading } from '../stores/loadingReducer';
-
 import axios, { AxiosError } from 'axios';
-import ErrorConstants from '../util/errorConstant';
 import { toast, ToastContainer } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import DestinationFilter from '../util/DestinationFilter';
 
 const maxCardsToIndexable = 8;
 const DestinationPage = () => {
@@ -44,17 +36,86 @@ const DestinationPage = () => {
         name: '',
         isSelected: false,
     });
-    const [activeTags, setActiveTag] = useState([
-        true,
-        false,
-        false,
-        false,
-        false,
-    ]); // 0: Highest Rating, 1: Wishlisted, 2: Newest, 3: Oldest, 4: Written by you
+    const [searchState, setSearchState] = useState();
+    const [activeTags, setActiveTags] = useState([]);
 
     const prevActiveTags = useRef(activeTags);
     const maxPages = useRef(0);
+    const searchDestination = async (province, name, filter = []) => {
+        try {
+            dispatch(showLoading('DestinationPageLoading'));
+            const response = await axios.get('/api/destinations', {
+                params: {
+                    province: province || undefined,
+                    name: name || undefined,
+                    filter: filter,
+                },
+            });
+            setDestinationList(response.data.data);
+        } catch (e) {
+            console.log(e);
+            toast.error(
+                'Something went wrong while getting destinations, Please try again later.',
+                {
+                    position: 'top-right',
+                },
+            );
+        } finally {
+            dispatch(hideLoading('DestinationPageLoading'));
+        }
+    };
+    const handleTagChange = (tags) => {};
+    const tagsChangeHandler = ({ type, active, setActive }) => {
+        let tags = [...activeTags];
+        let filterToggle = [];
+        if (!active) {
+            setActive(false);
+            tags = tags.filter((tag) => tag.type !== type);
+            setActiveTags(tags);
+            setSearchState((state) => ({
+                ...state,
+                tags: tags.map((tag) => tag.type),
+            }));
+            searchDestination(
+                searchState?.province.name,
+                searchState?.destination?.name,
+                tags.map((tag) => tag.type),
+            );
+            return;
+        }
+        if (
+            type === DestinationFilter.NEWEST &&
+            tags.find((tag) => tag.type === DestinationFilter.OLDEST)
+        ) {
+            filterToggle = tags.filter(
+                (tag) => tag.type === DestinationFilter.OLDEST,
+            );
+            tags = tags.filter((tag) => tag.type !== DestinationFilter.OLDEST);
+        }
+        if (
+            type === DestinationFilter.OLDEST &&
+            tags.find((tag) => tag.type === DestinationFilter.NEWEST)
+        ) {
+            filterToggle = tags.filter(
+                (tag) => tag.type === DestinationFilter.NEWEST,
+            );
+            tags = tags.filter((tag) => tag.type !== DestinationFilter.NEWEST);
+        }
 
+        filterToggle.forEach((tag) => tag.setActive(false));
+        tags.push({ type, active, setActive });
+        setActive(true);
+        searchDestination(
+            searchState?.province.name,
+            searchState?.destination?.name,
+            tags.map((tag) => tag.type),
+        );
+        setSearchState((state) => ({
+            ...state,
+            tags: tags.map((tag) => tag.type),
+        }));
+        setActiveTags(tags);
+    };
     const onTagChange = () => {
         if (activeTags[2] && activeTags[3]) {
             // both Newest & Oldest tag activation alternation mechanism
@@ -64,7 +125,7 @@ const DestinationPage = () => {
             else newTags[3] = false;
 
             prevActiveTags.current = newTags;
-            setActiveTag(newTags);
+            setActiveTags(newTags);
 
             return;
         }
@@ -75,10 +136,13 @@ const DestinationPage = () => {
     };
 
     const onSearchSubmit = (province, destination) => {
-        // TODO : API Recall, Refrsh destination list & display
-        console.log(
-            `searching province : ${province.name} & destination : ${destination.name}`,
-        );
+        setSearchState((state) => ({
+            ...state,
+            province: province,
+            destination: destination,
+        }));
+
+        searchDestination(province.name, destination.name, searchState?.tags);
     };
 
     const handleLoginNavigation = async () => {
@@ -91,41 +155,8 @@ const DestinationPage = () => {
     };
 
     useEffect(() => {
-        // Initialize API Call
-        return async () => {
-            try {
-                dispatch(showLoading('DestinationPageLoading'));
-                const response = (await axios.get('/api/destinations')).data;
-                setDestinationList(response.data);
-            } catch (e) {
-                if (!(e instanceof AxiosError)) {
-                    return toast.error(
-                        'Something went wrong while getting destinations, Please try again later.',
-                        {
-                            position: 'top-right',
-                        },
-                    );
-                }
-                if (e.code === 'ERR_NETWORK') {
-                    return toast.error(
-                        'Connection offline while getting destinations, Please try again later.',
-                        {
-                            position: 'top-right',
-                        },
-                    );
-                }
-            } finally {
-                dispatch(hideLoading('DestinationPageLoading'));
-            }
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        searchDestination();
     }, []);
-
-    useEffect(() => {
-        // Tag changes
-        onTagChange();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [activeTags]);
 
     useEffect(() => {
         // Index pages & rerender when destinationList refresh
@@ -150,6 +181,12 @@ const DestinationPage = () => {
     }, [currentPageIndex, destinationList]);
 
     const onProvinceSelected = (province) => {
+        setSearchState((state) => ({ ...state, province: province }));
+        searchDestination(
+            province.name,
+            searchState?.destination?.name,
+            searchState?.tags,
+        );
         setMapDisplay((state) => ({
             ...state,
             zoom: 7,
@@ -160,7 +197,7 @@ const DestinationPage = () => {
     };
     useEffect(() => {
         // Get available provinces
-        return async () => {
+        (async () => {
             try {
                 const response = await axios.get('/api/geolocation/provinces');
                 setProvinces(response.data.data || []);
@@ -182,7 +219,7 @@ const DestinationPage = () => {
                     );
                 }
             }
-        };
+        })();
     }, []);
 
     return (
@@ -208,9 +245,10 @@ const DestinationPage = () => {
                     isSelected={mapDisplay.isSelected}
                 />
                 <DestinationGroup
-                    tags={[activeTags, setActiveTag]}
+                    tags={[activeTags, setActiveTags]}
                     destinations={destinationDisplay}
                     maxIndexable={maxCardsToIndexable}
+                    tagsChangeHandler={tagsChangeHandler}
                     setLoginModalVisible={setLoginModalVisible}
                 />
                 {maxPages.current > 0 ? (

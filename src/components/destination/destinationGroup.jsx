@@ -1,12 +1,12 @@
-import { React, useRef } from 'react';
+import { React, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DestinationFilter from './destinationTag';
 import DestinationCard from './destinationCard';
-import { motion } from 'framer-motion';
 import { useSelector } from 'react-redux';
+import DestinationFilterConstant from '../../util/DestinationFilter.js';
 
 const DestinationGroup = ({
-    tags,
+    tagsChangeHandler,
     destinations,
     maxIndexable,
     setLoginModalVisible,
@@ -15,13 +15,10 @@ const DestinationGroup = ({
     const navigate = useNavigate();
     const loading = useSelector((state) => state.loading.loading);
 
-    const [activeTags, setActiveTag] = tags;
-
     const onCardClick = (id) => {
         // TODO? : Add to user statistic
         navigate(`/destination/${id}`);
     };
-
     return (
         <div ref={containerRef} className="mt-15 flex flex-col w-full">
             <div className="relative w-full caret-transparent">
@@ -35,28 +32,24 @@ const DestinationGroup = ({
             <div className="flex flex-row gap-2 mx-auto md:mx-0 md:gap-5 mt-5 md:mt-18 self-start caret-transparent">
                 <DestinationFilter
                     name="Highest Rating"
-                    order="0"
-                    activity={[activeTags, setActiveTag]}
+                    stateChangeHandler={tagsChangeHandler}
+                    type={DestinationFilterConstant.HIGHEST_RATING}
                 ></DestinationFilter>
-                <DestinationFilter
-                    name="Wishlisted"
-                    order="1"
-                    activity={[activeTags, setActiveTag]}
-                ></DestinationFilter>
+
                 <DestinationFilter
                     name="Newest"
-                    order="2"
-                    activity={[activeTags, setActiveTag]}
+                    stateChangeHandler={tagsChangeHandler}
+                    type={DestinationFilterConstant.NEWEST}
                 ></DestinationFilter>
                 <DestinationFilter
                     name="Oldest"
-                    order="3"
-                    activity={[activeTags, setActiveTag]}
+                    stateChangeHandler={tagsChangeHandler}
+                    type={DestinationFilterConstant.OLDEST}
                 ></DestinationFilter>
                 <DestinationFilter
+                    stateChangeHandler={tagsChangeHandler}
+                    type={DestinationFilterConstant.WRITTEN_BY_YOU}
                     name="Written by you"
-                    order="4"
-                    activity={[activeTags, setActiveTag]}
                 ></DestinationFilter>
             </div>
 
@@ -75,10 +68,7 @@ const DestinationGroup = ({
                                           import.meta.env.VITE_STATIC_ASSET_BASE_URL,
                                       ).href
                                   }
-                                  name={
-                                      element.name ||
-                                      'Nunggu kesava return nama nih' /*TODO: REMOVE PIPE WHEN BACKEND UPDATES*/
-                                  }
+                                  name={element.name}
                                   detail={element.detail}
                                   isWishlisted={element.isWishlisted}
                                   rating={element.rating}
