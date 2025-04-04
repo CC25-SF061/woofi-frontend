@@ -63,10 +63,10 @@ const DestinationPage = () => {
             dispatch(hideLoading('DestinationPageLoading'));
         }
     };
-    const handleTagChange = (tags) => {};
     const tagsChangeHandler = ({ type, active, setActive }) => {
         let tags = [...activeTags];
         let filterToggle = [];
+
         if (!active) {
             setActive(false);
             tags = tags.filter((tag) => tag.type !== type);
@@ -76,12 +76,13 @@ const DestinationPage = () => {
                 tags: tags.map((tag) => tag.type),
             }));
             searchDestination(
-                searchState?.province.name,
+                searchState?.province?.name,
                 searchState?.destination?.name,
                 tags.map((tag) => tag.type),
             );
             return;
         }
+
         if (
             type === DestinationFilter.NEWEST &&
             tags.find((tag) => tag.type === DestinationFilter.OLDEST)
@@ -91,6 +92,7 @@ const DestinationPage = () => {
             );
             tags = tags.filter((tag) => tag.type !== DestinationFilter.OLDEST);
         }
+
         if (
             type === DestinationFilter.OLDEST &&
             tags.find((tag) => tag.type === DestinationFilter.NEWEST)
@@ -105,7 +107,7 @@ const DestinationPage = () => {
         tags.push({ type, active, setActive });
         setActive(true);
         searchDestination(
-            searchState?.province.name,
+            searchState?.province?.name,
             searchState?.destination?.name,
             tags.map((tag) => tag.type),
         );
@@ -114,24 +116,6 @@ const DestinationPage = () => {
             tags: tags.map((tag) => tag.type),
         }));
         setActiveTags(tags);
-    };
-    const onTagChange = () => {
-        if (activeTags[2] && activeTags[3]) {
-            // both Newest & Oldest tag activation alternation mechanism
-            let newTags = [...activeTags];
-
-            if (prevActiveTags.current[2]) newTags[2] = false;
-            else newTags[3] = false;
-
-            prevActiveTags.current = newTags;
-            setActiveTags(newTags);
-
-            return;
-        }
-
-        // TODO : API Recall, Refresh destination list & display
-
-        prevActiveTags.current = activeTags;
     };
 
     const onSearchSubmit = (province, destination) => {
