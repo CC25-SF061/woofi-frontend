@@ -7,7 +7,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch, useSelector } from 'react-redux';
 import axios, { AxiosError } from 'axios';
-import ErrorConstant from '../../util/ErrorConstant';
+import ErrorConstant from '../../util/ErrorConstant.js';
 import { setForgetPassword } from '../../stores/forgetPasswordReducer';
 
 const NewPassword = () => {
@@ -48,7 +48,7 @@ const NewPassword = () => {
                 passwordConfirmation: null,
             }));
             const { password, passwordConfirmation } = Object.fromEntries(
-                new FormData(e.target)
+                new FormData(e.target),
             );
             await axios.post('/api/auth/reset-password', {
                 hash: forgetPassword.hash || ' ',

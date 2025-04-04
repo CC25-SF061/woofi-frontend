@@ -64,14 +64,19 @@ const DestinationGroup = ({ tags, destinations, maxIndexable }) => {
                                   key={order}
                                   id={element.id}
                                   order={order}
-                                  picture={element.image}
+                                  picture={
+                                      new URL(
+                                          element.image,
+                                          import.meta.env.VITE_STATIC_ASSET_BASE_URL,
+                                      ).href
+                                  }
                                   name={
                                       element.name ||
                                       'Nunggu kesava return nama nih' /*TODO: REMOVE PIPE WHEN BACKEND UPDATES*/
                                   }
                                   detail={element.detail}
                                   isWishlisted={element.isWishlisted}
-                                  rating={element.avgRating}
+                                  rating={element.rating}
                                   onclick={onCardClick}
                               ></DestinationCard>
                           );

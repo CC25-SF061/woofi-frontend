@@ -127,7 +127,11 @@ const App = () => {
                     ></Route>
                     <Route
                         path="/profile/data-destination"
-                        element={<DataDestination />}
+                        element={
+                            <AuthGuard>
+                                <DataDestination />
+                            </AuthGuard>
+                        }
                     ></Route>
                     <Route path="/admin" element={<Dashboard />}></Route>
                     <Route

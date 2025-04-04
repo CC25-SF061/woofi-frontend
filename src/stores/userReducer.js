@@ -22,7 +22,7 @@ export const fetchUserProfile = createAsyncThunk(
             }
         }
         return state.user.data;
-    }
+    },
 );
 export const userSlice = createSlice({
     name: 'user',

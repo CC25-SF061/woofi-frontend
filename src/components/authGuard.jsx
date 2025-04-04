@@ -6,7 +6,7 @@ import { fetchUserProfile } from '../stores/userReducer';
 const AuthGuard = ({ children }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const user = useSelector((state) => state.user);
+    const userId = useSelector((state) => state.user.data.id);
 
     useEffect(() => {
         async function fetchProfile() {
@@ -16,9 +16,9 @@ const AuthGuard = ({ children }) => {
             }
         }
         fetchProfile();
-    }, [user]);
+    }, [userId]);
 
-    return <>{children}</>;
+    return <>{userId ? children : ''}</>;
 };
 
 export default AuthGuard;
