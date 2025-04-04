@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from '../../components/profile/sidebar';
 import { HiX } from 'react-icons/hi';
 import { RiMenu2Line } from 'react-icons/ri';
@@ -6,6 +6,8 @@ import { IoIosNotifications } from 'react-icons/io';
 import ErrorConstant from '../../util/ErrorConstant.js';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { FaChevronDown } from 'react-icons/fa';
+import axios from 'axios';
 
 const AddData = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -19,6 +21,9 @@ const AddData = () => {
         province: '',
     });
     const [errors, setErrors] = useState({});
+    const [province, setProvince] = useState({ name: '' });
+    const [filteredProvinces, setFilteredProvinces] = useState([]);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -57,13 +62,11 @@ const AddData = () => {
             return;
         }
 
-        // Jika validasi berhasil
         toast.success('Data added successfully!', {
             position: 'top-right',
             autoClose: 3000,
         });
 
-        // Reset form setelah submit
         setFormData({
             title: '',
             description: '',
@@ -82,9 +85,47 @@ const AddData = () => {
             const imageUrl = URL.createObjectURL(file);
             setSelectedImage(imageUrl);
             setFileName(file.name);
-            setErrors((prevErrors) => ({ ...prevErrors, imageLink: null })); // Reset error
+            setErrors((prevErrors) => ({ ...prevErrors, imageLink: null }));
         }
     };
+
+    useEffect(() => {
+        setFormData((prev) => ({ ...prev, province: province.name }));
+    }, [province]);
+
+    useEffect(() => {
+        const fetchProvinces = async () => {
+            try {
+                const res = await axios.get('/api/geolocation/provinces');
+                setFilteredProvinces(res.data);
+            } catch (err) {
+                toast.error('Failed to fetch provinces!');
+                console.error(err);
+            }
+        };
+    
+        fetchProvinces();
+    }, []);
+
+    const handleProvinceChange = (e) => {
+        const value = e.target.value;
+        setProvince({ name: value });
+        setDropdownOpen(true);
+    
+        const filtered = filteredProvinces.filter((p) =>
+            p.name.toLowerCase().includes(value.toLowerCase())
+        );
+        setFilteredProvinces(filtered);
+    };
+    
+    const handleSelectProvince = (selectedProvince) => {
+        setProvince(selectedProvince);
+        setDropdownOpen(false);
+    };
+    
+    const toggleDropdown = () => {
+        setDropdownOpen((prev) => !prev);
+    };    
 
     return (
         <div>
@@ -185,26 +226,49 @@ const AddData = () => {
                                     </div>
                                 </div>
                                 <div className="flex flex-col mb-2 lg:mb-0 mt-auto">
-                                    <p className="font-quicksand text-white pb-2">
-                                        Province
-                                    </p>
-                                    <input
-                                        type="text"
-                                        name="province"
-                                        value={formData.province}
-                                        onChange={handleChange}
-                                        placeholder="Input Province"
-                                        className={`flex-3 p-3 font-quicksand rounded text-white border ${
-                                            errors.province
-                                                ? 'border-red-500'
-                                                : 'border-white'
-                                        } bg-transparent focus:outline-none focus:ring focus:ring-[#FFA666]`}
-                                    />
+                                    <p className="font-quicksand text-white pb-2">Province</p>
+                                    <div className="relative w-full">
+                                        <div className="flex items-center">
+                                            <input
+                                                id="province"
+                                                type="text"
+                                                name="province"
+                                                value={province.name}
+                                                onChange={handleProvinceChange}
+                                                placeholder="Search Province"
+                                                className={`flex-3 p-3 font-quicksand rounded text-white border ${
+                                                    errors.province ? 'border-red-500' : 'border-white'
+                                                } bg-transparent w-full pr-10 focus:outline-none focus:ring focus:ring-[#FFA666]`}
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={toggleDropdown}
+                                                className="absolute inset-y-0 right-0 flex items-center justify-center p-2 pl-4 rounded rounded-l-2xl bg-[#FFA666] cursor-pointer transition-all duration-200 hover:bg-white group"
+                                            >
+                                                <FaChevronDown
+                                                    className={`text-lg text-black group-hover:text-[#FFA666] transition-transform duration-300 ${
+                                                        dropdownOpen ? 'rotate-180' : 'rotate-0'
+                                                    }`}
+                                                />
+                                            </button>
+                                        </div>
+                                        {dropdownOpen && filteredProvinces.length > 0 && (
+                                            <ul className="absolute z-10 w-full mt-1 bg-[#252527] text-white border border-[#FFA666] rounded shadow-md max-h-60 overflow-y-auto">
+                                                {filteredProvinces.map((p) => (
+                                                    <li
+                                                        key={p.name}
+                                                        className="px-4 py-2 cursor-pointer hover:bg-[#FFA666] hover:text-black transition-all duration-200"
+                                                        onClick={() => handleSelectProvince(p)}
+                                                    >
+                                                        {p.name}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                    </div>
                                     <div className="min-h-[20px]">
                                         {errors.province && (
-                                            <div className="text-red-500 text-sm">
-                                                {errors.province}
-                                            </div>
+                                            <div className="text-red-500 text-sm">{errors.province}</div>
                                         )}
                                     </div>
                                 </div>
