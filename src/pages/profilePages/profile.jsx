@@ -268,6 +268,7 @@ const Profile = () => {
                                         onChange={(e) =>
                                             setUsername(e.target.value)
                                         }
+                                        readOnly
                                         placeholder="Your Username"
                                         className="flex-3 p-3 font-quicksand rounded text-white border border-white w-full focus:outline-none"
                                     />
@@ -325,6 +326,7 @@ const Profile = () => {
                                         onChange={(e) =>
                                             setEmail(e.target.value)
                                         }
+                                        readOnly
                                     />
                                     <button
                                         className="flex-1 lg:p-3 py-1 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition cursor-pointer font-semibold"
