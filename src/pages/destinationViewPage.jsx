@@ -23,6 +23,7 @@ const DestinationViewPage = () => {
                 const response = (
                     await axios.get(`/api/destination/${destinationId}`)
                 ).data;
+                console.log(response.data);
                 setDestination(response.data || null);
             } catch (e) {
                 if (!(e instanceof AxiosError)) {
@@ -74,6 +75,7 @@ const DestinationViewPage = () => {
                     name={destination.name}
                     detail={destination.detail}
                     writer={destination.writer}
+                    creationDate={destination.created_at}
                 />
             </main>
             <Footer />

@@ -229,7 +229,7 @@ const DestinationPage = () => {
                 backgroundImage={Image1}
                 title="Explore the Best Destinations"
                 highlightedWord="Destinations"
-                description="Explore the best places in Indonesia with complete information."
+                description="Explore countless places in Indonesia with complete information."
             />
             <div className="flex flex-col px-10 items-center bg-[#221122] w-full">
                 <SearchDestination
