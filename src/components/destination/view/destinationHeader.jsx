@@ -1,4 +1,4 @@
-import { useState, React } from 'react';
+import { useState, React, useRef } from 'react';
 
 import StarFull from '../../../assets/icons/ratestar/full.svg';
 import StarHalf from '../../../assets/icons/ratestar/half.svg';
@@ -10,9 +10,10 @@ import { motion } from 'framer-motion';
 
 import countStars from '../../../util/starRating';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
-import ErrorConstant from '../../../util/errorConstant';
+import { toast } from 'react-toastify';
+import LoginModal from '../../loginModal';
+import errorConstant from '../../../util/ErrorConstant';
 
 const DestinationGroup = ({
     id,
@@ -25,26 +26,19 @@ const DestinationGroup = ({
     isWishlist,
     personalRating,
 }) => {
+    const userId = useSelector((state) => state.user.data.id);
+
+    const loginModal = useRef();
     const [rating, setRating] = useState(personalRating);
     const [wishlist, setWishlist] = useState(isWishlist);
-    const userId = useSelector((state) => state.user.data.id);
-    const navigate = useNavigate();
     const { whole_rating, has_half_rating, empty_rating } = countStars(rating);
-    const handleLoginNavigation = async () => {
-        await navigate('/sign-in');
-    };
 
     async function handleWishlist() {
         if (!userId) {
-            document.getElementById('modal-not-login').showModal();
+            loginModal.current.showModal();
             return;
         }
-        if (!wishlist) {
-            await addWishlist();
-        }
-        if (wishlist) {
-            await removeWishlist();
-        }
+        !wishlist ? await addWishlist() : await removeWishlist();
     }
 
     async function addWishlist() {
@@ -53,17 +47,20 @@ const DestinationGroup = ({
             await axios.post(`/api/user/wishlist/${id}`);
         } catch (e) {
             if (!(e instanceof AxiosError)) {
-                return toast.error('Something went wrong', {
+                return toast.error('Something went wrong while wishlisting', {
                     position: 'top-right',
                     autoClose: 3000,
                 });
             }
             const response = e.response.data.payload;
-            if (response.errCode !== ErrorConstant.ERR_WISHLIST_ALREADY_EXIST) {
-                return toast.error('Something went wrong', {
-                    position: 'top-right',
-                    autoClose: 3000,
-                });
+            if (response.errCode !== errorConstant.ERR_WISHLIST_ALREADY_EXIST) {
+                return toast.error(
+                    'Something went wrong while adding to wishlist',
+                    {
+                        position: 'top-right',
+                        autoClose: 3000,
+                    },
+                );
             }
         }
     }
@@ -73,7 +70,7 @@ const DestinationGroup = ({
             setWishlist(false);
             await axios.delete(`/api/user/wishlist/${id}`);
         } catch (e) {
-            toast.error('Something went wrong', {
+            toast.error('Something went wrong while removing from wishlist', {
                 position: 'top-right',
                 autoClose: 3000,
             });
@@ -83,13 +80,13 @@ const DestinationGroup = ({
     async function handleRating(value) {
         try {
             if (!userId) {
-                document.getElementById('modal-not-login').showModal();
+                loginModal.current.showModal();
                 return;
             }
             setRating(value);
             await axios.post(`/api/destination/rating/${id}`, { score: value });
         } catch (e) {
-            toast.error('Something went wrong', {
+            toast.error('Something went wrong while rating', {
                 position: 'top-right',
                 autoClose: 3000,
             });
@@ -98,24 +95,7 @@ const DestinationGroup = ({
 
     return (
         <div className="text-white flex flex-col w-full mb-4 gap-4">
-            <dialog id="modal-not-login" className="modal">
-                <div className="modal-box">
-                    <form method="dialog">
-                        {/* if there is a button in form, it will close the modal */}
-                        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-                            ✕
-                        </button>
-                    </form>
-                    <h3 className="font-bold text-lg">You are not login</h3>
-                    <p className="py-4">Login to continue</p>
-                    <button
-                        className="btn btn-neutral"
-                        onClick={handleLoginNavigation}
-                    >
-                        Login Now
-                    </button>
-                </div>
-            </dialog>
+            <LoginModal dialogRef={loginModal} />
             <div className="flex flex-row gap-4 items-center">
                 <h1 className="font-inknut-antiqua font-normal text-lg md:font-semibold md:text-3xl">
                     {name}

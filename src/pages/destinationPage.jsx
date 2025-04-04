@@ -17,13 +17,12 @@ import { showLoading, hideLoading } from '../stores/loadingReducer';
 import axios, { AxiosError } from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import DestinationFilter from '../util/DestinationFilter';
+import LoginModal from '../components/loginModal';
 
 const maxCardsToIndexable = 8;
 const DestinationPage = () => {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
 
     const [destinationList, setDestinationList] = useState([]);
     const [destinationDisplay, setDestinationDisplay] = useState([]);
@@ -64,10 +63,10 @@ const DestinationPage = () => {
             dispatch(hideLoading('DestinationPageLoading'));
         }
     };
-    const handleTagChange = (tags) => {};
     const tagsChangeHandler = ({ type, active, setActive }) => {
         let tags = [...activeTags];
         let filterToggle = [];
+
         if (!active) {
             setActive(false);
             tags = tags.filter((tag) => tag.type !== type);
@@ -77,12 +76,13 @@ const DestinationPage = () => {
                 tags: tags.map((tag) => tag.type),
             }));
             searchDestination(
-                searchState?.province.name,
+                searchState?.province?.name,
                 searchState?.destination?.name,
                 tags.map((tag) => tag.type),
             );
             return;
         }
+
         if (
             type === DestinationFilter.NEWEST &&
             tags.find((tag) => tag.type === DestinationFilter.OLDEST)
@@ -92,6 +92,7 @@ const DestinationPage = () => {
             );
             tags = tags.filter((tag) => tag.type !== DestinationFilter.OLDEST);
         }
+
         if (
             type === DestinationFilter.OLDEST &&
             tags.find((tag) => tag.type === DestinationFilter.NEWEST)
@@ -106,7 +107,7 @@ const DestinationPage = () => {
         tags.push({ type, active, setActive });
         setActive(true);
         searchDestination(
-            searchState?.province.name,
+            searchState?.province?.name,
             searchState?.destination?.name,
             tags.map((tag) => tag.type),
         );
@@ -115,24 +116,6 @@ const DestinationPage = () => {
             tags: tags.map((tag) => tag.type),
         }));
         setActiveTags(tags);
-    };
-    const onTagChange = () => {
-        if (activeTags[2] && activeTags[3]) {
-            // both Newest & Oldest tag activation alternation mechanism
-            let newTags = [...activeTags];
-
-            if (prevActiveTags.current[2]) newTags[2] = false;
-            else newTags[3] = false;
-
-            prevActiveTags.current = newTags;
-            setActiveTags(newTags);
-
-            return;
-        }
-
-        // TODO : API Recall, Refresh destination list & display
-
-        prevActiveTags.current = activeTags;
     };
 
     const onSearchSubmit = (province, destination) => {
@@ -143,10 +126,6 @@ const DestinationPage = () => {
         }));
 
         searchDestination(province.name, destination.name, searchState?.tags);
-    };
-
-    const handleLoginNavigation = async () => {
-        await navigate('/sign-in');
     };
 
     const setLoginModalVisible = () => {
@@ -229,7 +208,7 @@ const DestinationPage = () => {
                 backgroundImage={Image1}
                 title="Explore the Best Destinations"
                 highlightedWord="Destinations"
-                description="Explore the best places in Indonesia with complete information."
+                description="Explore countless places in Indonesia with complete information."
             />
             <div className="flex flex-col px-10 items-center bg-[#221122] w-full">
                 <SearchDestination
@@ -264,48 +243,7 @@ const DestinationPage = () => {
             <JoinUs />
             <Footer />
             <ToastContainer />
-            <dialog
-                ref={loginModal}
-                id="modal-not-login"
-                className="modal font-quicksand"
-            >
-                <div className="modal-box bg-[#252527]">
-                    <form method="dialog">
-                        {/* if there is a button in form, it will close the modal */}
-                        <motion.button
-                            transition={{
-                                ease: 'backOut',
-                                delay: 0,
-                            }}
-                            whileHover={{ scale: 1.125 }}
-                            className="w-fit aspect-square rounded-[360px] hover:bg-gray-700 px-2 absolute right-2 top-2"
-                        >
-                            ✕
-                        </motion.button>
-                    </form>
-                    <h3 className="font-bold text-xl">
-                        You are not{' '}
-                        <span className="text-[#FFA666] font-bold">
-                            Logged In
-                        </span>
-                        , yet
-                    </h3>
-                    <p className="pb-6 font-light tracking-wide">
-                        Login to continue
-                    </p>
-                    <motion.button
-                        transition={{
-                            ease: 'backOut',
-                            delay: 0,
-                        }}
-                        whileHover={{ scale: 1.05 }}
-                        className="rounded-md hover:bg-[#FFA66622] border-solid border-[#FFA666] text-[#FFA666] border-[1px] px-2 py-1 font-semibold tracking-wider"
-                        onClick={handleLoginNavigation}
-                    >
-                        Login right away
-                    </motion.button>
-                </div>
-            </dialog>
+            <LoginModal dialogRef={loginModal} />
         </div>
     );
 };

@@ -381,16 +381,16 @@ const Profile = () => {
             </div>
 
             {isModalOpen && (
-                <div className="fixed inset-0 bg-black/50 bg-opacity-80 flex justify-center items-center backdrop-blur-md z-50 font-quicksand">
-                    <div className="relative p-4 py-0 w-full max-w-md bg-white rounded-lg shadow-lg dark:bg-gray-700 max-h-[90vh] overflow-y-auto">
-                        <div className="sticky top-0 bg-white dark:bg-gray-700 z-10 p-4 pt-8 border-b rounded-t dark:border-gray-600">
+                <div className="fixed inset-0 flex items-center justify-center bg-black/50 bg-opacity-80 backdrop-blur-md z-50 font-quicksand top-20 lg:top-0">
+                    <div className="relative p-4 py-0 w-full max-w-lg rounded-lg shadow-lg bg-[#252527] lg:max-h-[90vh] max-h-[70vh] overflow-y-auto">
+                        <div className="sticky top-0 bg-[#252527] z-10 p-4 pt-8 border-b rounded-t border-gray-600">
                             <div className="flex items-center justify-between">
-                                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                                <h3 className="text-xl font-semibold text-white">
                                     Change Profile Photo
                                 </h3>
                                 <button
                                     onClick={() => setIsModalOpen(false)}
-                                    className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-sm text-xl cursor-pointer"
+                                    className="text-white bg-transparent hover:bg-white hover:text-[#FFA666] rounded-sm text-2xl cursor-pointer"
                                 >
                                     <IoClose />
                                 </button>
