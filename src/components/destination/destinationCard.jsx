@@ -9,6 +9,7 @@ import countStars from '../../util/starRating';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import axios, { AxiosError } from 'axios';
+import errorConstant from '../../util/errorConstant';
 
 const DestinationCard = ({
     id,
@@ -22,28 +23,21 @@ const DestinationCard = ({
     onRequestDelete,
     setSelectedItemToEdit,
     optionsIcon = null,
+    setLoginModalVisible,
 }) => {
     const { whole_rating, has_half_rating, empty_rating } = countStars(rating);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [wishlist, setWishlist] = useState(isWishlisted);
     const userId = useSelector((state) => state.user.data.id);
-    const handleLoginNavigation = async () => {
-        await navigate('/sign-in');
-    };
     // Format detail description
     const formattedDetail = detail.replaceAll(/([\n]+[\w.,/ ]+)/g, '...');
 
     async function handleWishlist() {
         if (!userId) {
-            document.getElementById('modal-not-login').showModal();
+            setLoginModalVisible();
             return;
         }
-        if (!wishlist) {
-            await addWishlist();
-        }
-        if (wishlist) {
-            await removeWishlist();
-        }
+        !wishlist ? await addWishlist() : await removeWishlist();
     }
 
     async function addWishlist() {
@@ -87,24 +81,6 @@ const DestinationCard = ({
             whileHover={{ scale: 1.05 }}
             className="relative bg-[#252527] font-quicksand rounded-lg mx-auto w-73 sm:w-85 md:w-full h-95 shadow-lg overflow-hidden flex flex-col"
         >
-            <dialog id="modal-not-login" className="modal">
-                <div className="modal-box">
-                    <form method="dialog">
-                        {/* if there is a button in form, it will close the modal */}
-                        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-                            ✕
-                        </button>
-                    </form>
-                    <h3 className="font-bold text-lg">You are not login</h3>
-                    <p className="py-4">Login to continue</p>
-                    <button
-                        className="btn btn-neutral"
-                        onClick={handleLoginNavigation}
-                    >
-                        Login Now
-                    </button>
-                </div>
-            </dialog>
             {/* Image Section */}
             <div className="w-full h-40">
                 <img
@@ -175,7 +151,7 @@ const DestinationCard = ({
             </div>
 
             {/* Footer Section */}
-            <div className="flex justify-between items-center px-3 py-2 pb-6 bg-[#252527] relative">
+            <div className="flex justify-between items-center px-3 py-2 pb-3 bg-[#252527] relative">
                 {optionsIcon && (
                     <div className="relative">
                         <button

@@ -15,6 +15,7 @@ import Image3 from '../assets/gallery/lompatBatu.webp';
 import Image4 from '../assets/gallery/rambuSolo.webp';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { motion } from 'framer-motion';
 import 'swiper/css';
 import 'swiper/css/effect-fade';
 import 'swiper/css/pagination';
@@ -25,15 +26,18 @@ import axios, { AxiosError } from 'axios';
 import ErrorConstants from '../util/errorConstant';
 import { toast, ToastContainer } from 'react-toastify';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const maxCardsToIndexable = 8;
 const DestinationPage = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const [destinationList, setDestinationList] = useState([]);
     const [destinationDisplay, setDestinationDisplay] = useState([]);
     const [currentPageIndex, setCurrentPageIndex] = useState(0);
     const [provinces, setProvinces] = useState([]);
+    const loginModal = useRef(null);
     const [mapDisplay, setMapDisplay] = useState({
         pos: [-1.748926, 120.0148634],
         zoom: 5,
@@ -75,6 +79,15 @@ const DestinationPage = () => {
         console.log(
             `searching province : ${province.name} & destination : ${destination.name}`,
         );
+    };
+
+    const handleLoginNavigation = async () => {
+        await navigate('/sign-in');
+    };
+
+    const setLoginModalVisible = () => {
+        if (!loginModal) return;
+        loginModal.current.showModal();
     };
 
     useEffect(() => {
@@ -198,6 +211,7 @@ const DestinationPage = () => {
                     tags={[activeTags, setActiveTag]}
                     destinations={destinationDisplay}
                     maxIndexable={maxCardsToIndexable}
+                    setLoginModalVisible={setLoginModalVisible}
                 />
                 {maxPages.current > 0 ? (
                     <PageIndexer
@@ -212,6 +226,48 @@ const DestinationPage = () => {
             <JoinUs />
             <Footer />
             <ToastContainer />
+            <dialog
+                ref={loginModal}
+                id="modal-not-login"
+                className="modal font-quicksand"
+            >
+                <div className="modal-box bg-[#252527]">
+                    <form method="dialog">
+                        {/* if there is a button in form, it will close the modal */}
+                        <motion.button
+                            transition={{
+                                ease: 'backOut',
+                                delay: 0,
+                            }}
+                            whileHover={{ scale: 1.125 }}
+                            className="w-fit aspect-square rounded-[360px] hover:bg-gray-700 px-2 absolute right-2 top-2"
+                        >
+                            ✕
+                        </motion.button>
+                    </form>
+                    <h3 className="font-bold text-xl">
+                        You are not{' '}
+                        <span className="text-[#FFA666] font-bold">
+                            Logged In
+                        </span>
+                        , yet
+                    </h3>
+                    <p className="pb-6 font-light tracking-wide">
+                        Login to continue
+                    </p>
+                    <motion.button
+                        transition={{
+                            ease: 'backOut',
+                            delay: 0,
+                        }}
+                        whileHover={{ scale: 1.05 }}
+                        className="rounded-md hover:bg-[#FFA66622] border-solid border-[#FFA666] text-[#FFA666] border-[1px] px-2 py-1 font-semibold tracking-wider"
+                        onClick={handleLoginNavigation}
+                    >
+                        Login right away
+                    </motion.button>
+                </div>
+            </dialog>
         </div>
     );
 };

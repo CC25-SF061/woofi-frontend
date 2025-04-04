@@ -5,7 +5,12 @@ import DestinationCard from './destinationCard';
 import { motion } from 'framer-motion';
 import { useSelector } from 'react-redux';
 
-const DestinationGroup = ({ tags, destinations, maxIndexable }) => {
+const DestinationGroup = ({
+    tags,
+    destinations,
+    maxIndexable,
+    setLoginModalVisible,
+}) => {
     const containerRef = useRef(null);
     const navigate = useNavigate();
     const loading = useSelector((state) => state.loading.loading);
@@ -73,6 +78,7 @@ const DestinationGroup = ({ tags, destinations, maxIndexable }) => {
                                   isWishlisted={element.isWishlisted}
                                   rating={element.avgRating}
                                   onclick={onCardClick}
+                                  setLoginModalVisible={setLoginModalVisible}
                               ></DestinationCard>
                           );
                       })
