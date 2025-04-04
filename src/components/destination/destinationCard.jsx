@@ -84,7 +84,12 @@ const DestinationCard = ({
             {/* Image Section */}
             <div className="w-full h-40">
                 <img
-                    src={picture}
+                    src={
+                        new URL(
+                            picture,
+                            import.meta.env.VITE_STATIC_ASSET_BASE_URL,
+                        ).href
+                    }
                     className="w-full h-full object-cover rounded-t-lg"
                     alt={name}
                 />
