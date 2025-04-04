@@ -93,7 +93,7 @@ const SignIn = () => {
                 {
                     token: accessToken,
                 },
-                { withCredentials: true }
+                { withCredentials: true },
             );
             localStorage.setItem('token', response.data.data.token);
             dispatch(setData(response.data.data));
@@ -101,6 +101,22 @@ const SignIn = () => {
             //lakukan sesuatu jika berhasil
             await navigate('/profile');
         } catch (e) {
+            if (!(e instanceof AxiosError)) {
+                return toast.error('Something went wrong', {
+                    position: 'top-right',
+                    autoClose: 3000,
+                });
+            }
+            const response = e?.response?.data?.payload;
+            if (
+                response?.errCode ===
+                ErrorConstant.ERR_OAUTH_PROVIDER_ALREADY_EXIST
+            ) {
+                toast.error('Email already used', {
+                    position: 'top-right',
+                    autoClose: 3000,
+                });
+            }
             console.log(e);
         }
     };
@@ -114,7 +130,7 @@ const SignIn = () => {
                     {
                         token: credentialResponse.access_token,
                     },
-                    { withCredentials: true }
+                    { withCredentials: true },
                 );
 
                 localStorage.setItem('token', response.data.data.token);
@@ -200,7 +216,7 @@ const SignIn = () => {
                         </div>
                     </div>
 
-                    <button 
+                    <button
                         className="w-full p-3 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition cursor-pointer flex justify-center font-bold"
                         disabled={isLoading}
                     >
@@ -227,7 +243,8 @@ const SignIn = () => {
                             <FaSpinner className="animate-spin text-xl" />
                         ) : (
                             <>
-                                <FcGoogle className="text-2xl mr-2" /> Sign in with Google
+                                <FcGoogle className="text-2xl mr-2" /> Sign in
+                                with Google
                             </>
                         )}
                     </button>

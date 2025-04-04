@@ -1,27 +1,160 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ProfileIcon from '../../assets/navbar/Icon.webp';
-import Notification from '../../assets/profile/ic--baseline-notifications-none.svg';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import Sidebar from '../../components/profile/sidebar';
 import { HiX } from 'react-icons/hi';
 import { RiMenu2Line } from 'react-icons/ri';
 import { IoIosNotifications } from 'react-icons/io';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { IoClose } from 'react-icons/io5';
+import axios, { AxiosError } from 'axios';
+import ErrorConstant from '../../util/ErrorConstant';
+import { toast, ToastContainer } from 'react-toastify';
+import {
+    setPartialData,
+    setUsername as setUsernameRedux,
+    setEmail as setEmailRedux,
+    setName as setNameRedux,
+} from '../../stores/userReducer';
 
 const Profile = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [editSection, setEditSection] = useState(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const dispatch = useDispatch();
     const user = useSelector((state) => state.user.data);
     const [username, setUsername] = useState(user.username);
     const [name, setName] = useState(user.name);
     const [email, setEmail] = useState(user.email);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [err, setErr] = useState({
+        username: null,
+        email: null,
+        name: null,
+    });
+    const invalidFieldErr = (arr, newObjErr, setState) => {
+        for (const element of arr) {
+            if (
+                Object.prototype.hasOwnProperty.call(newObjErr, element.path[0])
+            ) {
+                newObjErr[element.path[0]] = element.message;
+            }
+        }
+        setState((state) => ({ ...state, ...newObjErr }));
+    };
+    const handlerEditUsername = async () => {
+        setErr((state) => ({ ...state, username: null }));
+        try {
+            await axios.patch('/api/user/edit/username', {
+                username: username,
+            });
+            dispatch(setUsernameRedux(username));
+            toast.success('Success edit username', {
+                position: 'top-right',
+                autoClose: 3000,
+            });
+        } catch (e) {
+            if (!(e instanceof AxiosError)) {
+                toast.error('Something went wrong', {
+                    position: 'top-right',
+                    autoClose: 3000,
+                });
+                return;
+            }
+            const response = e?.response?.data?.payload;
+            if (response.errCode === ErrorConstant.ERR_INVALID_FIELD) {
+                invalidFieldErr(response.fields, { username: null }, setErr);
+                return;
+            }
 
+            if (response.errCode === ErrorConstant.ERR_USERNAME_ALREADY_USED) {
+                setErr((state) => ({ ...state, username: response.message }));
+                return;
+            }
+
+            toast.error('Something went wrong', {
+                position: 'top-right',
+                autoClose: 3000,
+            });
+        }
+    };
+
+    const handleEditEmail = async () => {
+        setErr((state) => ({ ...state, email: null }));
+        try {
+            await axios.patch('/api/user/edit/email', {
+                email: email,
+            });
+            dispatch(setEmail(email));
+
+            toast.success('Success edit email', {
+                position: 'top-right',
+                autoClose: 3000,
+            });
+        } catch (e) {
+            if (!(e instanceof AxiosError)) {
+                toast.error('Something went wrong', {
+                    position: 'top-right',
+                    autoClose: 3000,
+                });
+                return;
+            }
+            const response = e?.response?.data?.payload;
+            if (response.errCode === ErrorConstant.ERR_INVALID_FIELD) {
+                invalidFieldErr(response.fields, { email: null }, setErr);
+                return;
+            }
+            if (response.errCode === ErrorConstant.ERR_EMAIL_ALREADY_USED) {
+                setErr((state) => ({ ...state, email: response.message }));
+                return;
+            }
+
+            toast.error('Something went wrong', {
+                position: 'top-right',
+                autoClose: 3000,
+            });
+        }
+    };
+
+    const handleEditName = async () => {
+        setErr((state) => ({ ...state, name: null }));
+        try {
+            await axios.patch('/api/user/edit/name', {
+                name: name,
+            });
+            dispatch(setNameRedux(name));
+
+            toast.success('Success edit name', {
+                position: 'top-right',
+                autoClose: 3000,
+            });
+            console.log('19u0h3');
+        } catch (e) {
+            if (!(e instanceof AxiosError)) {
+                toast.error('Something went wrong', {
+                    position: 'top-right',
+                    autoClose: 3000,
+                });
+                return;
+            }
+            const response = e?.response?.data?.payload;
+            if (response.errCode === ErrorConstant.ERR_INVALID_FIELD) {
+                invalidFieldErr(response.fields, { name: null }, setErr);
+                return;
+            }
+
+            toast.error('Something went wrong', {
+                position: 'top-right',
+                autoClose: 3000,
+            });
+        }
+    };
     return (
         <div className="w-full bg-[#221122] flex lg:h-screen items-center justify-center p-5 lg:p-10 gap-5 text-white">
+            <ToastContainer />
+
             {/* Header Mobile */}
+
             <div className="lg:hidden p-5 fixed z-30 top-0 w-full bg-[#252527] flex justify-between items-center shadow-xl">
                 <button
                     className="bg-[#FFA666] p-2 rounded-lg text-black cursor-pointer"
@@ -93,18 +226,22 @@ const Profile = () => {
                                 Username
                             </p>
                             <div className="flex flex-col lg:flex-row gap-3 w-full">
-                                <input
-                                    type="text"
-                                    value={username}
-                                    onChange={(e) =>
-                                        setUsername(e.target.value)
-                                    }
-                                    placeholder="Your Username"
-                                    className="flex-3 p-3 font-quicksand rounded text-white border border-white focus:outline-none"
-                                />
+                                <div className="w-full">
+                                    <input
+                                        type="text"
+                                        value={username}
+                                        onChange={(e) =>
+                                            setUsername(e.target.value)
+                                        }
+                                        placeholder="Your Username"
+                                        className="flex-3 p-3 font-quicksand rounded text-white border border-white w-full focus:outline-none"
+                                    />
+                                    <div className="error">{err.username}</div>
+                                </div>
+
                                 <button
                                     className="flex-1 lg:p-3 py-1 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition cursor-pointer"
-                                    onClick={() => setEditSection('Username')}
+                                    onClick={handlerEditUsername}
                                 >
                                     Edit
                                 </button>
@@ -115,18 +252,22 @@ const Profile = () => {
                                 Display Name
                             </p>
                             <div className="flex flex-col lg:flex-row gap-3 w-full">
-                                <input
-                                    type="text"
-                                    placeholder="Your Display Name"
-                                    className="flex-3 p-3 font-quicksand rounded text-white border border-white focus:outline-none"
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                />
+                                <div className="w-full">
+                                    <input
+                                        type="text"
+                                        placeholder="Your Display Name"
+                                        className="flex-3 w-full p-3 font-quicksand rounded text-white border border-white focus:outline-none"
+                                        value={name}
+                                        onChange={(e) =>
+                                            setName(e.target.value)
+                                        }
+                                    />
+                                    <div className="error">{err.name}</div>
+                                </div>
+
                                 <button
                                     className="flex-1 lg:p-3 py-1 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition cursor-pointer"
-                                    onClick={() =>
-                                        setEditSection('Display Name')
-                                    }
+                                    onClick={handleEditName}
                                 >
                                     Edit
                                 </button>
@@ -137,16 +278,22 @@ const Profile = () => {
                                 Email
                             </p>
                             <div className="flex flex-col lg:flex-row gap-3 w-full">
-                                <input
-                                    type="email"
-                                    placeholder="Your Email"
-                                    className="flex-3 p-3 font-quicksand rounded text-white border border-white focus:outline-none"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                />
+                                <div className="w-full">
+                                    <input
+                                        type="email"
+                                        placeholder="Your Email"
+                                        className="flex-3 p-3 font-quicksand rounded text-white border w-full border-white focus:outline-none"
+                                        value={email}
+                                        onChange={(e) =>
+                                            setEmail(e.target.value)
+                                        }
+                                    />
+                                    <div className="error">{err.email}</div>
+                                </div>
+
                                 <button
                                     className="flex-1 lg:p-3 py-1 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition cursor-pointer"
-                                    onClick={() => setEditSection('Email')}
+                                    onClick={handleEditEmail}
                                 >
                                     Edit
                                 </button>
@@ -236,7 +383,6 @@ const Profile = () => {
             {isModalOpen && (
                 <div className="fixed inset-0 bg-black/50 bg-opacity-80 flex justify-center items-center backdrop-blur-md z-50 font-quicksand">
                     <div className="relative p-4 py-0 w-full max-w-md bg-white rounded-lg shadow-lg dark:bg-gray-700 max-h-[90vh] overflow-y-auto">
-
                         <div className="sticky top-0 bg-white dark:bg-gray-700 z-10 p-4 pt-8 border-b rounded-t dark:border-gray-600">
                             <div className="flex items-center justify-between">
                                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -251,14 +397,14 @@ const Profile = () => {
                             </div>
                         </div>
 
-                        <div className='p-4 text-center divide-y-1 divide-white flex flex-col'>
-                            <button className='p-2 cursor-pointer font-semibold text-blue-500'>
+                        <div className="p-4 text-center divide-y-1 divide-white flex flex-col">
+                            <button className="p-2 cursor-pointer font-semibold text-blue-500">
                                 Upload Photo
                             </button>
-                            <button className='p-2 cursor-pointer font-semibold text-red-500'>
+                            <button className="p-2 cursor-pointer font-semibold text-red-500">
                                 Remove Current Photo
                             </button>
-                            <button className='p-2 cursor-pointer font-semibold'>
+                            <button className="p-2 cursor-pointer font-semibold">
                                 Cancel
                             </button>
                         </div>

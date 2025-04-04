@@ -49,6 +49,15 @@ export const userSlice = createSlice({
                 id,
             };
         },
+        setName: (state, action) => {
+            state.data.name = action.payload;
+        },
+        setUsername: (state, action) => {
+            state.data.username = action.payload;
+        },
+        setEmail: (state, action) => {
+            state.data.email = action.payload;
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(fetchUserProfile.fulfilled, (state, action) => {
@@ -57,5 +66,6 @@ export const userSlice = createSlice({
     },
 });
 
-export const { setData } = userSlice.actions;
+export const { setData, setPartialData, setName, setUsername, setEmail } =
+    userSlice.actions;
 export default userSlice.reducer;

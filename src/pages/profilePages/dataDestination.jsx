@@ -11,12 +11,14 @@ import { nanoid } from 'nanoid';
 import { hideLoading, showLoading } from '../../stores/loadingReducer';
 import { toast } from 'react-toastify';
 import { FaChevronDown } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const DataDestination = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [selectedItemToDelete, setSelectedItemToDelete] = useState(null);
     const [selectedItemToEdit, setSelectedItemToEdit] = useState(null);
     const [destinations, setDestinations] = useState([]);
+    const navigate = useNavigate();
     const handleDelete = () => {
         console.log('Deleted item', selectedItemToDelete.id);
         setSelectedItemToDelete(null);
@@ -80,6 +82,9 @@ const DataDestination = () => {
         setErrors((prev) => ({ ...prev, province: false }));
     };
 
+    const onCardClick = async (id) => {
+        await navigate(`/destination/${id}`);
+    };
     return (
         <div>
             <div className="w-full bg-[#221122] flex lg:h-screen items-center justify-center p-5 lg:p-10 gap-5 text-white">
@@ -140,8 +145,8 @@ const DataDestination = () => {
                                     }
                                     name={element.name}
                                     detail={element.detail}
-                                    rating={element.avgRating}
-                                    // onclick={onCardClick}
+                                    rating={element.rating}
+                                    onclick={onCardClick}
                                     onRequestDelete={(item) =>
                                         setSelectedItemToDelete(item)
                                     }
