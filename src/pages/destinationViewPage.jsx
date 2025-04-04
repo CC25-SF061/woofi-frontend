@@ -86,7 +86,9 @@ const DestinationViewPage = () => {
             <Footer />
             <ToastContainer />
         </>
-    ) : null;
+    ) : (
+        <ToastContainer />
+    );
 };
 
 export default DestinationViewPage;
