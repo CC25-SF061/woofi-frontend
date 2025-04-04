@@ -10,6 +10,7 @@ import axios from 'axios';
 import { nanoid } from 'nanoid';
 import { hideLoading, showLoading } from '../../stores/loadingReducer';
 import { toast } from 'react-toastify';
+import { FaChevronDown } from 'react-icons/fa';
 
 const DataDestination = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -21,6 +22,17 @@ const DataDestination = () => {
         setSelectedItemToDelete(null);
     };
     const dispatch = useDispatch();
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [filteredProvinces, setFilteredProvinces] = useState([]);
+    const [errors, setErrors] = useState({ province: false });
+    const provinces = [
+        { name: 'Jakarta' },
+        { name: 'West Java' },
+        { name: 'Central Java' },
+        { name: 'East Java' },
+        { name: 'Bali' },
+    ];
+
     useEffect(() => {
         (async () => {
             const keyLoading = nanoid();
@@ -40,6 +52,33 @@ const DataDestination = () => {
             }
         })();
     }, []);
+
+    const toggleDropdown = () => {
+        setDropdownOpen(!dropdownOpen);
+    };
+
+    const handleProvinceChange = (e) => {
+        const input = e.target.value;
+        setSelectedItemToEdit({
+            ...selectedItemToEdit,
+            province: input,
+        });
+
+        const filtered = provinces.filter((p) =>
+            p.name.toLowerCase().includes(input.toLowerCase()),
+        );
+        setFilteredProvinces(filtered);
+        setDropdownOpen(true);
+    };
+
+    const handleSelectProvince = (selected) => {
+        setSelectedItemToEdit({
+            ...selectedItemToEdit,
+            province: selected.name,
+        });
+        setDropdownOpen(false);
+        setErrors((prev) => ({ ...prev, province: false }));
+    };
 
     return (
         <div>
@@ -125,20 +164,20 @@ const DataDestination = () => {
 
             {selectedItemToDelete && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black/50 bg-opacity-80 backdrop-blur-md z-50 font-quicksand">
-                    <div className="relative p-4 w-full max-w-lg bg-white rounded-lg shadow-lg dark:bg-gray-700">
-                        <div className="flex items-center justify-between border-b p-4 rounded-t dark:border-gray-600">
-                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                    <div className="relative p-4 w-full max-w-lg rounded-lg shadow-lg bg-[#252527]">
+                        <div className="flex items-center justify-between border-b p-4 rounded-t border-gray-600">
+                            <h3 className="text-xl font-semibold text-white">
                                 Confirm Delete
                             </h3>
                             <button
                                 onClick={() => setSelectedItemToDelete(null)}
-                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-sm text-xl cursor-pointer"
+                                className="text-white bg-transparent hover:bg-white hover:text-[#FFA666] rounded-sm text-2xl cursor-pointer"
                             >
                                 <IoClose />
                             </button>
                         </div>
                         <div className="p-4 space-y-4">
-                            <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                            <p className="text-base leading-relaxed text-white">
                                 Are you sure you want to delete{' '}
                                 <span className="text-red-600 font-bold">
                                     {selectedItemToDelete.name}
@@ -146,16 +185,16 @@ const DataDestination = () => {
                                 ?
                             </p>
                         </div>
-                        <div className="flex items-center justify-end p-4 border-t border-gray-200 rounded-b dark:border-gray-600 gap-3">
+                        <div className="flex items-center justify-end p-4 border-t border-gray-200 rounded-b border-gray-600 gap-3">
                             <button
                                 onClick={() => setSelectedItemToDelete(null)}
-                                className="py-2.5 px-5 text-sm font-medium text-gray-900 bg-white rounded-lg hover:bg-gray-300 cursor-pointer"
+                                className="py-2.5 px-5 text-sm font-semibold text-black rounded-lg hover:bg-gray-400 bg-white cursor-pointer"
                             >
                                 Cancel
                             </button>
                             <button
                                 onClick={handleDelete}
-                                className="text-white bg-red-600 hover:bg-red-800 font-medium rounded-lg text-sm px-5 py-2.5 cursor-pointer"
+                                className="text-white bg-red-600 hover:bg-red-800 font-semibold rounded-lg text-sm px-5 py-2.5 cursor-pointer"
                             >
                                 Yes, Delete
                             </button>
@@ -166,15 +205,15 @@ const DataDestination = () => {
 
             {selectedItemToEdit && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black/50 bg-opacity-80 backdrop-blur-md z-50 font-quicksand">
-                    <div className="relative p-4 py-0 w-full max-w-lg bg-white rounded-lg shadow-lg dark:bg-gray-700 max-h-[90vh] overflow-y-auto">
-                        <div className="sticky top-0 bg-white dark:bg-gray-700 z-10 p-4 pt-8 border-b rounded-t dark:border-gray-600">
+                    <div className="relative p-4 py-0 w-full max-w-lg rounded-lg shadow-lg bg-[#252527] max-h-[90vh] overflow-y-auto">
+                        <div className="sticky top-0 bg-[#252527] z-10 p-4 pt-8 border-b rounded-t border-gray-600">
                             <div className="flex items-center justify-between">
-                                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                                <h3 className="text-xl font-semibold text-white">
                                     Edit Destination
                                 </h3>
                                 <button
                                     onClick={() => setSelectedItemToEdit(null)}
-                                    className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-sm text-xl cursor-pointer"
+                                    className="text-white bg-transparent hover:bg-white hover:text-[#FFA666] rounded-sm text-2xl cursor-pointer"
                                 >
                                     <IoClose />
                                 </button>
@@ -182,98 +221,215 @@ const DataDestination = () => {
                         </div>
 
                         <div className="p-4 space-y-4">
-                            <label className="block text-gray-700 dark:text-gray-300">
-                                Destination Name:
-                            </label>
-                            <input
-                                type="text"
-                                value={selectedItemToEdit.name}
-                                onChange={(e) =>
-                                    setSelectedItemToEdit({
-                                        ...selectedItemToEdit,
-                                        name: e.target.value,
-                                    })
-                                }
-                                className="w-full p-2 border border-gray-300 rounded dark:bg-gray-600 dark:text-white"
-                            />
-
-                            <label className="block text-gray-700 dark:text-gray-300">
-                                Location:
-                            </label>
-                            <input
-                                type="text"
-                                value={selectedItemToEdit.location}
-                                onChange={(e) =>
-                                    setSelectedItemToEdit({
-                                        ...selectedItemToEdit,
-                                        location: e.target.value,
-                                    })
-                                }
-                                className="w-full p-2 border border-gray-300 rounded dark:bg-gray-600 dark:text-white"
-                            />
-
-                            <label className="block text-gray-700 dark:text-gray-300">
-                                Description:
-                            </label>
-                            <textarea
-                                value={selectedItemToEdit.detail}
-                                onChange={(e) =>
-                                    setSelectedItemToEdit({
-                                        ...selectedItemToEdit,
-                                        detail: e.target.value,
-                                    })
-                                }
-                                className="w-full p-2 border border-gray-300 rounded dark:bg-gray-600 dark:text-white"
-                            />
-
-                            <label className="block text-gray-700 dark:text-gray-300">
-                                Image:
-                            </label>
-                            <div className="flex items-center justify-center w-full">
-                                <label
-                                    htmlFor="dropzone-file"
-                                    className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
-                                >
-                                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                        <svg
-                                            className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-                                            aria-hidden="true"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="none"
-                                            viewBox="0 0 20 16"
-                                        >
-                                            <path
-                                                stroke="currentColor"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth="2"
-                                                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                                            />
-                                        </svg>
-                                        <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                                            <span className="font-semibold">
-                                                Click to upload
-                                            </span>{' '}
-                                            or drag and drop
-                                        </p>
-                                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                                            SVG, PNG, JPG or GIF (MAX.
-                                            800x400px)
-                                        </p>
-                                    </div>
-                                    <input
-                                        id="dropzone-file"
-                                        type="file"
-                                        className="hidden"
-                                    />
+                            <div className="flex flex-col gap-2">
+                                <label className="block text-white">
+                                    Destination Name:
                                 </label>
+                                <input
+                                    type="text"
+                                    value={selectedItemToEdit.name}
+                                    onChange={(e) =>
+                                        setSelectedItemToEdit({
+                                            ...selectedItemToEdit,
+                                            name: e.target.value,
+                                        })
+                                    }
+                                    className="w-full p-3 font-quicksand rounded text-white border bg-transparent focus:outline-none focus:ring focus:ring-[#FFA666]"
+                                />
+                            </div>
+
+                            <div className="flex flex-col gap-2">
+                                <label className="block text-white">
+                                    Location:
+                                </label>
+                                <input
+                                    type="text"
+                                    value={selectedItemToEdit.location}
+                                    onChange={(e) =>
+                                        setSelectedItemToEdit({
+                                            ...selectedItemToEdit,
+                                            location: e.target.value,
+                                        })
+                                    }
+                                    className="w-full p-3 font-quicksand rounded text-white border bg-transparent focus:outline-none focus:ring focus:ring-[#FFA666]"
+                                />
+                            </div>
+
+                            <div className="flex flex-col gap-2">
+                                <label className="block text-white">
+                                    Province:
+                                </label>
+                                <div className="relative w-full">
+                                    <div className="flex items-center">
+                                        <input
+                                            id="province"
+                                            type="text"
+                                            name="province"
+                                            value={
+                                                selectedItemToEdit?.province ||
+                                                ''
+                                            }
+                                            onChange={handleProvinceChange}
+                                            placeholder="Search Province"
+                                            className={`flex-3 p-3 font-quicksand rounded text-white border ${
+                                                errors.province
+                                                    ? 'border-red-500'
+                                                    : 'border-white'
+                                            } bg-transparent w-full pr-10 focus:outline-none focus:ring focus:ring-[#FFA666]`}
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={toggleDropdown}
+                                            className="absolute inset-y-0 right-0 flex items-center justify-center p-2 pl-4 rounded rounded-l-2xl bg-[#FFA666] cursor-pointer transition-all duration-200 hover:bg-white group"
+                                        >
+                                            <FaChevronDown
+                                                className={`text-lg text-black group-hover:text-[#FFA666] transition-transform duration-300 ${
+                                                    dropdownOpen
+                                                        ? 'rotate-180'
+                                                        : 'rotate-0'
+                                                }`}
+                                            />
+                                        </button>
+                                    </div>
+                                    {dropdownOpen &&
+                                        filteredProvinces.length > 0 && (
+                                            <ul className="absolute z-10 w-full mt-1 bg-[#252527] text-white border border-[#FFA666] rounded shadow-md max-h-60 overflow-y-auto">
+                                                {filteredProvinces.map((p) => (
+                                                    <li
+                                                        key={p.name}
+                                                        className="px-4 py-2 cursor-pointer hover:bg-[#FFA666] hover:text-black transition-all duration-200"
+                                                        onClick={() =>
+                                                            handleSelectProvince(
+                                                                p,
+                                                            )
+                                                        }
+                                                    >
+                                                        {p.name}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                </div>
+                            </div>
+
+                            <div className="flex flex-col gap-2">
+                                <label className="block text-white">
+                                    Description:
+                                </label>
+                                <textarea
+                                    value={selectedItemToEdit.detail}
+                                    onChange={(e) =>
+                                        setSelectedItemToEdit({
+                                            ...selectedItemToEdit,
+                                            detail: e.target.value,
+                                        })
+                                    }
+                                    className="w-full max-h-45 p-3 font-quicksand rounded text-white border bg-transparent focus:outline-none focus:ring focus:ring-[#FFA666]"
+                                    rows="5"
+                                />
+                            </div>
+
+                            <div className="flex flex-col gap-2">
+                                <label className="block text-white">
+                                    Image:
+                                </label>
+
+                                <div className="flex flex-col items-center gap-3 w-full">
+                                    {/* Preview image */}
+                                    {selectedItemToEdit?.imageFile ? (
+                                        <img
+                                            src={URL.createObjectURL(
+                                                selectedItemToEdit.imageFile,
+                                            )}
+                                            alt="Preview"
+                                            className="w-full max-h-64 object-cover rounded-lg border border-gray-600"
+                                        />
+                                    ) : selectedItemToEdit?.image ? (
+                                        <img
+                                            src={
+                                                new URL(
+                                                    selectedItemToEdit.image,
+                                                    import.meta.env.VITE_STATIC_ASSET_BASE_URL,
+                                                ).href
+                                            }
+                                            alt="Current"
+                                            className="w-full max-h-64 object-cover rounded-lg border border-gray-600"
+                                        />
+                                    ) : null}
+
+                                    {/* Show dropzone input only if no imageFile is selected */}
+                                    {!selectedItemToEdit?.imageFile && (
+                                        <label
+                                            htmlFor="dropzone-file"
+                                            className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-gray-500 rounded-lg cursor-pointer hover:bg-gray-700 transition"
+                                        >
+                                            <div className="flex flex-col items-center justify-center pt-5 pb-6 text-center">
+                                                <svg
+                                                    className="w-8 h-8 mb-4 text-gray-400"
+                                                    aria-hidden="true"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth={2}
+                                                        d="M12 4v16m8-8H4"
+                                                    />
+                                                </svg>
+                                                <p className="text-sm text-gray-400">
+                                                    <span className="font-semibold">
+                                                        Click to upload
+                                                    </span>{' '}
+                                                    or drag and drop
+                                                </p>
+                                                <p className="text-xs text-gray-400">
+                                                    PNG, JPG, max 800x400px
+                                                </p>
+                                            </div>
+                                            <input
+                                                id="dropzone-file"
+                                                type="file"
+                                                accept="image/*"
+                                                className="hidden"
+                                                onChange={(e) => {
+                                                    const file =
+                                                        e.target.files[0];
+                                                    if (file) {
+                                                        setSelectedItemToEdit({
+                                                            ...selectedItemToEdit,
+                                                            imageFile: file,
+                                                        });
+                                                        e.target.value = null; // Reset input
+                                                    }
+                                                }}
+                                            />
+                                        </label>
+                                    )}
+
+                                    {/* Show file name and remove option */}
+                                    {selectedItemToEdit?.imageFile && (
+                                        <div className="flex flex-col items-center gap-2">
+                                            <p className="text-sm text-white text-center">
+                                                Selected file:{' '}
+                                                <span className="font-semibold">
+                                                    {
+                                                        selectedItemToEdit
+                                                            .imageFile.name
+                                                    }
+                                                </span>
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
 
-                        <div className="sticky bottom-0 bg-white dark:bg-gray-700 z-10 p-4 pb-8 border-t border-gray-200 rounded-b dark:border-gray-600 flex items-center justify-end gap-3">
+                        <div className="sticky bottom-0 bg-[#252527] z-10 p-4 pb-8 border-t border-gray-200 rounded-b border-gray-600 flex items-center justify-end gap-3">
                             <button
                                 onClick={() => setSelectedItemToEdit(null)}
-                                className="py-2.5 px-5 text-sm font-medium text-gray-900 bg-white rounded-lg hover:bg-gray-300 cursor-pointer"
+                                className="py-2.5 px-5 text-sm font-semibold text-black rounded-lg hover:bg-gray-400 bg-white cursor-pointer"
                             >
                                 Cancel
                             </button>

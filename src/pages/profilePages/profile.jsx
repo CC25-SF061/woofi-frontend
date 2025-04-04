@@ -7,6 +7,7 @@ import { HiX } from 'react-icons/hi';
 import { RiMenu2Line } from 'react-icons/ri';
 import { IoIosNotifications } from 'react-icons/io';
 import { useSelector } from 'react-redux';
+import { IoClose } from 'react-icons/io5';
 
 const Profile = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -16,6 +17,7 @@ const Profile = () => {
     const [username, setUsername] = useState(user.username);
     const [name, setName] = useState(user.name);
     const [email, setEmail] = useState(user.email);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     return (
         <div className="w-full bg-[#221122] flex lg:h-screen items-center justify-center p-5 lg:p-10 gap-5 text-white">
@@ -61,7 +63,8 @@ const Profile = () => {
                         <img
                             src={ProfileIcon}
                             alt="Profile"
-                            className="rounded-full w-20"
+                            className="rounded-full w-20 cursor-pointer"
+                            onClick={() => setIsModalOpen(true)}
                         />
                         <div className="flex flex-col gap-2">
                             <h1 className="font-inknut-antiqua text-3xl">
@@ -229,6 +232,39 @@ const Profile = () => {
                     </div>
                 )}
             </div>
+
+            {isModalOpen && (
+                <div className="fixed inset-0 bg-black/50 bg-opacity-80 flex justify-center items-center backdrop-blur-md z-50 font-quicksand">
+                    <div className="relative p-4 py-0 w-full max-w-md bg-white rounded-lg shadow-lg dark:bg-gray-700 max-h-[90vh] overflow-y-auto">
+
+                        <div className="sticky top-0 bg-white dark:bg-gray-700 z-10 p-4 pt-8 border-b rounded-t dark:border-gray-600">
+                            <div className="flex items-center justify-between">
+                                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                                    Change Profile Photo
+                                </h3>
+                                <button
+                                    onClick={() => setIsModalOpen(false)}
+                                    className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-sm text-xl cursor-pointer"
+                                >
+                                    <IoClose />
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className='p-4 text-center divide-y-1 divide-white flex flex-col'>
+                            <button className='p-2 cursor-pointer font-semibold text-blue-500'>
+                                Upload Photo
+                            </button>
+                            <button className='p-2 cursor-pointer font-semibold text-red-500'>
+                                Remove Current Photo
+                            </button>
+                            <button className='p-2 cursor-pointer font-semibold'>
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
