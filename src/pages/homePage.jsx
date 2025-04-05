@@ -4,15 +4,13 @@ import Navbar from '../components/navbar';
 import Footer from '../components/footer';
 import LogoWoofi from '../assets/navbar/logo.webp';
 import Image1 from '../assets/homePage/whatWoofi.webp';
-import Image2 from '../assets/homePage/image2.webp';
-import Image3 from '../assets/homePage/image3.webp';
-import Image4 from '../assets/homePage/image4.webp';
 
-import SeeDetail from '../components/seeDetail';
 import JoinUs from '../components/joinUs';
 import { slideInLeft, slideInRight, fadeInUp } from '../util/animation';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+
+import FavDestination from '../components/home/favDestination';
 import TopDestination from '../components/home/topDestination';
 
 const backgroundImages = [
@@ -140,42 +138,15 @@ const home = () => {
                         cultural treasures across Indonesia. Let Woofi guide you
                         to your dream destination!
                     </p>
-                    <button className="font-quicksand text-lg p-2 border-2 border-white rounded-md border-solid">
+                    <Link
+                        to="/destination"
+                        className="font-quicksand text-lg p-2 border-2 border-white rounded-md border-solid"
+                    >
                         Start Exploring
-                    </button>
+                    </Link>
                 </motion.div>
 
-                <motion.div
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ amount: 0.1 }}
-                    variants={slideInRight}
-                    className="flex lg:w-3/5 flex-col lg:flex-row h-full items-center gap-4"
-                >
-                    <div className="relative w-xs lg:w-1/3 h-full rounded-lg overflow-hidden">
-                        <img
-                            src={Image2}
-                            alt="Destination 1"
-                            className="object-cover w-full h-full"
-                        />
-                        <div className="absolute inset-0 bg-black opacity-40"></div>
-                    </div>
-
-                    <SeeDetail
-                        image={Image3}
-                        title="Wonderful of Bali"
-                        description="Lorem Ipsum is simply dummy text of the printing and f"
-                    />
-
-                    <div className="relative w-xs lg:w-1/3 h-full rounded-lg overflow-hidden">
-                        <img
-                            src={Image4}
-                            alt="Destination 3"
-                            className="object-cover w-full h-full"
-                        />
-                        <div className="absolute inset-0 bg-black opacity-40"></div>
-                    </div>
-                </motion.div>
+                <FavDestination />
             </div>
 
             <TopDestination />

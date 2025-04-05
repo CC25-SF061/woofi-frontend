@@ -27,11 +27,18 @@ const Profile = () => {
     const [name, setName] = useState(user.name);
     const [email, setEmail] = useState(user.email);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [afterValue, setAfterValue] = useState('');
     const [err, setErr] = useState({
         username: null,
         email: null,
         name: null,
     });
+    const [passwords, setPasswords] = useState({
+        oldPassword: '',
+        newPassword: '',
+        confirmNewPassword: '',
+    });
+    const [passwordError, setPasswordError] = useState(null);
     const invalidFieldErr = (arr, newObjErr, setState) => {
         for (const element of arr) {
             if (
@@ -42,7 +49,7 @@ const Profile = () => {
         }
         setState((state) => ({ ...state, ...newObjErr }));
     };
-    const handlerEditUsername = async () => {
+    const handlerEditUsername = async (newUsername) => {
         setErr((state) => ({ ...state, username: null }));
         try {
             await axios.patch('/api/user/edit/username', {
@@ -79,7 +86,7 @@ const Profile = () => {
         }
     };
 
-    const handleEditEmail = async () => {
+    const handleEditEmail = async (newEmail) => {
         setErr((state) => ({ ...state, email: null }));
         try {
             await axios.patch('/api/user/edit/email', {
@@ -116,7 +123,7 @@ const Profile = () => {
         }
     };
 
-    const handleEditName = async () => {
+    const handleEditName = async (newName) => {
         setErr((state) => ({ ...state, name: null }));
         try {
             await axios.patch('/api/user/edit/name', {
@@ -149,6 +156,34 @@ const Profile = () => {
             });
         }
     };
+
+    useEffect(() => {
+        if (editSection === 'username') {
+            setAfterValue(user.username);
+        } else if (editSection === 'email') {
+            setAfterValue(user.email);
+        } else if (editSection === 'name') {
+            setAfterValue(user.name);
+        } else {
+            setAfterValue('');
+        }
+    }, [editSection]);
+
+    const handleSave = async () => {
+        if (editSection === 'username') {
+            setUsername(afterValue);
+            await handlerEditUsername(afterValue);
+        } else if (editSection === 'email') {
+            setEmail(afterValue);
+            await handleEditEmail(afterValue);
+        } else if (editSection === 'name') {
+            setName(afterValue);
+            await handleEditName(afterValue);
+        }
+
+        setEditSection(null);
+    };
+
     return (
         <div className="w-full bg-[#221122] flex lg:h-screen items-center justify-center p-5 lg:p-10 gap-5 text-white">
             <ToastContainer />
@@ -225,34 +260,36 @@ const Profile = () => {
                             <p className="font-quicksand text-white pb-2">
                                 Username
                             </p>
-                            <div className="flex flex-col lg:flex-row gap-3 w-full">
-                                <div className="w-full">
+                            <div className="flex flex-col lg:flex-row w-full">
+                                <div className="flex w-full gap-3">
                                     <input
                                         type="text"
                                         value={username}
                                         onChange={(e) =>
                                             setUsername(e.target.value)
                                         }
+                                        readOnly
                                         placeholder="Your Username"
                                         className="flex-3 p-3 font-quicksand rounded text-white border border-white w-full focus:outline-none"
                                     />
-                                    <div className="error">{err.username}</div>
+                                    <button
+                                        className="flex-1 lg:p-3 py-1 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition cursor-pointer font-semibold"
+                                        onClick={() =>
+                                            setEditSection('Username')
+                                        }
+                                    >
+                                        Edit
+                                    </button>
                                 </div>
-
-                                <button
-                                    className="flex-1 lg:p-3 py-1 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition cursor-pointer"
-                                    onClick={handlerEditUsername}
-                                >
-                                    Edit
-                                </button>
+                                <div className="error">{err.username}</div>
                             </div>
                         </div>
                         <div className="flex flex-col lg:w-xl">
                             <p className="font-quicksand text-white pb-2">
                                 Display Name
                             </p>
-                            <div className="flex flex-col lg:flex-row gap-3 w-full">
-                                <div className="w-full">
+                            <div className="flex flex-col lg:flex-row w-full">
+                                <div className="flex w-full gap-3">
                                     <input
                                         type="text"
                                         placeholder="Your Display Name"
@@ -261,24 +298,26 @@ const Profile = () => {
                                         onChange={(e) =>
                                             setName(e.target.value)
                                         }
+                                        readOnly
                                     />
-                                    <div className="error">{err.name}</div>
+                                    <button
+                                        className="flex-1 lg:p-3 py-1 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition cursor-pointer font-semibold"
+                                        onClick={() =>
+                                            setEditSection('Dsiplay Name')
+                                        }
+                                    >
+                                        Edit
+                                    </button>
                                 </div>
-
-                                <button
-                                    className="flex-1 lg:p-3 py-1 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition cursor-pointer"
-                                    onClick={handleEditName}
-                                >
-                                    Edit
-                                </button>
+                                <div className="error">{err.name}</div>
                             </div>
                         </div>
                         <div className="flex flex-col lg:w-xl">
                             <p className="font-quicksand text-white pb-2">
                                 Email
                             </p>
-                            <div className="flex flex-col lg:flex-row gap-3 w-full">
-                                <div className="w-full">
+                            <div className="flex flex-col lg:flex-row w-full">
+                                <div className="flex w-full gap-3">
                                     <input
                                         type="email"
                                         placeholder="Your Email"
@@ -287,16 +326,16 @@ const Profile = () => {
                                         onChange={(e) =>
                                             setEmail(e.target.value)
                                         }
+                                        readOnly
                                     />
-                                    <div className="error">{err.email}</div>
+                                    <button
+                                        className="flex-1 lg:p-3 py-1 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition cursor-pointer font-semibold"
+                                        onClick={() => setEditSection('email')}
+                                    >
+                                        Edit
+                                    </button>
                                 </div>
-
-                                <button
-                                    className="flex-1 lg:p-3 py-1 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition cursor-pointer"
-                                    onClick={handleEditEmail}
-                                >
-                                    Edit
-                                </button>
+                                <div className="error">{err.email}</div>
                             </div>
                         </div>
                         <div className="flex flex-col lg:w-xl">
@@ -304,77 +343,200 @@ const Profile = () => {
                                 Password
                             </p>
                             <div className="flex flex-col lg:flex-row gap-3 w-full">
-                                <div className="relative flex-1">
-                                    <input
-                                        type={
-                                            showPassword ? 'text' : 'password'
-                                        }
-                                        placeholder="Password"
-                                        className="w-full p-3 pr-10 font-quicksand rounded text-white border border-white bg-transparent focus:outline-none"
-                                    />
+                                <div className="flex w-full gap-3">
+                                    <div className="relative flex-1">
+                                        <input
+                                            type={
+                                                showPassword
+                                                    ? 'text'
+                                                    : 'password'
+                                            }
+                                            placeholder="Password"
+                                            className="w-full p-3 pr-10 font-quicksand rounded text-white border border-white bg-transparent focus:outline-none"
+                                        />
+                                        <button
+                                            type="button"
+                                            className={`absolute right-3 top-1/2 -translate-y-1/2 text-white cursor-pointer p-1 rounded-full transition-all duration-300 ease-in-out ${
+                                                showPassword
+                                                    ? 'bg-gray-600'
+                                                    : 'hover:bg-gray-600'
+                                            }`}
+                                            onClick={() =>
+                                                setShowPassword(!showPassword)
+                                            }
+                                        >
+                                            {showPassword ? (
+                                                <FaEyeSlash className="transition-all duration-300" />
+                                            ) : (
+                                                <FaEye className="transition-all duration-300" />
+                                            )}
+                                        </button>
+                                    </div>
                                     <button
-                                        type="button"
-                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-white cursor-pointer"
+                                        className="lg:w-38 lg:p-3 py-1 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition cursor-pointer font-semibold"
                                         onClick={() =>
-                                            setShowPassword(!showPassword)
+                                            setEditSection('Password')
                                         }
                                     >
-                                        {showPassword ? (
-                                            <FaEyeSlash />
-                                        ) : (
-                                            <FaEye />
-                                        )}
+                                        Edit
                                     </button>
                                 </div>
-                                <button
-                                    className="lg:w-38 lg:p-3 py-1 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition cursor-pointer"
-                                    onClick={() => setEditSection('Password')}
-                                >
-                                    Edit
-                                </button>
+                                {/* <div className="error">{err.name}</div> naro tempat error nya di sini aja */}
                             </div>
                         </div>
-                        <button className="w-38 mt-10 p-3 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition cursor-pointer">
+                        <button className="w-38 mt-10 p-3 bg-red-600 text-white font-quicksand rounded hover:bg-red-800 transition cursor-pointer font-semibold">
                             Logout
                         </button>
                     </div>
                 )}
 
-                {editSection && (
+                {editSection && editSection !== 'Password' && (
                     <div className="flex flex-col gap-4 h-full">
-                        <div className="w-full">
-                            <p className="font-quicksand text-white pb-2">
-                                {editSection} Before
-                            </p>
-                            <input
-                                type="text"
-                                placeholder={`${editSection}-Before`}
-                                className="w-full p-3 font-quicksand rounded text-white border border-white focus:outline-none bg-transparent"
-                            />
-                        </div>
                         <div className="w-full">
                             <p className="font-quicksand text-white pb-2">
                                 {editSection} After
                             </p>
                             <input
                                 type="text"
-                                placeholder={`${editSection}-After`}
+                                value={afterValue}
+                                onChange={(e) => setAfterValue(e.target.value)}
                                 className="w-full p-3 font-quicksand rounded text-white border border-white focus:outline-none bg-transparent"
                             />
                         </div>
                         <div className="flex flex-col lg:flex-row gap-3 lg:gap-0 justify-between lg:mt-auto mt-10">
                             <button
-                                className="lg:w-38 p-3 bg-red-500 text-white font-quicksand rounded hover:bg-red-700 transition cursor-pointer"
+                                className="lg:w-38 p-3 bg-red-500 font-semibold text-white font-quicksand rounded hover:bg-red-700 transition cursor-pointer"
                                 onClick={() => setEditSection(null)}
                             >
                                 Cancel
                             </button>
                             <button
-                                className="lg:w-38 p-3 bg-[#4AFF71] text-[#252527] font-quicksand rounded hover:bg-orange-500 transition cursor-pointer"
-                                onClick={() => setEditSection(null)}
+                                className="lg:w-38 p-3 bg-green-500 text-white font-semibold font-quicksand rounded hover:bg-green-700 transition cursor-pointer"
+                                onClick={handleSave}
                             >
                                 Save & Quit
                             </button>
+                        </div>
+                    </div>
+                )}
+
+                {editSection === 'Password' && (
+                    <div className="flex flex-col gap-4 h-full overflow-y-auto">
+                        <div>
+                            <p className="text-white font-quicksand pb-2">
+                                Old Password
+                            </p>
+                            <input
+                                type="password"
+                                value={passwords.oldPassword}
+                                onChange={(e) =>
+                                    setPasswords((prev) => ({
+                                        ...prev,
+                                        oldPassword: e.target.value,
+                                    }))
+                                }
+                                className="w-full p-3 font-quicksand rounded text-white border border-white focus:outline-none bg-transparent"
+                            />
+                        </div>
+
+                        <div>
+                            <p className="text-white font-quicksand pb-2">
+                                New Password
+                            </p>
+                            <input
+                                type="password"
+                                value={passwords.newPassword}
+                                onChange={(e) =>
+                                    setPasswords((prev) => ({
+                                        ...prev,
+                                        newPassword: e.target.value,
+                                    }))
+                                }
+                                className="w-full p-3 font-quicksand rounded text-white border border-white focus:outline-none bg-transparent"
+                            />
+                        </div>
+
+                        <div>
+                            <p className="text-white font-quicksand pb-2">
+                                Confirm New Password
+                            </p>
+                            <input
+                                type="password"
+                                value={passwords.confirmNewPassword}
+                                onChange={(e) =>
+                                    setPasswords((prev) => ({
+                                        ...prev,
+                                        confirmNewPassword: e.target.value,
+                                    }))
+                                }
+                                className="w-full p-3 font-quicksand rounded text-white border border-white focus:outline-none bg-transparent"
+                            />
+                        </div>
+
+                        {passwordError && (
+                            <p className="text-red-400 font-quicksand">
+                                {passwordError}
+                            </p>
+                        )}
+
+                        <div className="flex flex-col lg:flex-row gap-3 lg:gap-0 justify-between lg:mt-auto mt-10">
+                            <button
+                                className="lg:w-38 p-3 bg-red-500 font-semibold text-white font-quicksand rounded hover:bg-red-700 transition cursor-pointer"
+                                onClick={() => {
+                                    setEditSection(null);
+                                    setPasswords({
+                                        oldPassword: '',
+                                        newPassword: '',
+                                        confirmNewPassword: '',
+                                    });
+                                    setPasswordError(null);
+                                }}
+                            >
+                                Cancel
+                            </button>
+                            <div className="flex gap-4">
+                                <button
+                                    className="lg:w-50 p-3 bg-blue-500 text-white font-semibold font-quicksand rounded hover:bg-blue-700 transition cursor-pointer"
+                                    onClick={() => {
+                                        // Arahkan ke halaman lupa password
+                                        // Misal: navigate('/forgot-password')
+                                        toast.info(
+                                            'Redirecting to forgot password...',
+                                        );
+                                    }}
+                                >
+                                    I forgot my password
+                                </button>
+                                <button
+                                    className="lg:w-44 p-3 bg-green-500 text-white font-semibold font-quicksand rounded hover:bg-green-700 transition cursor-pointer"
+                                    onClick={() => {
+                                        if (
+                                            passwords.newPassword !==
+                                            passwords.confirmNewPassword
+                                        ) {
+                                            setPasswordError(
+                                                'New passwords do not match.',
+                                            );
+                                            return;
+                                        }
+
+                                        // Call your API to change password here
+                                        // Example:
+                                        // await axios.patch('/api/user/edit/password', passwords)
+
+                                        toast.success('Password changed!');
+                                        setEditSection(null);
+                                        setPasswords({
+                                            oldPassword: '',
+                                            newPassword: '',
+                                            confirmNewPassword: '',
+                                        });
+                                        setPasswordError(null);
+                                    }}
+                                >
+                                    Update Password
+                                </button>
+                            </div>
                         </div>
                     </div>
                 )}
