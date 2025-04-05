@@ -7,76 +7,109 @@ import ErrorConstant from '../../util/ErrorConstant.js';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaChevronDown } from 'react-icons/fa';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 const AddData = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
-    const [fileName, setFileName] = useState('');
+    const [fileImage, setFileImage] = useState('');
+    const [postId, setPostId] = useState();
     const [formData, setFormData] = useState({
-        title: '',
-        description: '',
+        name: '',
+        detail: '',
         imageLink: '',
         location: '',
         province: '',
     });
-    const [errors, setErrors] = useState({});
+    const [errors, setErrors] = useState({
+        name: '',
+        detail: '',
+        image: '',
+        location: '',
+        province: '',
+    });
     const [province, setProvince] = useState({ name: '' });
     const [filteredProvinces, setFilteredProvinces] = useState([]);
+    const [provinces, setProvinces] = useState([]);
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-        setErrors({ ...errors, [name]: null });
+        setFormData((state) => ({ ...state, [name]: value }));
     };
 
-    const validateForm = () => {
-        let validationErrors = {};
-
-        if (!formData.title.trim()) {
-            validationErrors.title = 'Title field cannot be empty!';
-        }
-        if (!formData.description.trim()) {
-            validationErrors.description = 'Description field cannot be empty!';
-        }
-        if (!selectedImage) {
-            validationErrors.imageLink = 'Image must be uploaded!';
-        }
-        if (!formData.location.trim()) {
-            validationErrors.location = 'Location field cannot be empty!';
-        }
-        if (!formData.province.trim()) {
-            validationErrors.province = 'Province field cannot be empty!';
-        }
-
-        return validationErrors;
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const validationErrors = validateForm();
-
-        if (Object.keys(validationErrors).length > 0) {
-            setErrors(validationErrors);
-            return;
-        }
-
-        toast.success('Data added successfully!', {
-            position: 'top-right',
-            autoClose: 3000,
-        });
-
-        setFormData({
-            title: '',
-            description: '',
-            imageLink: '',
+    const invalidFieldErr = (arr) => {
+        const newObjErr = {
+            name: '',
+            detail: '',
+            image: '',
             location: '',
             province: '',
-        });
-        setErrors({});
-        setSelectedImage(null);
-        setFileName('');
+        };
+        for (const element of arr) {
+            if (
+                Object.prototype.hasOwnProperty.call(newObjErr, element.path[0])
+            ) {
+                newObjErr[element.path[0]] = element.message;
+            }
+        }
+        setErrors((state) => ({ ...state, ...newObjErr }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const form = new FormData();
+
+        form.append('name', formData.name.trim());
+        form.append('province', formData.province.trim());
+        form.append('detail', formData.detail.trim());
+        form.append('image', fileImage);
+        form.append('location', formData.location.trim());
+
+        try {
+            //ping the route so its not econreset error
+            await axios
+                .post('/api/destination/add', new FormData())
+                .catch((e) => {});
+
+            const result = await axios.post('/api/destination/add', form);
+            setPostId(result.data.data.postId);
+            formData?.imageLink?.revokeObjectUrl?.();
+            setErrors(() => ({
+                name: '',
+                detail: '',
+                image: '',
+                location: '',
+                province: '',
+            }));
+            setFormData(() => ({
+                name: '',
+                detail: '',
+                imageLink: '',
+                location: '',
+                province: '',
+            }));
+            setProvince({ name: '' });
+            setFileImage(null);
+            setSelectedImage('');
+
+            document.getElementById('modal-success').showModal();
+        } catch (e) {
+            if (!(e instanceof AxiosError)) {
+                return toast.error('Something went wrong', {
+                    position: 'top-right',
+                    autoClose: 3000,
+                });
+            }
+            if (e.status == 413) {
+                setErrors((state) => ({ ...state, image: 'Image too large' }));
+            }
+            const response = e?.response?.data?.payload;
+            if (response.errCode === ErrorConstant.ERR_INVALID_FIELD) {
+                console.log(response.fields);
+                invalidFieldErr(response.fields);
+            }
+        }
     };
 
     const handleImageChange = (event) => {
@@ -84,9 +117,9 @@ const AddData = () => {
         if (file) {
             const imageUrl = URL.createObjectURL(file);
             setSelectedImage(imageUrl);
-            setFileName(file.name);
-            setErrors((prevErrors) => ({ ...prevErrors, imageLink: null }));
+            setFileImage(file);
         }
+        event.target.value = '';
     };
 
     useEffect(() => {
@@ -97,13 +130,14 @@ const AddData = () => {
         const fetchProvinces = async () => {
             try {
                 const res = await axios.get('/api/geolocation/provinces');
-                setFilteredProvinces(res.data);
+                setProvinces(res.data.data);
+                setFilteredProvinces(res.data.data);
             } catch (err) {
                 toast.error('Failed to fetch provinces!');
                 console.error(err);
             }
         };
-    
+
         fetchProvinces();
     }, []);
 
@@ -111,24 +145,52 @@ const AddData = () => {
         const value = e.target.value;
         setProvince({ name: value });
         setDropdownOpen(true);
-    
-        const filtered = filteredProvinces.filter((p) =>
-            p.name.toLowerCase().includes(value.toLowerCase())
+
+        const filtered = provinces.filter((p) =>
+            p.name.toLowerCase().includes(value.toLowerCase()),
         );
         setFilteredProvinces(filtered);
     };
-    
+
     const handleSelectProvince = (selectedProvince) => {
         setProvince(selectedProvince);
         setDropdownOpen(false);
     };
-    
+
     const toggleDropdown = () => {
         setDropdownOpen((prev) => !prev);
-    };    
+    };
 
     return (
         <div>
+            <ToastContainer />
+            <dialog id="modal-success" className="modal">
+                <div className="modal-box">
+                    <form method="dialog">
+                        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                            ✕
+                        </button>
+                    </form>
+                    <h3 className="font-bold text-lg">
+                        Success adding Destination!
+                    </h3>
+                    <p className="py-4">
+                        Click
+                        <a
+                            className="link link-primary"
+                            href={`/destination/${postId}`}
+                        >
+                            {' '}
+                            Here{' '}
+                        </a>
+                        to go to your created destination
+                    </p>
+                    <form method="dialog">
+                        <button className="btn btn-neutral">Ok</button>
+                    </form>
+                </div>
+            </dialog>
+
             <div className="w-full bg-[#221122] flex lg:h-screen items-center justify-center p-5 lg:p-10 gap-5 text-white">
                 {/* Header Mobile */}
                 <div className="lg:hidden p-5 fixed z-60 top-0 w-full bg-[#252527] flex justify-between items-center shadow-xl">
@@ -142,6 +204,7 @@ const AddData = () => {
                             <RiMenu2Line size={24} />
                         )}
                     </button>
+
                     <button className="bg-[#FFA666] text-black font-quicksand p-2 rounded-lg cursor-pointer">
                         <IoIosNotifications size={24} />
                     </button>
@@ -179,54 +242,33 @@ const AddData = () => {
                             <div className="flex-1 flex flex-col lg:gap-2">
                                 <div className="flex flex-col mb-2 lg:mb-0">
                                     <p className="font-quicksand text-white pb-2">
-                                        Title
+                                        Destination Name
                                     </p>
                                     <input
                                         type="text"
-                                        name="title"
-                                        value={formData.title}
+                                        name="name"
+                                        value={formData.name}
                                         onChange={handleChange}
-                                        placeholder="Input Title"
+                                        placeholder="Input Destination"
                                         className={`flex-3 p-3 font-quicksand rounded text-white border ${
-                                            errors.title
+                                            errors.name
                                                 ? 'border-red-500'
                                                 : 'border-white'
                                         } bg-transparent focus:outline-none focus:ring focus:ring-[#FFA666]`}
                                     />
                                     <div className="min-h-[20px]">
-                                        {errors.title && (
+                                        {errors.name && (
                                             <div className="text-red-500 text-sm">
-                                                {errors.title}
+                                                {errors.name}
                                             </div>
                                         )}
                                     </div>
                                 </div>
+
                                 <div className="flex flex-col mb-2 lg:mb-0">
                                     <p className="font-quicksand text-white pb-2">
-                                        Description
+                                        Province
                                     </p>
-                                    <textarea
-                                        name="description"
-                                        value={formData.description}
-                                        onChange={handleChange}
-                                        placeholder="Input Description"
-                                        rows={4}
-                                        className={`flex-3 p-3 font-quicksand rounded text-white border ${
-                                            errors.description
-                                                ? 'border-red-500'
-                                                : 'border-white'
-                                        } bg-transparent focus:outline-none focus:ring focus:ring-[#FFA666] resize-none`}
-                                    ></textarea>
-                                    <div className="min-h-[20px]">
-                                        {errors.description && (
-                                            <div className="text-red-500 text-sm">
-                                                {errors.description}
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                                <div className="flex flex-col mb-2 lg:mb-0 mt-auto">
-                                    <p className="font-quicksand text-white pb-2">Province</p>
                                     <div className="relative w-full">
                                         <div className="flex items-center">
                                             <input
@@ -237,7 +279,9 @@ const AddData = () => {
                                                 onChange={handleProvinceChange}
                                                 placeholder="Search Province"
                                                 className={`flex-3 p-3 font-quicksand rounded text-white border ${
-                                                    errors.province ? 'border-red-500' : 'border-white'
+                                                    errors.province
+                                                        ? 'border-red-500'
+                                                        : 'border-white'
                                                 } bg-transparent w-full pr-10 focus:outline-none focus:ring focus:ring-[#FFA666]`}
                                             />
                                             <button
@@ -247,28 +291,63 @@ const AddData = () => {
                                             >
                                                 <FaChevronDown
                                                     className={`text-lg text-black group-hover:text-[#FFA666] transition-transform duration-300 ${
-                                                        dropdownOpen ? 'rotate-180' : 'rotate-0'
+                                                        dropdownOpen
+                                                            ? 'rotate-180'
+                                                            : 'rotate-0'
                                                     }`}
                                                 />
                                             </button>
                                         </div>
-                                        {dropdownOpen && filteredProvinces.length > 0 && (
-                                            <ul className="absolute z-10 w-full mt-1 bg-[#252527] text-white border border-[#FFA666] rounded shadow-md max-h-60 overflow-y-auto">
-                                                {filteredProvinces.map((p) => (
-                                                    <li
-                                                        key={p.name}
-                                                        className="px-4 py-2 cursor-pointer hover:bg-[#FFA666] hover:text-black transition-all duration-200"
-                                                        onClick={() => handleSelectProvince(p)}
-                                                    >
-                                                        {p.name}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        )}
+                                        {dropdownOpen &&
+                                            filteredProvinces.length > 0 && (
+                                                <ul className="absolute z-10 w-full mt-1 bg-[#252527] text-white border border-[#FFA666] rounded shadow-md max-h-60 overflow-y-auto">
+                                                    {filteredProvinces.map(
+                                                        (p) => (
+                                                            <li
+                                                                key={p.name}
+                                                                className="px-4 py-2 cursor-pointer hover:bg-[#FFA666] hover:text-black transition-all duration-200"
+                                                                onClick={() =>
+                                                                    handleSelectProvince(
+                                                                        p,
+                                                                    )
+                                                                }
+                                                            >
+                                                                {p.name}
+                                                            </li>
+                                                        ),
+                                                    )}
+                                                </ul>
+                                            )}
                                     </div>
                                     <div className="min-h-[20px]">
                                         {errors.province && (
-                                            <div className="text-red-500 text-sm">{errors.province}</div>
+                                            <div className="text-red-500 text-sm">
+                                                {errors.province}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className="flex flex-col mb-2 lg:mb-0 mt-auto">
+                                    <p className="font-quicksand text-white pb-2">
+                                        Description
+                                    </p>
+                                    <textarea
+                                        name="detail"
+                                        value={formData.detail}
+                                        onChange={handleChange}
+                                        placeholder="Input Description"
+                                        rows={4}
+                                        className={`flex-3 p-3 font-quicksand rounded text-white border ${
+                                            errors.detail
+                                                ? 'border-red-500'
+                                                : 'border-white'
+                                        } bg-transparent focus:outline-none focus:ring focus:ring-[#FFA666] resize-none`}
+                                    ></textarea>
+                                    <div className="min-h-[20px]">
+                                        {errors.detail && (
+                                            <div className="text-red-500 text-sm">
+                                                {errors.detail}
+                                            </div>
                                         )}
                                     </div>
                                 </div>
@@ -320,8 +399,8 @@ const AddData = () => {
                                                         or drag and drop
                                                     </p>
                                                     <p className="text-xs text-gray-400">
-                                                        SVG, PNG, JPG or GIF
-                                                        (MAX. 800x400px)
+                                                        PNG, JPG or WEBP (MAX.
+                                                        800x400px)
                                                     </p>
                                                 </div>
                                             )}
@@ -334,18 +413,18 @@ const AddData = () => {
                                             />
                                         </label>
                                     </div>
-                                    <div className='min-h-[20px]'>
-                                        {fileName && (
+                                    <div className="min-h-[20px]">
+                                        {fileImage && (
                                             <p className="text-sm text-gray-500 text-center">
-                                                {fileName}
+                                                {fileImage.name}
                                             </p>
                                         )}
                                     </div>
 
                                     <div className="min-h-[20px]">
-                                        {errors.imageLink && (
+                                        {errors.image && (
                                             <div className="text-red-500 text-sm">
-                                                {errors.imageLink}
+                                                {errors.image}
                                             </div>
                                         )}
                                     </div>
