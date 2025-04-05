@@ -44,6 +44,10 @@ const DestinationCard = ({
         try {
             setWishlist(true);
             await axios.post(`/api/user/wishlist/${id}`);
+            toast.success('Added to wishlist!', {
+                position: 'top-right',
+                autoClose: 3000,
+            });
         } catch (e) {
             if (!(e instanceof AxiosError)) {
                 return toast.error('Something went wrong', {
@@ -65,6 +69,10 @@ const DestinationCard = ({
         try {
             setWishlist(false);
             await axios.delete(`/api/user/wishlist/${id}`);
+            toast.info('Removed from wishlist', {
+                position: 'top-right',
+                autoClose: 3000,
+            });
         } catch (e) {
             toast.error('Something went wrong', {
                 position: 'top-right',

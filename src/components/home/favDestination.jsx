@@ -22,11 +22,12 @@ import SeeDetail from '../seeDetail';
 const FavDestination = () => {
   return (
     <Swiper
-      className="swiper absolute inset-0 w-full lg:w-3/5 h-screen lg:h-[720px] md:h-[960]"
+      className="swiper absolute inset-0 w-full lg:w-3/5 h-screen lg:h-[720px] md:h-[960px] cursor-grab active:cursor-grabbing"
       modules={[Autoplay, Pagination, EffectCoverflow]}
       effect="coverflow"
       autoplay={{ delay: 5000, disableOnInteraction: false }}
       pagination={{ clickable: true }}
+      grabCursor={true}
     >
       {/* Slide 1 */}
       <SwiperSlide>

@@ -47,14 +47,14 @@ const home = () => {
                         whileInView="visible"
                         viewport={{ amount: 0.1 }}
                         variants={slideInLeft}
-                        className="flex flex-col items-center justify-center lg:w-1/3 text-center px-8"
+                        className="flex flex-col items-center justify-center lg:w-1/3 text-center lg:px-16  z-11"
                     >
                         <h1 className="text-white lg:text-2xl text-xl font-inknut-antiqua">
                             What is{' '}
                             <span className="text-[#FFA666]">Woofi?</span>
                         </h1>
                         <hr className="w-full border-t-2 border-white my-2" />
-                        <p className="text-white max-w-xs text-justify font-quicksand">
+                        <p className="text-white text-justify font-quicksand">
                             Woofi (Wonderful of Indonesia), the ultimate guide
                             to discovering the charm of Indonesian tourism! From
                             white sandy beaches, majestic green mountains, to
@@ -69,7 +69,7 @@ const home = () => {
                         variants={fadeInUp}
                         className="relative lg:w-1/3 h-full flex justify-center"
                     >
-                        <div className="relative w-full h-full">
+                        <div className="relative w-full aspect-square lg:aspect-auto lg:h-full">
                             <img
                                 src={Image1}
                                 alt="Image 1"
@@ -89,14 +89,14 @@ const home = () => {
                         whileInView="visible"
                         viewport={{ amount: 0.1 }}
                         variants={slideInRight}
-                        className="flex flex-col items-center justify-center lg:w-1/3 text-center px-8"
+                        className="flex flex-col items-center justify-center lg:w-1/3 text-center lg:px-16  z-11"
                     >
                         <h1 className="text-white lg:text-2xl text-xl font-inknut-antiqua">
                             Why Choose{' '}
                             <span className="text-[#FFA666]">Woofi?</span>
                         </h1>
                         <hr className="w-full border-t-2 border-white my-2" />
-                        <p className="text-white text-justify max-w-xs font-quicksand">
+                        <p className="text-white text-justify font-quicksand">
                             Discover the wonders of Indonesia with Woofi! From
                             the best tourist destinations across the archipelago
                             to rich culinary delights, we bring you expert
@@ -140,7 +140,7 @@ const home = () => {
                     </p>
                     <Link
                         to="/destination"
-                        className="font-quicksand text-lg p-2 border-2 border-white rounded-md border-solid"
+                        className="px-4 py-2 border border-white rounded-md hover:bg-white hover:text-black transition duration-300 font-semibold text-lg"
                     >
                         Start Exploring
                     </Link>

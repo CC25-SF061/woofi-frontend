@@ -17,26 +17,29 @@ const topDestination = () => {
                 whileInView="visible"
                 viewport={{ amount: 0.1 }}
                 variants={fadeInUp}
-                className="relative flex flex-col items-center justify-center gap-4 py-12 px-8 lg:px-0 bg-[#252527] text-white"
+                className=" flex flex-col items-center justify-center gap-4 py-12 px-8 lg:px-0 bg-[#252527] text-white"
             >
-                
-                    <h1 className="font-inknut-antiqua lg:text-4xl text-2xl">
-                        <span className="text-[#FFA666]">Top</span> Destination
-                    </h1>
-                    <p className="font-quicksand lg:text-2xl w-full md:w-3/4 text-xl text-center">
-                        Explore Indonesia’s most stunning destinations, from
-                        pristine beaches to majestic mountains. Find your next
-                        adventure with Woofi!
-                    </p>
-                
+                <h1 className="font-inknut-antiqua lg:text-4xl text-2xl">
+                    <span className="text-[#FFA666]">Top</span> Destination
+                </h1>
+                <p className="font-quicksand lg:text-2xl w-full md:w-3/4 text-xl text-center">
+                    Explore Indonesia’s most stunning destinations, from
+                    pristine beaches to majestic mountains. Find your next
+                    adventure with Woofi!
+                </p>
+
                 <div className="lg:w-5xl">
                     <Link
                         to="/destination"
-                        className="underline underline-offset-2 font-quicksand mb-4"
+                        className="relative inline-block font-quicksand font-semibold hover:text-[#FFA666] transition-colors duration-300 group"
                     >
-                        See More Destination
+                        <span className="relative z-10">
+                            See More Destination
+                        </span>
+                        <span className="absolute left-0 bottom-0 h-[2px] bg-[#FFA666] transition-all duration-300 w-0 group-hover:w-full"></span>
                     </Link>
-                    <div className="flex flex-col lg:flex-row items-center gap-5">
+
+                    <div className="flex flex-col lg:flex-row items-center gap-5 mt-4 lg:mt-0 aspect-square lg:aspect-auto">
                         <SeeDetail
                             image={Image5}
                             title="Bromo Mountain"

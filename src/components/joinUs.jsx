@@ -44,7 +44,7 @@ const JoinUs = () => {
                     </p>
                     <Link
                         to="/sign-in"
-                        className="px-5 py-3 border border-white rounded-md hover:bg-white hover:text-black transition duration-300"
+                        className="px-8 py-2 border border-white rounded-md hover:bg-white hover:text-black transition duration-300 font-semibold text-lg"
                     >
                         Click Here
                     </Link>

@@ -23,13 +23,13 @@ const DestinationGroup = ({
         <div ref={containerRef} className="mt-15 flex flex-col w-full">
             <div className="relative w-full caret-transparent">
                 <div className="absolute right-0 left-0 h-[2px] top-[50%] bg-[#FFA66677]"></div>
-                <h1 className="relative mx-auto px-3 font-inknut-antiqua text-2xl md:text-5xl w-fit text-center text-[#FFA666] font-bold bg-[#221122]">
+                <h1 className="relative mx-auto px-3 font-inknut-antiqua text-2xl md:text-4xl w-fit text-center text-[#FFA666] font-bold bg-[#221122]">
                     Explore Destinations
                 </h1>
             </div>
 
             {/* The Filters */}
-            <div className="flex flex-row gap-2 mx-auto md:mx-0 md:gap-5 mt-5 md:mt-18 self-start caret-transparent">
+            <div className="flex flex-row justify-between lg:mx-auto md:mx-0 mt-5 md:mt-18 self-start caret-transparent w-full">
                 <DestinationFilter
                     name="Highest Rating"
                     stateChangeHandler={tagsChangeHandler}

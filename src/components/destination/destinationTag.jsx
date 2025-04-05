@@ -23,8 +23,8 @@ const DestinationTag = ({ name, stateChangeHandler, type }) => {
             <p
                 className={
                     isActive
-                        ? 'text-white text-xs md:text-lg font-quicksand font-bold'
-                        : 'text-white text-xs md:text-lg font-quicksand'
+                        ? 'text-white text-sm md:text-lg font-quicksand font-bold'
+                        : 'text-white text-sm md:text-lg font-quicksand'
                 }
             >
                 {name}

@@ -49,7 +49,7 @@ const SearchDestination = ({ handleSubmit, selectedHandler, provinces }) => {
         >
             <label
                 htmlFor="province"
-                className="font-quicksand text-sm sm:text-md text-nowrap md:text-xl rounded-md w-full tracking-tight sm:tracking-wide"
+                className="font-quicksand text-xl text-nowrap md:text-2xl rounded-md w-full tracking-tight sm:tracking-wide"
             >
                 Search For Tourist Destination
             </label>

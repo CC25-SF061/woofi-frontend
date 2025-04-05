@@ -8,7 +8,7 @@ const SeeDetail = ({ image, title, description }) => {
       <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center p-4">
         <h3 className="text-lg font-inknut-antiqua mb-3">{title}</h3>
         <p className="text-sm font-quicksand">{description}</p>
-        <Link to="/destination" className="mt-3 hover:bg-[#ffffff55] hover:scale-[1.05] px-3 py-1 border border-white rounded-md font-quicksand">
+        <Link to="/destination" className="mt-3 hover:bg-[#ffffff55] hover:scale-[1.05] px-3 py-1 border border-white rounded-md font-quicksand font-semibold">
           Explore Now 
         </Link>
       </div>
