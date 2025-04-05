@@ -19,6 +19,7 @@ const DataDestination = () => {
     const [selectedItemToEdit, setSelectedItemToEdit] = useState(null);
     const [destinations, setDestinations] = useState([]);
     const navigate = useNavigate();
+    const [isDragging, setIsDragging] = useState(false);
     const handleDelete = () => {
         console.log('Deleted item', selectedItemToDelete.id);
         setSelectedItemToDelete(null);
@@ -85,8 +86,30 @@ const DataDestination = () => {
     const onCardClick = async (id) => {
         await navigate(`/destination/${id}`);
     };
+
+    const handleDragOver = (e) => {
+        e.preventDefault();
+        setIsDragging(true);
+    };
+
+    const handleDragLeave = () => {
+        setIsDragging(false);
+    };
+
+    const handleDrop = (e) => {
+        e.preventDefault();
+        setIsDragging(false);
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) {
+            setSelectedItemToEdit({
+                ...selectedItemToEdit,
+                imageFile: file,
+            });
+        }
+    };
+
     return (
-        <div className='min-h-screen bg-[#221122] flex flex-col items-center justify-center'>
+        <div className="min-h-screen bg-[#221122] flex flex-col items-center justify-center">
             <div className="w-full lg:h-screen flex items-center justify-center p-5 lg:p-10 gap-5 text-white">
                 <div className="lg:hidden p-5 fixed z-60 top-0 w-full bg-[#252527] flex justify-between items-center shadow-xl">
                     <button
@@ -364,53 +387,65 @@ const DataDestination = () => {
 
                                     {/* Show dropzone input only if no imageFile is selected */}
                                     {!selectedItemToEdit?.imageFile && (
-                                        <label
-                                            htmlFor="dropzone-file"
-                                            className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-gray-500 rounded-lg cursor-pointer hover:bg-gray-700 transition"
+                                        <div
+                                            className="w-full"
+                                            onDragOver={handleDragOver}
+                                            onDragLeave={handleDragLeave}
+                                            onDrop={handleDrop}
                                         >
-                                            <div className="flex flex-col items-center justify-center pt-5 pb-6 text-center">
-                                                <svg
-                                                    className="w-8 h-8 mb-4 text-gray-400"
-                                                    aria-hidden="true"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    viewBox="0 0 24 24"
-                                                >
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        strokeWidth={2}
-                                                        d="M12 4v16m8-8H4"
-                                                    />
-                                                </svg>
-                                                <p className="text-sm text-gray-400">
-                                                    <span className="font-semibold">
-                                                        Click to upload
-                                                    </span>{' '}
-                                                    or drag and drop
-                                                </p>
-                                                <p className="text-xs text-gray-400">
-                                                    PNG, JPG, max 800x400px
-                                                </p>
-                                            </div>
-                                            <input
-                                                id="dropzone-file"
-                                                type="file"
-                                                accept="image/*"
-                                                className="hidden"
-                                                onChange={(e) => {
-                                                    const file =
-                                                        e.target.files[0];
-                                                    if (file) {
-                                                        setSelectedItemToEdit({
-                                                            ...selectedItemToEdit,
-                                                            imageFile: file,
-                                                        });
-                                                        e.target.value = null; // Reset input
-                                                    }
-                                                }}
-                                            />
-                                        </label>
+                                            <label
+                                                htmlFor="dropzone-file"
+                                                className={`flex flex-col items-center justify-center w-full h-64 border-white border-2 border-dashed rounded-lg cursor-pointer transition
+                                                    ${isDragging ? 'border-[#FFA666] bg-gray-800' : 'border-gray-300 hover:bg-gray-700'}`}
+                                            >
+                                                <div className="flex flex-col items-center justify-center pt-5 pb-6 text-center">
+                                                    <svg
+                                                        className="w-8 h-8 mb-4 text-gray-400"
+                                                        aria-hidden="true"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        viewBox="0 0 24 24"
+                                                    >
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth={2}
+                                                            d="M12 4v16m8-8H4"
+                                                        />
+                                                    </svg>
+                                                    <p className="text-sm text-gray-400">
+                                                        <span className="font-semibold">
+                                                            Click to upload
+                                                        </span>{' '}
+                                                        or drag and drop
+                                                    </p>
+                                                    <p className="text-xs text-gray-400">
+                                                        PNG, JPG, max 800x400px
+                                                    </p>
+                                                </div>
+                                                <input
+                                                    id="dropzone-file"
+                                                    type="file"
+                                                    accept="image/*"
+                                                    className="hidden"
+                                                    onChange={(e) => {
+                                                        const file =
+                                                            e.target.files[0];
+                                                        if (file) {
+                                                            setSelectedItemToEdit(
+                                                                {
+                                                                    ...selectedItemToEdit,
+                                                                    imageFile:
+                                                                        file,
+                                                                },
+                                                            );
+                                                            e.target.value =
+                                                                null;
+                                                        }
+                                                    }}
+                                                />
+                                            </label>
+                                        </div>
                                     )}
 
                                     {/* Show file name and remove option */}

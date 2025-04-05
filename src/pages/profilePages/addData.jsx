@@ -14,6 +14,7 @@ const AddData = () => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [fileImage, setFileImage] = useState('');
     const [postId, setPostId] = useState();
+    const [isDragging, setIsDragging] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
         detail: '',
@@ -161,6 +162,24 @@ const AddData = () => {
         setDropdownOpen((prev) => !prev);
     };
 
+    const handleDragOver = (e) => {
+        e.preventDefault();
+        setIsDragging(true);
+    };
+
+    const handleDragLeave = () => {
+        setIsDragging(false);
+    };
+
+    const handleDrop = (e) => {
+        e.preventDefault();
+        setIsDragging(false);
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) {
+            handleImageChange({ target: { files: [file] } });
+        }
+    };
+
     return (
         <div>
             <ToastContainer />
@@ -229,15 +248,15 @@ const AddData = () => {
                     <Sidebar />
                 </div>
 
-                <div className="flex flex-col flex-1 rounded-lg overflow-hidden shadow-lg bg-[#252527] m-5 lg:m-0 h-full lg:w-3/4 mt-20">
-                    <div className="p-3 w-full shadow-md z-10">
+                <div className="flex flex-col flex-1 rounded-lg overflow-hidden shadow-lg bg-[#252527] p-5 m-5 lg:m-0 h-full lg:w-3/4 mt-20">
+                    <div className=" w-full shadow-md z-10">
                         <h1 className="text-center font-quicksand text-2xl">
                             Add Data Destination
                         </h1>
                         <hr className="border-t-2 border-white my-3 rounded" />
                     </div>
 
-                    <div className="overflow-y-auto p-3 ">
+                    <div className="overflow-y-auto py-3 pr-3">
                         <div className="flex flex-col lg:flex-row lg:gap-10">
                             <div className="flex-1 flex flex-col lg:gap-2">
                                 <div className="flex flex-col mb-2 lg:mb-0">
@@ -266,6 +285,31 @@ const AddData = () => {
                                 </div>
 
                                 <div className="flex flex-col mb-2 lg:mb-0">
+                                    <p className="font-quicksand text-white pb-2">
+                                        Description
+                                    </p>
+                                    <textarea
+                                        name="detail"
+                                        value={formData.detail}
+                                        onChange={handleChange}
+                                        placeholder="Input Description"
+                                        rows={4}
+                                        className={`flex-3 p-3 font-quicksand rounded text-white border ${
+                                            errors.detail
+                                                ? 'border-red-500'
+                                                : 'border-white'
+                                        } bg-transparent focus:outline-none focus:ring focus:ring-[#FFA666] resize-none`}
+                                    ></textarea>
+                                    <div className="min-h-[20px]">
+                                        {errors.detail && (
+                                            <div className="text-red-500 text-sm">
+                                                {errors.detail}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-col mb-2 lg:mb-0 mt-auto">
                                     <p className="font-quicksand text-white pb-2">
                                         Province
                                     </p>
@@ -327,30 +371,6 @@ const AddData = () => {
                                         )}
                                     </div>
                                 </div>
-                                <div className="flex flex-col mb-2 lg:mb-0 mt-auto">
-                                    <p className="font-quicksand text-white pb-2">
-                                        Description
-                                    </p>
-                                    <textarea
-                                        name="detail"
-                                        value={formData.detail}
-                                        onChange={handleChange}
-                                        placeholder="Input Description"
-                                        rows={4}
-                                        className={`flex-3 p-3 font-quicksand rounded text-white border ${
-                                            errors.detail
-                                                ? 'border-red-500'
-                                                : 'border-white'
-                                        } bg-transparent focus:outline-none focus:ring focus:ring-[#FFA666] resize-none`}
-                                    ></textarea>
-                                    <div className="min-h-[20px]">
-                                        {errors.detail && (
-                                            <div className="text-red-500 text-sm">
-                                                {errors.detail}
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
                             </div>
 
                             <div className="flex-1 flex flex-col lg:gap-2">
@@ -359,15 +379,16 @@ const AddData = () => {
                                         Link Image
                                     </p>
 
-                                    <div className="flex items-center justify-center w-full">
+                                    <div
+                                        className="flex items-center justify-center w-full"
+                                        onDragOver={handleDragOver}
+                                        onDragLeave={handleDragLeave}
+                                        onDrop={handleDrop}
+                                    >
                                         <label
                                             htmlFor="dropzone-file"
-                                            className={`flex flex-col items-center justify-center w-full h-59 border-2 border-dashed border-gray-500 rounded-lg cursor-pointer hover:bg-gray-700 transition 
-                                            ${
-                                                errors.imageLink
-                                                    ? 'border-red-500'
-                                                    : 'border-gray-300'
-                                            }`}
+                                            className={`flex flex-col items-center justify-center w-full h-59 border-2 border-dashed rounded-lg cursor-pointer transition
+                                                ${errors.imageLink ? 'border-red-500' : isDragging ? 'border-[#FFA666] bg-gray-800' : 'border-gray-300 hover:bg-gray-700'}`}
                                         >
                                             {selectedImage ? (
                                                 <img
@@ -413,6 +434,7 @@ const AddData = () => {
                                             />
                                         </label>
                                     </div>
+
                                     <div className="min-h-[20px]">
                                         {fileImage && (
                                             <p className="text-sm text-gray-500 text-center">

@@ -28,6 +28,10 @@ const Profile = () => {
     const [email, setEmail] = useState(user.email);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [afterValue, setAfterValue] = useState('');
+    const [isDragging, setIsDragging] = useState(false);
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [fileImage, setFileImage] = useState('');
+
     const [err, setErr] = useState({
         username: null,
         email: null,
@@ -184,8 +188,36 @@ const Profile = () => {
         setEditSection(null);
     };
 
+    const handleImageChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const imageUrl = URL.createObjectURL(file);
+            setSelectedImage(imageUrl);
+            setFileImage(file);
+        }
+        event.target.value = '';
+    };
+
+    const handleDragOver = (e) => {
+        e.preventDefault();
+        setIsDragging(true);
+    };
+
+    const handleDragLeave = () => {
+        setIsDragging(false);
+    };
+
+    const handleDrop = (e) => {
+        e.preventDefault();
+        setIsDragging(false);
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) {
+            handleImageChange({ target: { files: [file] } }); // panggil handler kamu yang udah ada
+        }
+    };
+
     return (
-        <div className="w-full bg-[#221122] flex lg:h-screen items-center justify-center p-5 lg:p-10 gap-5 text-white">
+        <div className="w-full bg-[#221122] flex lg:h-screen items-center justify-center p-5 lg:p-10 text-white">
             <ToastContainer />
 
             {/* Header Mobile */}
@@ -221,11 +253,11 @@ const Profile = () => {
                 ></div>
             )}
 
-            <div className="hidden lg:flex h-full">
+            <div className="hidden lg:flex h-full mr-5">
                 <Sidebar />
             </div>
 
-            <div className="flex flex-col flex-1 rounded-lg overflow-hidden shadow-lg bg-[#252527] p-5 m-5 lg:m-0 h-full lg:w-3/4 mt-20">
+            <div className="flex flex-col flex-1 rounded-lg overflow-hidden shadow-lg bg-[#252527] p-3 m-5 lg:m-0 h-full w-12 mt-20">
                 <div className="flex justify-between items-center border-white border-b-2 pb-5 rounded-b-lg">
                     <div className="flex flex-row gap-3 items-center">
                         <img
@@ -540,39 +572,114 @@ const Profile = () => {
                         </div>
                     </div>
                 )}
-            </div>
 
-            {isModalOpen && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black/50 bg-opacity-80 backdrop-blur-md z-50 font-quicksand top-20 lg:top-0">
-                    <div className="relative p-4 py-0 w-full max-w-lg rounded-lg shadow-lg bg-[#252527] lg:max-h-[90vh] max-h-[70vh] overflow-y-auto">
-                        <div className="sticky top-0 bg-[#252527] z-10 p-4 pt-8 border-b rounded-t border-gray-600">
-                            <div className="flex items-center justify-between">
-                                <h3 className="text-xl font-semibold text-white">
-                                    Change Profile Photo
-                                </h3>
+                {isModalOpen && (
+                    <div className="fixed inset-0 flex items-center justify-center bg-black/50 bg-opacity-80 backdrop-blur-md z-50 font-quicksand top-20 lg:top-0">
+                        <div className="relative p-4 py-0 w-full max-w-lg rounded-lg shadow-lg bg-[#252527] lg:max-h-[90vh] max-h-[70vh] overflow-y-auto">
+                            <div className="sticky top-0 bg-[#252527] z-10 p-4 pt-8 border-b rounded-t border-gray-600">
+                                <div className="flex items-center justify-between">
+                                    <h3 className="text-xl font-semibold text-white">
+                                        Change Profile Photo
+                                    </h3>
+                                    <button
+                                        onClick={() => setIsModalOpen(false)}
+                                        className="text-white bg-transparent hover:bg-white hover:text-[#FFA666] rounded-sm text-2xl cursor-pointer"
+                                    >
+                                        <IoClose />
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="flex flex-col mb-2 lg:mb-0 mt-5">
+                                <div
+                                    className="flex items-center justify-center w-full"
+                                    onDragOver={handleDragOver}
+                                    onDragLeave={handleDragLeave}
+                                    onDrop={handleDrop}
+                                >
+                                    <label
+                                        htmlFor="dropzone-file"
+                                        className={`flex flex-col items-center justify-center w-full h-59 border-2 border-dashed rounded-lg cursor-pointer transition
+                                                ${isDragging ? 'border-[#FFA666] bg-gray-800' : 'border-gray-300 hover:bg-gray-700'}`}
+                                    >
+                                        {selectedImage ? (
+                                            <img
+                                                src={selectedImage}
+                                                alt="Selected"
+                                                className="object-cover w-full h-full rounded-lg"
+                                            />
+                                        ) : (
+                                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                                <svg
+                                                    className="w-8 h-8 mb-4 text-gray-400"
+                                                    aria-hidden="true"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    fill="none"
+                                                    viewBox="0 0 20 16"
+                                                >
+                                                    <path
+                                                        stroke="currentColor"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth="2"
+                                                        d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                                                    />
+                                                </svg>
+                                                <p className="text-sm text-gray-400">
+                                                    <span className="font-semibold">
+                                                        Click to upload
+                                                    </span>{' '}
+                                                    or drag and drop
+                                                </p>
+                                                <p className="text-xs text-gray-400">
+                                                    PNG, JPG or WEBP (MAX.
+                                                    800x400px)
+                                                </p>
+                                            </div>
+                                        )}
+                                        <input
+                                            id="dropzone-file"
+                                            type="file"
+                                            className="hidden"
+                                            accept="image/*"
+                                            onChange={handleImageChange}
+                                        />
+                                    </label>
+                                </div>
+
+                                <div className="min-h-[20px]">
+                                    {fileImage && (
+                                        <p className="text-sm text-gray-500 text-center">
+                                            {fileImage.name}
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div className="sticky bottom-0 bg-[#252527] z-10 p-4 pb-8 border-t border-gray-200 rounded-b border-gray-600 flex items-center justify-end gap-3">
                                 <button
                                     onClick={() => setIsModalOpen(false)}
-                                    className="text-white bg-transparent hover:bg-white hover:text-[#FFA666] rounded-sm text-2xl cursor-pointer"
+                                    className="py-2.5 px-5 text-sm font-semibold text-black rounded-lg hover:bg-gray-400 bg-white cursor-pointer"
                                 >
-                                    <IoClose />
+                                    Cancel
+                                </button>
+                                <button
+                                    // onClick={() => {
+                                    //     console.log(
+                                    //         'Updated item:',
+                                    //         selectedItemToEdit,
+                                    //     );
+                                    //     setSelectedItemToEdit(null);
+                                    // }}
+                                    className="text-white bg-blue-600 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 cursor-pointer"
+                                >
+                                    Save Changes
                                 </button>
                             </div>
                         </div>
-
-                        <div className="p-4 text-center divide-y-1 divide-white flex flex-col">
-                            <button className="p-2 cursor-pointer font-semibold text-blue-500">
-                                Upload Photo
-                            </button>
-                            <button className="p-2 cursor-pointer font-semibold text-red-500">
-                                Remove Current Photo
-                            </button>
-                            <button className="p-2 cursor-pointer font-semibold">
-                                Cancel
-                            </button>
-                        </div>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
         </div>
     );
 };
