@@ -8,7 +8,7 @@ const Dashboard = () => {
     const [selectedDate, setSelectedDate] = useState(new Date());
 
     return (
-        <div className="w-full bg-[#221122] flex text-white">
+        <div className="w-full bg-[#221122] flex text-white overflow-y-auto">
             <SidebarAdmin />
             <HeaderAdmin
                 selectedDate={{ get: selectedDate, set: setSelectedDate }}
