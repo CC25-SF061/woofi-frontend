@@ -38,7 +38,6 @@ const DestinationPage = () => {
     const [searchState, setSearchState] = useState();
     const [activeTags, setActiveTags] = useState([]);
 
-    const prevActiveTags = useRef(activeTags);
     const maxPages = useRef(0);
     const searchDestination = async (province, name, filter = []) => {
         try {
