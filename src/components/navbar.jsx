@@ -5,7 +5,7 @@ import logo from "../assets/navbar/finalLogo.webp";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfile } from "../stores/userReducer";
 import { AnimatePresence, motion } from "framer-motion";
-import { slideInRight } from "../util/animation";
+import defaultProfile from "../assets/icons/profile_outline.svg"
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -134,7 +134,7 @@ const Navbar = () => {
               ) : (
                 <Link to="/profile" className="flex items-center gap-2">
                   <img
-                    src={user.profileImage || "/default-avatar.png"} // Gunakan gambar default jika tidak ada
+                    src={user.profileImage || defaultProfile} // Gunakan gambar default jika tidak ada
                     alt="Profile"
                     className="w-8 h-8 rounded-full border border-gray-300"
                   />
@@ -224,7 +224,7 @@ const Navbar = () => {
                   >
                     <Link to="/profile" className="flex items-center gap-2">
                       <img
-                        src={user.profileImage || "/default-avatar.png"}
+                        src={user.profileImage || defaultProfile}
                         alt="Profile"
                         className="w-8 h-8 rounded-full border border-gray-300"
                       />
