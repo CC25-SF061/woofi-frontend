@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfile } from "../stores/userReducer";
 import { AnimatePresence, motion } from "framer-motion";
 import defaultProfile from "../assets/icons/profile_outline.svg"
-
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
