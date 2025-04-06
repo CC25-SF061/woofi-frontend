@@ -56,20 +56,23 @@ const DestinationCard = ({
         try {
             setWishlist(true);
             await axios.post(`/api/user/wishlist/${id}`);
-            toast.success('Added to wishlist!', {
+            toast.success('Added to wishlist', {
                 position: 'top-right',
                 autoClose: 3000,
             });
         } catch (e) {
             if (!(e instanceof AxiosError)) {
-                return toast.error('Something went wrong', {
-                    position: 'top-right',
-                    autoClose: 3000,
-                });
+                return toast.error(
+                    'Something went wrong while adding to wishlist',
+                    {
+                        position: 'top-right',
+                        autoClose: 3000,
+                    },
+                );
             }
             const response = e.response.data.payload;
             if (response.errCode !== ErrorConstant.ERR_WISHLIST_ALREADY_EXIST) {
-                return toast.error('Something went wrong', {
+                return toast.error('Already added to wishlist', {
                     position: 'top-right',
                     autoClose: 3000,
                 });
@@ -86,23 +89,16 @@ const DestinationCard = ({
                 autoClose: 3000,
             });
         } catch (e) {
-            toast.error('Something went wrong', {
+            toast.error('Something went wrong while removing from wishlist', {
                 position: 'top-right',
                 autoClose: 3000,
             });
         }
     }
     return (
-        <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.25, ease: 'backOut', delay: 0 }}
-            whileHover={{ scale: 1.05 }}
-            className="relative bg-[#252527] font-quicksand rounded-lg mx-auto w-73 sm:w-85 md:w-full h-95 shadow-lg overflow-hidden flex flex-col"
-        >
+        <div className="relative bg-[#252527] font-quicksand rounded-lg mx-auto w-73 sm:w-85 md:w-full h-95 shadow-lg overflow-hidden flex flex-col duration-75 scale-100 hover:scale-[103%] ease-in">
             {/* Image Section */}
-            <div className="w-full h-40">
+            <div className="skeleton w-full h-40 rounded-b-none">
                 <img
                     src={
                         new URL(
@@ -110,8 +106,9 @@ const DestinationCard = ({
                             import.meta.env.VITE_STATIC_ASSET_BASE_URL,
                         ).href
                     }
+                    loading="lazy"
                     className="w-full h-full object-cover rounded-t-lg"
-                    alt={name}
+                    alt={`Picture of ${name}`}
                 />
             </div>
 
@@ -124,6 +121,7 @@ const DestinationCard = ({
                             <img
                                 key={i}
                                 src={StarFull}
+                                loading="lazy"
                                 width="19"
                                 alt="Full Star"
                             />
@@ -132,6 +130,7 @@ const DestinationCard = ({
                             <img
                                 key="half"
                                 src={StarHalf}
+                                loading="lazy"
                                 width="19"
                                 alt="Half Star"
                             />
@@ -140,13 +139,14 @@ const DestinationCard = ({
                             <img
                                 key={i + whole_rating + has_half_rating}
                                 src={StarEmpty}
+                                loading="lazy"
                                 width="19"
                                 alt="Empty Star"
                             />
                         ))}
                     </div>
                     <motion.div
-                        animate={{ opacity: 1, scale: 1 }}
+                        animate={{ scale: 1 }}
                         transition={{
                             duration: 0.25,
                             ease: 'backOut',
@@ -211,13 +211,13 @@ const DestinationCard = ({
                     </div>
                 )}
                 <button
-                    onMouseUpCapture={() => onclick(id)}
+                    onMouseUp={() => onclick(id)}
                     className="text-white text-xs md:text-base font-semibold px-4 py-1 border border-[#ffffff88] rounded-md bg-[#252527] hover:bg-[#fff] hover:text-black transition-all cursor-pointer"
                 >
                     See Details
                 </button>
             </div>
-        </motion.div>
+        </div>
     );
 };
 

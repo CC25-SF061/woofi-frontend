@@ -5,7 +5,7 @@ const Sidebar = () => {
     const location = useLocation();
 
     return (
-        <div className="fixed flex flex-col items-center justify-between overflow-hidden shadow-lg mt-19 pb-25 px-3 bg-[#252527] h-full w-fit font-quicksand z-10">
+        <div className="fixed flex flex-col items-center justify-between overflow-hidden shadow-lg mt-19 pb-25 px-3 bg-[#252527] h-full w-fit font-quicksand z-20">
             <div className="flex flex-col items-center justify-center gap-5">
                 <div className="text-center flex flex-col overflow-x-auto text-lg font-medium scroll-smooth whitespace-nowrap divide-y divide-[#ffffff3] rounded-lg justify-start md:justify-center w-45">
                     <Link
