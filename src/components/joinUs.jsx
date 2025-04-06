@@ -1,11 +1,20 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Image8 from '../assets/homePage/image8.webp';
 import LogoWoofi from '../assets/navbar/logo.webp';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { fadeInUp } from '../util/animation';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUserProfile } from '../stores/userReducer';
 
 const JoinUs = () => {
+    const user = useSelector((state) => state.user.data);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(fetchUserProfile());
+    }, []);
+
     return (
         <>
             <motion.div
@@ -40,14 +49,24 @@ const JoinUs = () => {
                     </h1>
                     <p className="font-quicksand text-lg md:text-xl mb-4 max-w-lg">
                         Be part of the Woofi community and explore the beauty of
-                        Indonesia together! 
+                        Indonesia together!
                     </p>
-                    <Link
-                        to="/sign-in"
-                        className="px-8 py-2 border border-white rounded-md hover:bg-white hover:text-black transition duration-300 font-semibold text-lg"
-                    >
-                        Click Here
-                    </Link>
+
+                    {!user.id ? (
+                        <Link
+                            to="/sign-in"
+                            className="px-8 py-2 border border-white rounded-md hover:bg-white hover:text-black transition duration-300 font-semibold text-lg"
+                        >
+                            Click Here
+                        </Link>
+                    ) : (
+                        <Link
+                            to="/profile"
+                            className="px-8 py-2 border border-white rounded-md hover:bg-white hover:text-black transition duration-300 font-semibold text-lg"
+                        >
+                            Click Here
+                        </Link>
+                    )}
                 </div>
             </motion.div>
         </>
