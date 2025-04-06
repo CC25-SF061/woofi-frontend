@@ -20,7 +20,7 @@ import { useDispatch } from 'react-redux';
 import DestinationFilter from '../util/DestinationFilter';
 import LoginModal from '../components/loginModal';
 
-const maxCardsToIndexable = 8;
+const maxCardsToIndexable = 16;
 const DestinationPage = () => {
     const dispatch = useDispatch();
 
@@ -148,11 +148,11 @@ const DestinationPage = () => {
     };
 
     useEffect(() => {
-
         // Keep track of side effects to prevent accidental early scroll
         changePaginationCount.current++;
         if (destinationListContainer && changePaginationCount.current > 3)
-            window.scrollTo({ // Scroll when changing pagination
+            window.scrollTo({
+                // Scroll when changing pagination
                 behavior: 'smooth',
                 top: destinationListContainer.current.offsetTop - 100,
             });

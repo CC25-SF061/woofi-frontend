@@ -84,15 +84,9 @@ const DestinationCard = ({
         }
     }
     return (
-        <motion.div
-            initial={{ opacity: 0.35 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.25, ease: 'backOut', delay: 0 }}
-            whileHover={{ scale: 1.05 }}
-            className="relative bg-[#252527] font-quicksand rounded-lg mx-auto w-73 sm:w-85 md:w-full h-95 shadow-lg overflow-hidden flex flex-col"
-        >
+        <div className="relative bg-[#252527] font-quicksand rounded-lg mx-auto w-73 sm:w-85 md:w-full h-95 shadow-lg overflow-hidden flex flex-col duration-75 scale-100 hover:scale-[103%] ease-in">
             {/* Image Section */}
-            <div className="w-full h-40">
+            <div className="skeleton w-full h-40 rounded-b-none">
                 <img
                     src={
                         new URL(
@@ -100,8 +94,9 @@ const DestinationCard = ({
                             import.meta.env.VITE_STATIC_ASSET_BASE_URL,
                         ).href
                     }
+                    loading="lazy"
                     className="w-full h-full object-cover rounded-t-lg"
-                    alt={name}
+                    alt={`Picture of ${name}`}
                 />
             </div>
 
@@ -114,6 +109,7 @@ const DestinationCard = ({
                             <img
                                 key={i}
                                 src={StarFull}
+                                loading="lazy"
                                 width="19"
                                 alt="Full Star"
                             />
@@ -122,6 +118,7 @@ const DestinationCard = ({
                             <img
                                 key="half"
                                 src={StarHalf}
+                                loading="lazy"
                                 width="19"
                                 alt="Half Star"
                             />
@@ -130,6 +127,7 @@ const DestinationCard = ({
                             <img
                                 key={i + whole_rating + has_half_rating}
                                 src={StarEmpty}
+                                loading="lazy"
                                 width="19"
                                 alt="Empty Star"
                             />
@@ -214,7 +212,7 @@ const DestinationCard = ({
                     See Details
                 </button>
             </div>
-        </motion.div>
+        </div>
     );
 };
 
