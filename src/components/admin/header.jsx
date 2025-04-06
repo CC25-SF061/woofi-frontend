@@ -9,8 +9,12 @@ import { Link, useLocation } from 'react-router-dom';
 
 const Header = ({ selectedDate, search }) => {
     const location = useLocation();
+    let pathName =
+        location.pathname.charAt(location.pathname.length - 1) === '/'
+            ? location.pathname.slice(0, location.pathname.length - 1)
+            : location.pathname;
     let name = '';
-    switch (location.pathname) {
+    switch (pathName) {
         case '/admin':
             name = 'Admin Dashboard';
             break;
@@ -33,7 +37,7 @@ const Header = ({ selectedDate, search }) => {
     };
 
     return (
-        <div className="fixed overflow-hidden h-fit w-full font-quicksand pb-5">
+        <div className="fixed overflow-hidden h-fit w-full font-quicksand pb-5 z-10">
             <div className="relative flex flex-row items-center shadow-lg bg-[#252527] p-4 pt-5">
                 <div className="flex flex-row w-fit items-center gap-3 mr-5 divide-white">
                     <img src={Logo} alt="Logo Woofi" className="w-15" />

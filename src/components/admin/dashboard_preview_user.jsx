@@ -56,8 +56,8 @@ const Dashboard = () => {
     console.log(generateUserDataPieChart());
 
     return (
-        <div className="flex flex-col items-center p5-5 gap-4 pb-5 w-full font-quicksand">
-            <div className="py-8 flex flex-col w-4/6 items-center bg-[#252527] rounded-md shadow-lg shadow-[#00000055] mb-2">
+        <div className="relative flex flex-col items-center p5-5 gap-4 pb-5 w-full font-quicksand">
+            <div className="py-8 flex flex-col w-4/6 items-center bg-[#252527] rounded-md shadow-lg mb-2">
                 <img src={LogoUsers} alt="Users Icon" className="w-8 mb-1" />
                 <h2 className="text-[#aaa] tracking-wide text-xl">
                     Overview User Data
@@ -67,7 +67,7 @@ const Dashboard = () => {
             {/* Pie Chart Diagram */}
             <div className="flex items-center justify-center p-5 bg-[#252527] rounded-md w-4/6 aspect-video">
                 <div className="flex flex-row justify-around items-center p-5 w-full h-full bg-[#14141C] rounded-md">
-                    <div className="relative flex items-center justify-center bg-black rounded-[360rem] border-black border-[2px] w-1/2 aspect-square">
+                    <div className="relative flex items-center justify-center bg-black rounded-[360rem] border-black border-[2px] w-1/2 aspect-square z-0">
                         <div
                             className="absolute inset-0 rounded-[360rem]"
                             style={generateUserDataPieChart()}
