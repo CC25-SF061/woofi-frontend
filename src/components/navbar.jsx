@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
 import logo from "../assets/navbar/finalLogo.webp";
@@ -6,12 +6,35 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfile } from "../stores/userReducer";
 import { AnimatePresence, motion } from "framer-motion";
 import defaultProfile from "../assets/icons/profile_outline.svg"
+
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const user = useSelector((state) => state.user.data);
   const dispatch = useDispatch();
   const location = useLocation();
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  const buttonRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(e.target)
+      ) {
+        setIsOpen(false);
+      }
+    }
+  
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);  
+
   useEffect(() => {
     dispatch(fetchUserProfile());
   }, []);
@@ -131,13 +154,55 @@ const Navbar = () => {
                   Sign In
                 </Link>
               ) : (
-                <Link to="/profile" className="flex items-center gap-2">
-                  <img
-                    src={user.profileImage || defaultProfile} // Gunakan gambar default jika tidak ada
-                    alt="Profile"
-                    className="w-8 h-8 rounded-full border border-gray-300"
-                  />
-                </Link>
+                <div className="relative" ref={dropdownRef}>
+                  <button
+                    onClick={() => setIsOpen((prev) => !prev)}
+                    className="flex items-center gap-2 focus:outline-none cursor-pointer"
+                  >
+                    <img
+                      src={user.profileImage || defaultProfile}
+                      alt="Profile"
+                      className="size-10 rounded-full border border-gray-300"
+                    />
+                    <FaChevronDown
+                      className={`text-lg transform transition-transform duration-300 ${
+                        isOpen ? "rotate-180" : "rotate-0"
+                      }`}
+                    />
+                  </button>
+
+                  <div
+                    className={`absolute right-0 mt-4 w-44 bg-[#252527] border-2 border-[#FFA666] rounded-md shadow-lg z-50 transition-all duration-300 ease-in-out transform ${
+                      isOpen
+                        ? "opacity-100  translate-y-0 pointer-events-auto"
+                        : "opacity-0 -translate-y-2 pointer-events-none"
+                    }`}
+                  >
+                    <Link
+                      to="/profile"
+                      className="block px-4 font-semibold py-2 text-sm hover:bg-[#FFA666]"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      My Profile
+                    </Link>
+                    <Link
+                      to="/admin"
+                      className="block px-4 font-semibold py-2 text-sm hover:bg-[#FFA666]"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      Admin
+                    </Link>
+                    <button
+                      onClick={() => {
+                        // handleLogout();
+                        setIsOpen(false);
+                      }}
+                      className="w-full font-semibold text-left px-4 py-2 text-sm text-red-500 hover:bg-[#FFA666] cursor-pointer"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                </div>
               )}
             </div>
           </div>
@@ -151,28 +216,83 @@ const Navbar = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, transition: { duration: 0.3 } }}
           >
-            {/* Backdrop Blur dengan animasi */}
+            {/* Backdrop */}
             <motion.div
-              className="fixed inset-0 w-full bg-black/40 "
+              className="fixed inset-0 w-full bg-black/40"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             />
-
+          
             {/* Mobile Menu */}
             <motion.div
-              className="overflow-y-auto w-1/2 max-w-sm h-screen shadow-xl fixed right-0 bg-[#252527] text-white mt-15 pt-10"
+              className="overflow-y-auto w-1/2 max-w-sm h-screen shadow-xl fixed right-0 bg-[#252527] text-white mt-15 pt-10 px-6 flex flex-col"
               initial={{ x: "100%" }}
               animate={{ x: 0, transition: { duration: 0.4, ease: "easeOut" } }}
-              exit={{
-                x: "100%",
-                transition: { duration: 0.3, ease: "easeIn" },
-              }}
+              exit={{ x: "100%", transition: { duration: 0.3, ease: "easeIn" } }}
             >
-              {/* Tombol Close */}
-
-              {/* Navigasi Menu */}
-              <ul className="space-y-6 px-6">
+              {/* USER INFO + DROPDOWN (TOP) */}
+              {user.id && (
+                <div className="mb-6">
+                  <button
+                    ref={buttonRef}
+                    onClick={() => setIsOpen((prev) => !prev)}
+                    className="flex items-center gap-2 w-full focus:outline-none cursor-pointer"
+                  >
+                    <img
+                      src={user.profileImage || defaultProfile}
+                      alt="Profile"
+                      className="size-10 rounded-full border border-gray-300"
+                    />
+                    <span className="truncate">{user.name}</span>
+                    <FaChevronDown
+                      className={`text-lg transform transition-transform duration-300 ${
+                        isOpen ? "rotate-180" : "rotate-0"
+                      }`}
+                    />
+                  </button>
+          
+                  {/* Dropdown muncul & dorong item di bawahnya */}
+                  <AnimatePresence>
+                    {isOpen && (
+                      <motion.div
+                        className="mt-4 bg-[#252527] border-2 border-[#FFA666] rounded-md shadow-lg"
+                        initial={{ opacity: 0, y: -10, height: 0 }}
+                        animate={{ opacity: 1, y: 0, height: "auto" }}
+                        exit={{ opacity: 0, y: 0, height: 0 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <Link
+                          to="/profile"
+                          className="block px-4 py-2 font-semibold text-sm hover:bg-[#FFA666]"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          My Profile
+                        </Link>
+                        <Link
+                          to="/admin"
+                          className="block px-4 py-2 font-semibold text-sm hover:bg-[#FFA666]"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          Admin
+                        </Link>
+                        <button
+                          onClick={() => {
+                            // handleLogout();
+                            setIsOpen(false);
+                          }}
+                          className="w-full text-left px-4 py-2 font-semibold text-sm text-red-500 hover:bg-[#FFA666] cursor-pointer"
+                        >
+                          Logout
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              )}
+          
+              {/* MENU (MIDDLE) */}
+              <ul className="space-y-6 flex-grow max-h-fit">
                 {[
                   { name: "Home", path: "/" },
                   { name: "Destination", path: "/destination" },
@@ -201,36 +321,21 @@ const Navbar = () => {
                     </Link>
                   </motion.li>
                 ))}
-
-                {/* Sign In / Profile */}
-                {!user.id ? (
-                  <motion.li
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0, transition: { delay: 0.5 } }}
+                {!user.id && (
+                <motion.div
+                  className="mt-10"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0, transition: { delay: 0.5 } }}
+                >
+                  <Link
+                    to="/sign-in"
+                    className="block w-full px-4 py-2 border border-[#FFA666] rounded-md hover:bg-[#FFA666] hover:text-black text-center transition"
+                    onClick={() => setMobileMenuOpen(false)}
                   >
-                    <Link
-                      to="/sign-in"
-                      className="block w-full px-4 py-2 border border-[#FFA666] rounded-md hover:bg-[#FFA666] hover:text-black text-center transition"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Sign In
-                    </Link>
-                  </motion.li>
-                ) : (
-                  <motion.li
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0, transition: { delay: 0.5 } }}
-                  >
-                    <Link to="/profile" className="flex items-center gap-2">
-                      <img
-                        src={user.profileImage || defaultProfile}
-                        alt="Profile"
-                        className="w-8 h-8 rounded-full border border-gray-300"
-                      />
-                      <span>{user.name}</span>
-                    </Link>
-                  </motion.li>
-                )}
+                    Sign In
+                  </Link>
+                </motion.div>
+              )}
               </ul>
             </motion.div>
           </motion.div>
