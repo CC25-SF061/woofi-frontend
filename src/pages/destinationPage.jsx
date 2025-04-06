@@ -24,9 +24,11 @@ const maxCardsToIndexable = 8;
 const DestinationPage = () => {
     const dispatch = useDispatch();
 
-    const [destinationList, setDestinationList] = useState([]);
+    const changePaginationCount = useRef(0);
+    const destinationList = useRef([]);
+    const destinationListContainer = useRef(null);
     const [destinationDisplay, setDestinationDisplay] = useState([]);
-    const [currentPageIndex, setCurrentPageIndex] = useState(0);
+    const [currentPageIndex, setCurrentPageIndex] = useState(null);
     const [provinces, setProvinces] = useState([]);
     const loginModal = useRef(null);
     const [mapDisplay, setMapDisplay] = useState({
@@ -39,6 +41,18 @@ const DestinationPage = () => {
     const [activeTags, setActiveTags] = useState([]);
 
     const maxPages = useRef(0);
+
+    const refreshDisplay = (newData) => {
+        // Index pages & rerender when destinationList refresh
+        destinationList.current = newData;
+        setCurrentPageIndex(0);
+        if (newData.length <= maxCardsToIndexable) {
+            return;
+        }
+        const pagesCount = Math.ceil(newData.length / maxCardsToIndexable);
+        maxPages.current = pagesCount;
+    };
+
     const searchDestination = async (province, name, filter = []) => {
         try {
             dispatch(showLoading('DestinationPageLoading'));
@@ -49,7 +63,7 @@ const DestinationPage = () => {
                     filter: filter,
                 },
             });
-            setDestinationList(response.data.data);
+            refreshDisplay(response.data.data);
         } catch (e) {
             console.log(e);
             toast.error(
@@ -62,6 +76,7 @@ const DestinationPage = () => {
             dispatch(hideLoading('DestinationPageLoading'));
         }
     };
+
     const tagsChangeHandler = ({ type, active, setActive }) => {
         let tags = [...activeTags];
         let filterToggle = [];
@@ -133,30 +148,23 @@ const DestinationPage = () => {
     };
 
     useEffect(() => {
-        searchDestination();
-    }, []);
 
-    useEffect(() => {
-        // Index pages & rerender when destinationList refresh
-        setCurrentPageIndex(0);
-        if (destinationList.length <= maxCardsToIndexable) {
-            return;
-        }
-        const pagesCount = Math.ceil(
-            destinationList.length / maxCardsToIndexable,
-        );
-        maxPages.current = pagesCount;
-    }, [destinationList]);
+        // Keep track of side effects to prevent accidental early scroll
+        changePaginationCount.current++;
+        if (destinationListContainer && changePaginationCount.current > 3)
+            window.scrollTo({ // Scroll when changing pagination
+                behavior: 'smooth',
+                top: destinationListContainer.current.offsetTop - 100,
+            });
 
-    useEffect(() => {
-        // Display Destinations
+        // Display Destinations after pagination
         setDestinationDisplay(
-            destinationList.slice(
+            destinationList.current.slice(
                 currentPageIndex * maxCardsToIndexable,
                 (currentPageIndex + 1) * maxCardsToIndexable,
             ),
         );
-    }, [currentPageIndex, destinationList]);
+    }, [currentPageIndex]);
 
     const onProvinceSelected = (province) => {
         setSearchState((state) => ({ ...state, province: province }));
@@ -173,7 +181,10 @@ const DestinationPage = () => {
             isSelected: true,
         }));
     };
+
     useEffect(() => {
+        searchDestination();
+
         // Get available provinces
         (async () => {
             try {
@@ -223,6 +234,7 @@ const DestinationPage = () => {
                     isSelected={mapDisplay.isSelected}
                 />
                 <DestinationGroup
+                    containerRef={destinationListContainer}
                     tags={[activeTags, setActiveTags]}
                     destinations={destinationDisplay}
                     maxIndexable={maxCardsToIndexable}
