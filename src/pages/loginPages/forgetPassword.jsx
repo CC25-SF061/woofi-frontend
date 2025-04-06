@@ -54,17 +54,14 @@ const ForgetPassword = () => {
             ).data;
             dispatch(setForgetEmail(email));
 
-            toast.success(
-                'If this email is registered, a reset link has been sent.',
-                {
-                    position: 'top-right',
-                    autoClose: 3000,
-                }
-            );
+            toast.success(' a reset code has been sent.', {
+                position: 'top-right',
+                autoClose: 3000,
+            });
             localStorage.setItem('passToken', response.data.hash);
             setTimeout(() => {
                 navigate(`/otp-code`);
-            }, 1000);
+            }, 3000);
         } catch (e) {
             setAttempts(attempts + 1);
             const response = e?.response?.data?.payload;

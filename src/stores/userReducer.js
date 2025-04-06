@@ -58,6 +58,9 @@ export const userSlice = createSlice({
         setEmail: (state, action) => {
             state.data.email = action.payload;
         },
+        setImage: (state, action) => {
+            state.data.profileImage = action.payload;
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(fetchUserProfile.fulfilled, (state, action) => {
@@ -66,6 +69,12 @@ export const userSlice = createSlice({
     },
 });
 
-export const { setData, setPartialData, setName, setUsername, setEmail } =
-    userSlice.actions;
+export const {
+    setData,
+    setPartialData,
+    setName,
+    setUsername,
+    setEmail,
+    setImage,
+} = userSlice.actions;
 export default userSlice.reducer;

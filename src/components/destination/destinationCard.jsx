@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import StarFull from '../../assets/icons/ratestar/full.svg';
 import StarHalf from '../../assets/icons/ratestar/half.svg';
 import StarEmpty from '../../assets/icons/ratestar/empty.svg';
@@ -16,7 +16,6 @@ const DestinationCard = ({
     picture,
     name,
     detail,
-    location,
     isWishlisted,
     rating,
     onclick,
@@ -29,9 +28,22 @@ const DestinationCard = ({
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [wishlist, setWishlist] = useState(isWishlisted);
     const userId = useSelector((state) => state.user.data.id);
+    const button = useRef(null);
     // Format detail description
     const formattedDetail = detail.replaceAll(/([\n]+[\w.,/ ]+)/g, '...');
+    useEffect(() => {
+        const eventListener = () => {};
+        if (dropdownOpen) {
+            document.addEventListener('click', (e) => {
+                if (button.current === e.target) return;
+                setDropdownOpen(false);
+            });
+        }
 
+        return () => {
+            document.removeEventListener('click', eventListener);
+        };
+    }, [dropdownOpen]);
     async function handleWishlist() {
         if (!userId) {
             setLoginModalVisible();
@@ -168,6 +180,7 @@ const DestinationCard = ({
                 {optionsIcon && (
                     <div className="relative">
                         <button
+                            ref={button}
                             className={`text-white cursor-pointer p-1 rounded-full bg-[#252527] ${
                                 dropdownOpen
                                     ? 'bg-gray-700'
@@ -175,29 +188,21 @@ const DestinationCard = ({
                             }`}
                             onClick={() => setDropdownOpen(!dropdownOpen)}
                         >
-                            {optionsIcon}
+                            <span className="pointer-events-none">
+                                {optionsIcon}
+                            </span>
                         </button>
                         {dropdownOpen && (
                             <div className="absolute left-9 bottom-0 mt-2 w-32 bg-[#333] text-white rounded-md shadow-lg z-10 divide-y divide-gray-600">
                                 <button
                                     className="block w-full text-left px-4 py-2 hover:bg-gray-600 cursor-pointer rounded-t-md"
-                                    onClick={() =>
-                                        setSelectedItemToEdit({
-                                            id,
-                                            name,
-                                            detail,
-                                            location,
-                                            picture,
-                                        })
-                                    }
+                                    onClick={() => setSelectedItemToEdit()}
                                 >
                                     Edit
                                 </button>
                                 <button
                                     className="block w-full text-left px-4 py-2 hover:bg-gray-600 cursor-pointer rounded-b-md"
-                                    onClick={() =>
-                                        onRequestDelete({ id, name })
-                                    }
+                                    onClick={() => onRequestDelete()}
                                 >
                                     Delete
                                 </button>

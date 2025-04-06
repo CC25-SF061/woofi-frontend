@@ -8,6 +8,9 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaChevronDown } from 'react-icons/fa';
 import axios, { AxiosError } from 'axios';
+import { nanoid } from 'nanoid';
+import { useDispatch } from 'react-redux';
+import { hideLoading, showLoading } from '../../stores/loadingReducer.js';
 
 const AddData = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -15,6 +18,7 @@ const AddData = () => {
     const [fileImage, setFileImage] = useState('');
     const [postId, setPostId] = useState();
     const [isDragging, setIsDragging] = useState(false);
+    const dispatch = useDispatch();
     const [formData, setFormData] = useState({
         name: '',
         detail: '',
@@ -60,22 +64,22 @@ const AddData = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const form = new FormData();
-
-        form.append('name', formData.name.trim());
-        form.append('province', formData.province.trim());
-        form.append('detail', formData.detail.trim());
-        form.append('image', fileImage);
-        form.append('location', formData.location.trim());
-
+        const keyLoading = nanoid();
+        form.append('name', formData.name.trim() || '');
+        form.append('province', formData.province.trim() || '');
+        form.append('detail', formData.detail.trim() || '');
+        if (fileImage) {
+            form.append('image', fileImage);
+        }
+        form.append('location', formData.location.trim() || '');
+        dispatch(showLoading(keyLoading));
         try {
-            //ping the route so its not econreset error
             await axios
                 .post('/api/destination/add', new FormData())
                 .catch((e) => {});
-
             const result = await axios.post('/api/destination/add', form);
             setPostId(result.data.data.postId);
-            formData?.imageLink?.revokeObjectUrl?.();
+            URL.revokeObjectURL(formData.imageLink || '');
             setErrors(() => ({
                 name: '',
                 detail: '',
@@ -97,25 +101,30 @@ const AddData = () => {
             document.getElementById('modal-success').showModal();
         } catch (e) {
             if (!(e instanceof AxiosError)) {
-                return toast.error('Something went wrong', {
-                    position: 'top-right',
-                    autoClose: 3000,
-                });
+                return toast.error(
+                    'Something went wrong please try again later',
+                    {
+                        position: 'top-right',
+                        autoClose: 3000,
+                    },
+                );
             }
             if (e.status == 413) {
                 setErrors((state) => ({ ...state, image: 'Image too large' }));
             }
             const response = e?.response?.data?.payload;
             if (response.errCode === ErrorConstant.ERR_INVALID_FIELD) {
-                console.log(response.fields);
                 invalidFieldErr(response.fields);
             }
+        } finally {
+            dispatch(hideLoading(keyLoading));
         }
     };
 
     const handleImageChange = (event) => {
         const file = event.target.files[0];
         if (file) {
+            URL.revokeObjectURL(formData.imageLink);
             const imageUrl = URL.createObjectURL(file);
             setSelectedImage(imageUrl);
             setFileImage(file);

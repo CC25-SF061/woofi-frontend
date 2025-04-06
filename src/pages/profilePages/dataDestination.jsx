@@ -6,12 +6,13 @@ import { IoIosNotifications } from 'react-icons/io';
 import DestinationCard from '../../components/destination/destinationCard';
 import { IoClose } from 'react-icons/io5';
 import { useDispatch } from 'react-redux';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { nanoid } from 'nanoid';
 import { hideLoading, showLoading } from '../../stores/loadingReducer';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import { FaChevronDown } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import ErrorConstant from '../../util/ErrorConstant';
 
 const DataDestination = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -20,21 +21,95 @@ const DataDestination = () => {
     const [destinations, setDestinations] = useState([]);
     const navigate = useNavigate();
     const [isDragging, setIsDragging] = useState(false);
-    const handleDelete = () => {
-        console.log('Deleted item', selectedItemToDelete.id);
-        setSelectedItemToDelete(null);
-    };
     const dispatch = useDispatch();
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [filteredProvinces, setFilteredProvinces] = useState([]);
-    const [errors, setErrors] = useState({ province: false });
-    const provinces = [
-        { name: 'Jakarta' },
-        { name: 'West Java' },
-        { name: 'Central Java' },
-        { name: 'East Java' },
-        { name: 'Bali' },
-    ];
+    const [errors, setErrors] = useState({
+        name: '',
+        detail: '',
+        image: '',
+        location: '',
+        province: '',
+    });
+    const [provinces, setProvinces] = useState([]);
+    const invalidFieldErr = (arr) => {
+        const newObjErr = {
+            name: '',
+            detail: '',
+            image: '',
+            location: '',
+            province: '',
+        };
+        for (const element of arr) {
+            if (
+                Object.prototype.hasOwnProperty.call(newObjErr, element.path[0])
+            ) {
+                newObjErr[element.path[0]] = element.message;
+            }
+        }
+        setErrors((state) => ({ ...state, ...newObjErr }));
+    };
+    const handleDelete = async () => {
+        try {
+            await axios.delete(`/api/destination/${selectedItemToDelete.id}`);
+            toast.success('Success deleting destination', {
+                autoClose: 3000,
+                position: 'top-right',
+            });
+            setDestinations(
+                destinations.filter(
+                    (destination) => destination.id !== selectedItemToDelete.id,
+                ),
+            );
+            setSelectedItemToDelete(null);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    const handleEdit = async () => {
+        const formData = new FormData();
+
+        formData.append('name', selectedItemToEdit.name || '');
+        formData.append('location', selectedItemToEdit.location || '');
+        formData.append('detail', selectedItemToEdit.detail || '');
+        formData.append('province', selectedItemToEdit.province || '');
+        if (selectedItemToEdit.image) {
+            formData.append('image', selectedItemToEdit.image || '');
+        }
+        try {
+            await axios.put(
+                `/api/destination/${selectedItemToEdit.id}`,
+                formData,
+            );
+
+            toast.success('Success editing destination', {
+                autoClose: 3000,
+                position: 'top-right',
+            });
+
+            setSelectedItemToEdit(null);
+        } catch (e) {
+            if (!(e instanceof AxiosError)) {
+                return toast.error('something went wrong when updating data', {
+                    autoClose: 3000,
+                    position: 'top-right',
+                });
+            }
+
+            const response = e.response.data.payload;
+
+            if (response?.errCode === ErrorConstant.ERR_INVALID_FIELD) {
+                return invalidFieldErr(response.fields);
+            }
+
+            toast.error('something went wrong when updating data', {
+                autoClose: 3000,
+                position: 'top-right',
+            });
+        }
+        // setSelectedItemToEdit(null);
+    };
 
     useEffect(() => {
         (async () => {
@@ -54,6 +129,20 @@ const DataDestination = () => {
                 dispatch(hideLoading(keyLoading));
             }
         })();
+    }, []);
+
+    useEffect(() => {
+        const fetchProvinces = async () => {
+            try {
+                const res = await axios.get('/api/geolocation/provinces');
+                setProvinces(res.data.data);
+                setFilteredProvinces(res.data.data);
+            } catch (err) {
+                toast.error('Failed to fetch provinces!');
+            }
+        };
+
+        fetchProvinces();
     }, []);
 
     const toggleDropdown = () => {
@@ -110,6 +199,7 @@ const DataDestination = () => {
 
     return (
         <div className="min-h-screen bg-[#221122] flex flex-col items-center justify-center">
+            <ToastContainer />
             <div className="w-full lg:h-screen flex items-center justify-center p-5 lg:p-10 gap-5 text-white">
                 <div className="lg:hidden p-5 fixed z-60 top-0 w-full bg-[#252527] flex justify-between items-center shadow-xl">
                     <button
@@ -170,11 +260,14 @@ const DataDestination = () => {
                                     detail={element.detail}
                                     rating={element.rating}
                                     onclick={onCardClick}
-                                    onRequestDelete={(item) =>
-                                        setSelectedItemToDelete(item)
+                                    onRequestDelete={() =>
+                                        setSelectedItemToDelete(element)
                                     }
-                                    setSelectedItemToEdit={(item) =>
-                                        setSelectedItemToEdit(item)
+                                    setSelectedItemToEdit={() =>
+                                        setSelectedItemToEdit({
+                                            ...element,
+                                            image: null,
+                                        })
                                     }
                                     isWishlisted={element.isWishlisted}
                                     optionsIcon={
@@ -248,7 +341,10 @@ const DataDestination = () => {
                             </div>
                         </div>
 
-                        <div className="p-4 space-y-4">
+                        <form
+                            className="p-4 space-y-4"
+                            onSubmit={(e) => e.preventDefault()}
+                        >
                             <div className="flex flex-col gap-2">
                                 <label className="block text-white">
                                     Destination Name:
@@ -264,6 +360,11 @@ const DataDestination = () => {
                                     }
                                     className="w-full p-3 font-quicksand rounded text-white border bg-transparent focus:outline-none focus:ring focus:ring-[#FFA666]"
                                 />
+                                {errors.name && (
+                                    <div className="text-red-500 text-sm">
+                                        {errors.name}
+                                    </div>
+                                )}
                             </div>
 
                             <div className="flex flex-col gap-2">
@@ -281,6 +382,11 @@ const DataDestination = () => {
                                     }
                                     className="w-full p-3 font-quicksand rounded text-white border bg-transparent focus:outline-none focus:ring focus:ring-[#FFA666]"
                                 />
+                                {errors.location && (
+                                    <div className="text-red-500 text-sm">
+                                        {errors.location}
+                                    </div>
+                                )}
                             </div>
 
                             <div className="flex flex-col gap-2">
@@ -293,10 +399,7 @@ const DataDestination = () => {
                                             id="province"
                                             type="text"
                                             name="province"
-                                            value={
-                                                selectedItemToEdit?.province ||
-                                                ''
-                                            }
+                                            value={selectedItemToEdit.province}
                                             onChange={handleProvinceChange}
                                             placeholder="Search Province"
                                             className={`flex-3 p-3 font-quicksand rounded text-white border ${
@@ -338,6 +441,11 @@ const DataDestination = () => {
                                             </ul>
                                         )}
                                 </div>
+                                {errors.province && (
+                                    <div className="text-red-500 text-sm">
+                                        {errors.province}
+                                    </div>
+                                )}
                             </div>
 
                             <div className="flex flex-col gap-2">
@@ -355,6 +463,11 @@ const DataDestination = () => {
                                     className="w-full max-h-45 p-3 font-quicksand rounded text-white border bg-transparent focus:outline-none focus:ring focus:ring-[#FFA666]"
                                     rows="5"
                                 />
+                                {errors.detail && (
+                                    <div className="text-red-500 text-sm">
+                                        {errors.detail}
+                                    </div>
+                                )}
                             </div>
 
                             <div className="flex flex-col gap-2">
@@ -363,37 +476,12 @@ const DataDestination = () => {
                                 </label>
 
                                 <div className="flex flex-col items-center gap-3 w-full">
-                                    {/* Preview image */}
-                                    {selectedItemToEdit?.imageFile ? (
-                                        <img
-                                            src={URL.createObjectURL(
-                                                selectedItemToEdit.imageFile,
-                                            )}
-                                            alt="Preview"
-                                            className="w-full max-h-64 object-cover rounded-lg border border-gray-600"
-                                        />
-                                    ) : selectedItemToEdit?.image ? (
-                                        <img
-                                            src={
-                                                new URL(
-                                                    selectedItemToEdit.image,
-                                                    import.meta.env.VITE_STATIC_ASSET_BASE_URL,
-                                                ).href
-                                            }
-                                            alt="Current"
-                                            className="w-full max-h-64 object-cover rounded-lg border border-gray-600"
-                                        />
-                                    ) : null}
-
-                                    {/* Show dropzone input only if no imageFile is selected */}
                                     {!selectedItemToEdit?.imageFile && (
-                                        <div
-                                            className="w-full"
-                                            onDragOver={handleDragOver}
-                                            onDragLeave={handleDragLeave}
-                                            onDrop={handleDrop}
-                                        >
+                                        <div className="w-full">
                                             <label
+                                                onDragOver={handleDragOver}
+                                                onDragLeave={handleDragLeave}
+                                                onDrop={handleDrop}
                                                 htmlFor="dropzone-file"
                                                 className={`flex flex-col items-center justify-center w-full h-64 border-white border-2 border-dashed rounded-lg cursor-pointer transition
                                                     ${isDragging ? 'border-[#FFA666] bg-gray-800' : 'border-gray-300 hover:bg-gray-700'}`}
@@ -463,8 +551,13 @@ const DataDestination = () => {
                                         </div>
                                     )}
                                 </div>
+                                {errors.image && (
+                                    <div className="text-red-500 text-sm">
+                                        {errors.image}
+                                    </div>
+                                )}
                             </div>
-                        </div>
+                        </form>
 
                         <div className="sticky bottom-0 bg-[#252527] z-10 p-4 pb-8 border-t border-gray-200 rounded-b border-gray-600 flex items-center justify-end gap-3">
                             <button
@@ -474,13 +567,9 @@ const DataDestination = () => {
                                 Cancel
                             </button>
                             <button
-                                onClick={() => {
-                                    console.log(
-                                        'Updated item:',
-                                        selectedItemToEdit,
-                                    );
-                                    setSelectedItemToEdit(null);
-                                }}
+                                onClick={() =>
+                                    handleEdit(setSelectedItemToEdit)
+                                }
                                 className="text-white bg-blue-600 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 cursor-pointer"
                             >
                                 Save Changes
