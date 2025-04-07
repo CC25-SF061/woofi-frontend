@@ -64,7 +64,7 @@ const SignIn = () => {
             const response = await axios.post('/api/auth/login', request, {
                 withCredentials: true,
             });
-            //lakukan sesuatu ketika sukses
+            localStorage.setItem('token', response.data.data.token);
             dispatch(setData(response.data.data));
             await navigate('/profile');
         } catch (e) {

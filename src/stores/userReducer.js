@@ -15,7 +15,6 @@ export const fetchUserProfile = createAsyncThunk(
                 const response = (await axios.get('/api/user/profile')).data;
                 return response.data;
             } catch (e) {
-                console.log(e);
                 return state.user.data;
             } finally {
                 dispatch(hideLoading(keyLoading));
@@ -38,15 +37,13 @@ export const userSlice = createSlice({
     },
     reducers: {
         setData: (state, action) => {
-            const { username, email, name, profileImage, isVerified, id } =
-                action.payload;
             state.data = {
-                username,
-                email,
-                name,
-                profileImage,
-                isVerified,
-                id,
+                username: action?.payload?.username,
+                email: action?.payload?.email,
+                name: action?.payload?.name,
+                profileImage: action?.payload?.profileImage,
+                isVerified: action?.payload?.isVerified,
+                id: action?.payload?.id,
             };
         },
         setName: (state, action) => {

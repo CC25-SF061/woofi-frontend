@@ -18,6 +18,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import DestinationFilter from '../util/DestinationFilter';
 import LoginModal from '../components/loginModal';
+import { nanoid } from 'nanoid';
 
 const maxCardsToIndexable = 16;
 const DestinationPage = () => {
@@ -27,41 +28,52 @@ const DestinationPage = () => {
     const destinationListContainer = useRef(null);
     const [destinationDisplay, setDestinationDisplay] = useState([]);
     const [currentPageIndex, setCurrentPageIndex] = useState(null);
+    const [pageIndex, setPageIndex] = useState(0);
     const [provinces, setProvinces] = useState([]);
     const loginModal = useRef(null);
+    const [isLoading, setLoading] = useState(false);
     const [mapDisplay, setMapDisplay] = useState({
         pos: [-1.748926, 120.0148634],
         zoom: 5,
         name: '',
         isSelected: false,
     });
+    const [hasMore, setHasMore] = useState(true);
     const [searchState, setSearchState] = useState();
     const [activeTags, setActiveTags] = useState([]);
 
     const maxPages = useRef(0);
 
-    const refreshDisplay = (newData) => {
-        // Index pages & rerender when destinationList refresh
-        destinationList.current = newData;
-        setCurrentPageIndex(0);
-        if (newData.length <= maxCardsToIndexable) {
-            return;
-        }
-        const pagesCount = Math.ceil(newData.length / maxCardsToIndexable);
-        maxPages.current = pagesCount;
-    };
-
-    const searchDestination = async (province, name, filter = []) => {
+    const searchDestination = async (
+        province,
+        name,
+        filter = [],
+        pageIdx = 0,
+        append = false,
+    ) => {
         try {
-            dispatch(showLoading('DestinationPageLoading'));
+            if (pageIdx === 0) {
+                setHasMore(() => true);
+            }
+            setPageIndex(pageIdx);
             const response = await axios.get('/api/destinations', {
                 params: {
                     province: province || undefined,
                     name: name || undefined,
                     filter: filter,
+                    page: pageIdx,
                 },
             });
-            setDestinationDisplay(response.data.data);
+            if (!response.data.data.length) {
+                setHasMore(() => false);
+            }
+            if (append) {
+                return setDestinationDisplay((state) => [
+                    ...state,
+                    ...response.data.data,
+                ]);
+            }
+            return setDestinationDisplay(response.data.data);
         } catch (e) {
             console.log(e);
             toast.error(
@@ -70,15 +82,29 @@ const DestinationPage = () => {
                     position: 'top-right',
                 },
             );
-        } finally {
-            dispatch(hideLoading('DestinationPageLoading'));
         }
     };
 
-    const tagsChangeHandler = ({ type, active, setActive }) => {
+    const handleEndScroll = async () => {
+        setLoading(() => true);
+        await searchDestination(
+            searchState?.province?.name,
+            searchState?.destination?.name,
+            searchState?.tags,
+            pageIndex + 1,
+            true,
+        ).catch((e) => {});
+        setLoading(() => false);
+    };
+    const tagsChangeHandler = async ({ type, active, setActive }) => {
+        const keyLoading = nanoid();
+        const loading = () => {
+            dispatch(showLoading(keyLoading));
+        };
         let tags = [...activeTags];
         let filterToggle = [];
 
+        loading();
         if (!active) {
             setActive(false);
             tags = tags.filter((tag) => tag.type !== type);
@@ -87,11 +113,12 @@ const DestinationPage = () => {
                 ...state,
                 tags: tags.map((tag) => tag.type),
             }));
-            searchDestination(
+            await searchDestination(
                 searchState?.province?.name,
                 searchState?.destination?.name,
                 tags.map((tag) => tag.type),
-            );
+            ).catch((e) => {});
+            dispatch(hideLoading(keyLoading));
             return;
         }
 
@@ -118,11 +145,12 @@ const DestinationPage = () => {
         filterToggle.forEach((tag) => tag.setActive(false));
         tags.push({ type, active, setActive });
         setActive(true);
-        searchDestination(
+        await searchDestination(
             searchState?.province?.name,
             searchState?.destination?.name,
             tags.map((tag) => tag.type),
-        );
+        ).catch((e) => {});
+        dispatch(hideLoading(keyLoading));
         setSearchState((state) => ({
             ...state,
             tags: tags.map((tag) => tag.type),
@@ -130,14 +158,20 @@ const DestinationPage = () => {
         setActiveTags(tags);
     };
 
-    const onSearchSubmit = (province, destination) => {
+    const onSearchSubmit = async (province, destination) => {
+        const keyLoading = nanoid();
+        dispatch(showLoading(keyLoading));
         setSearchState((state) => ({
             ...state,
             province: province,
             destination: destination,
         }));
-
-        searchDestination(province.name, destination.name, searchState?.tags);
+        await searchDestination(
+            province.name,
+            destination.name,
+            searchState?.tags,
+        ).catch((e) => {});
+        dispatch(hideLoading(keyLoading));
     };
 
     const setLoginModalVisible = () => {
@@ -164,13 +198,16 @@ const DestinationPage = () => {
         );
     }, [currentPageIndex]);
 
-    const onProvinceSelected = (province) => {
+    const onProvinceSelected = async (province) => {
+        const keyLoading = nanoid();
+        dispatch(showLoading(keyLoading));
         setSearchState((state) => ({ ...state, province: province }));
-        searchDestination(
+        await searchDestination(
             province.name,
             searchState?.destination?.name,
             searchState?.tags,
-        );
+        ).catch((e) => {});
+        hideLoading(keyLoading);
         setMapDisplay((state) => ({
             ...state,
             zoom: 7,
@@ -181,13 +218,16 @@ const DestinationPage = () => {
     };
 
     useEffect(() => {
-        searchDestination();
-
         // Get available provinces
         (async () => {
+            const keyLoading = nanoid();
             try {
+                dispatch(showLoading(keyLoading));
+                const destination = searchDestination();
                 const response = await axios.get('/api/geolocation/provinces');
                 setProvinces(response.data.data || []);
+                await destination.catch((e) => {});
+                dispatch(hideLoading(keyLoading));
             } catch (e) {
                 if (!(e instanceof AxiosError)) {
                     return toast.error(
@@ -238,7 +278,14 @@ const DestinationPage = () => {
                     maxIndexable={maxCardsToIndexable}
                     tagsChangeHandler={tagsChangeHandler}
                     setLoginModalVisible={setLoginModalVisible}
+                    handleEndScroll={handleEndScroll}
+                    hasMore={hasMore}
                 />
+                {isLoading && (
+                    <div className="text-center mb-6">
+                        <span className="loading loading-spinner loading-xl text-[#FFA666]"></span>
+                    </div>
+                )}
                 {maxPages.current > 0 ? (
                     <PageIndexer
                         current={{
@@ -249,6 +296,7 @@ const DestinationPage = () => {
                     />
                 ) : null}
             </div>
+
             <JoinUs />
             <Footer />
             <ToastContainer />

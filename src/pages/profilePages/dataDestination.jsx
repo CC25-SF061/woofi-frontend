@@ -198,10 +198,10 @@ const DataDestination = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#221122] flex flex-col items-center justify-center">
+        <div className="min-h-screen bg-[#221122] flex flex-col items-center lg:justify-center">
             <ToastContainer />
-            <div className="w-full lg:h-screen flex items-center justify-center p-5 lg:p-10 gap-5 text-white">
-                <div className="lg:hidden p-5 fixed z-60 top-0 w-full bg-[#252527] flex justify-between items-center shadow-xl">
+            <div className="w-full lg:h-screen flex  justify-center p-5 lg:p-10 gap-5 text-white">
+                <div className="lg:hidden p-5 fixed  z-60 top-0 w-full bg-[#252527] flex justify-between items-center shadow-xl">
                     <button
                         className="bg-[#FFA666] p-2 rounded-lg text-black cursor-pointer"
                         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -235,8 +235,8 @@ const DataDestination = () => {
                     <Sidebar />
                 </div>
 
-                <div className="flex flex-col flex-1 rounded-lg overflow-hidden shadow-lg bg-[#252527] m-5 lg:m-0 lg:h-full h-svw lg:w-3/4 mt-20 overflow-y-auto">
-                    <div className="w-full max-w-6xl flex flex-col items-center relative">
+                <div className="flex flex-col flex-1 rounded-lg overflow-hidden shadow-lg bg-[#252527]  lg:m-0 lg:h-full  lg:w-3/4 mt-20 overflow-y-auto">
+                    <div className="w-full max-w-6xl flex flex-col lg:items-center mx-auto relative">
                         <div className="mb-5 sticky top-0 bg-[#252527] p-3 pb-0 w-full shadow-md z-10">
                             <h1 className="text-center font-quicksand text-2xl">
                                 Data Destination
@@ -244,7 +244,7 @@ const DataDestination = () => {
                             <hr className="border-t-2 border-white my-3 rounded" />
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 w-full px-5 pb-5">
+                        <div className="grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 gap-5 w-full px-3 pb-5">
                             {destinations.map((element, order) => (
                                 <DestinationCard
                                     key={order}

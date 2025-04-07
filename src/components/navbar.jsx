@@ -3,9 +3,11 @@ import { Link, useLocation } from 'react-router-dom';
 import { FaChevronDown, FaBars, FaTimes } from 'react-icons/fa';
 import logo from '../assets/navbar/finalLogo.webp';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchUserProfile } from '../stores/userReducer';
+import { fetchUserProfile, setData } from '../stores/userReducer';
 import { AnimatePresence, motion } from 'framer-motion';
 import defaultProfile from '../assets/icons/profile_outline.svg';
+import { toast, ToastContainer } from 'react-toastify';
+import axios from 'axios';
 
 const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -16,7 +18,19 @@ const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
     const buttonRef = useRef(null);
-
+    const handleLogout = async () => {
+        try {
+            await axios.post('/api/auth/logout', {}, { withCredentials: true });
+            localStorage.removeItem('token');
+            dispatch(setData());
+        } catch (e) {
+            console.log(e);
+            toast.error('Something went wrong', {
+                autoClose: 3000,
+                position: 'top-right',
+            });
+        }
+    };
     useEffect(() => {
         function handleClickOutside(e) {
             if (
@@ -56,7 +70,8 @@ const Navbar = () => {
     }, [mobileMenuOpen]);
 
     return (
-        <div className="">
+        <div>
+            <ToastContainer />
             <div
                 className={`fixed top-0 left-0 w-full transition-all duration-300 shadow-md z-50 py-4 ${
                     isScrolled
@@ -163,10 +178,12 @@ const Navbar = () => {
                                     >
                                         <img
                                             src={
-                                                new URL(
-                                                    user.profileImage,
-                                                    import.meta.env.VITE_STATIC_ASSET_BASE_URL,
-                                                ).href || defaultProfile
+                                                user.profileImage
+                                                    ? new URL(
+                                                          user.profileImage,
+                                                          import.meta.env.VITE_STATIC_ASSET_BASE_URL,
+                                                      ).href
+                                                    : defaultProfile
                                             }
                                             alt="Profile"
                                             className="size-10 rounded-full border border-gray-300"
@@ -203,7 +220,7 @@ const Navbar = () => {
                                         </Link>
                                         <button
                                             onClick={() => {
-                                                // handleLogout();
+                                                handleLogout();
                                                 setIsOpen(false);
                                             }}
                                             className="w-full font-semibold text-left px-4 py-2 text-sm text-red-500 hover:bg-[#FFA666] cursor-pointer"

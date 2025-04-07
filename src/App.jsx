@@ -56,16 +56,7 @@ const App = () => {
                 } catch (_) {
                     localStorage.setItem('token', null);
 
-                    dispatch(
-                        setData({
-                            profileImage: null,
-                            username: null,
-                            name: null,
-                            email: null,
-                            id: null,
-                            isVerified: null,
-                        }),
-                    );
+                    dispatch(setData());
                     return Promise.reject(error);
                 }
             }

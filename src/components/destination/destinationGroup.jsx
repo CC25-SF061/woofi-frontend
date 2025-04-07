@@ -10,9 +10,10 @@ const DestinationGroup = ({
     tagsChangeHandler,
     destinations = [],
     setLoginModalVisible,
+    handleEndScroll,
+    hasMore,
 }) => {
     const navigate = useNavigate();
-
     const onCardClick = (id) => {
         // TODO? : Add to user statistic
         navigate(`/destination/${id}`);
@@ -40,6 +41,7 @@ const DestinationGroup = ({
             window.removeEventListener('resize', handleResize);
         };
     });
+
     const virtualizer = useWindowVirtualizer({
         count: destinations.length,
         overscan: 5,
@@ -48,6 +50,20 @@ const DestinationGroup = ({
         estimateSize: () => 380,
         scrollMargin: listRef.current?.offsetTop ?? 0,
     });
+
+    useEffect(() => {
+        if (!virtualizer.getVirtualItems().length) return;
+
+        if (
+            destinations.length - 1 ===
+                virtualizer.getVirtualIndexes()[
+                    virtualizer.getVirtualIndexes().length - 1
+                ] &&
+            hasMore
+        ) {
+            handleEndScroll?.();
+        }
+    }, [virtualizer.getVirtualIndexes(), destinations.length]);
     return (
         <div ref={containerRef} className="mt-15 flex flex-col w-full">
             <div className="relative w-full caret-transparent">
@@ -94,7 +110,6 @@ const DestinationGroup = ({
                     {virtualizer.getVirtualItems().map((item) => {
                         const row = item.index;
                         const element = destinations[row];
-
                         return (
                             <div
                                 key={item.index}

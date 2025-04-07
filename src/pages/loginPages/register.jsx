@@ -87,9 +87,13 @@ const Register = () => {
         }
 
         try {
-            const response = (await axios.post('/api/auth/register', request))
-                .data;
+            const response = (
+                await axios.post('/api/auth/register', request, {
+                    withCredentials: true,
+                })
+            ).data;
             e.target.reset();
+            localStorage.setItem('token', response.data.token);
             dispatch(setData(response.data));
             await navigate('/profile');
         } catch (error) {
@@ -135,8 +139,8 @@ const Register = () => {
                     token: accessToken,
                 })
             ).data;
-            dispatch(setData(response.data));
             localStorage.setItem('token', response.data.token);
+            dispatch(setData(response.data));
             //lakukan sesuatu jika berhasil kurang lebih sama dengan yang diatas
             await navigate('/profile');
         } catch (e) {
@@ -153,8 +157,8 @@ const Register = () => {
                         token: credentialsResponse.access_token,
                     })
                 ).data;
-                dispatch(setData(response.data));
                 localStorage.setItem('token', response.data.token);
+                dispatch(setData(response.data));
                 await navigate('/profile');
             } catch (e) {
                 if (!(e instanceof AxiosError)) {
@@ -308,8 +312,15 @@ const Register = () => {
                         </div>
                     </div>
 
-                    <button className="w-full p-3 bg-[#FFA666] text-black font-bold cursor-pointer font-quicksand rounded hover:bg-orange-500 transition flex justify-center items-center" disabled={isLoading}>
-                        {isLoading ? <FaSpinner className="animate-spin text-2xl" /> : 'Register'}
+                    <button
+                        className="w-full p-3 bg-[#FFA666] text-black font-bold cursor-pointer font-quicksand rounded hover:bg-orange-500 transition flex justify-center items-center"
+                        disabled={isLoading}
+                    >
+                        {isLoading ? (
+                            <FaSpinner className="animate-spin text-2xl" />
+                        ) : (
+                            'Register'
+                        )}
                     </button>
 
                     <div className="w-full flex items-center my-4">
@@ -324,7 +335,14 @@ const Register = () => {
                         className="w-full flex font-bold items-center justify-center p-3 bg-white text-black font-quicksand rounded shadow hover:bg-gray-200 transition mb-4 cursor-pointer"
                         disabled={isGoogleLoading}
                     >
-                        {isGoogleLoading ? <FaSpinner className="animate-spin text-2xl" /> : <><FcGoogle className="text-2xl mr-2" /> Register with Google</>}
+                        {isGoogleLoading ? (
+                            <FaSpinner className="animate-spin text-2xl" />
+                        ) : (
+                            <>
+                                <FcGoogle className="text-2xl mr-2" /> Register
+                                with Google
+                            </>
+                        )}
                     </button>
 
                     <p className="text-sm text-gray-400 mt-2">

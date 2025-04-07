@@ -9,11 +9,6 @@ import { fetchUserProfile } from '../stores/userReducer';
 
 const JoinUs = () => {
     const user = useSelector((state) => state.user.data);
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        dispatch(fetchUserProfile());
-    }, []);
 
     return (
         <>
