@@ -6,6 +6,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserProfile } from '../stores/userReducer';
 import { AnimatePresence, motion } from 'framer-motion';
 import defaultProfile from '../assets/icons/profile_outline.svg';
+import axios, { AxiosError } from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -16,6 +19,7 @@ const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
     const buttonRef = useRef(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         function handleClickOutside(e) {
@@ -54,6 +58,24 @@ const Navbar = () => {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, [mobileMenuOpen]);
+
+    const handleLogout = async () => {
+      try {
+          await axios.post(
+              '/api/auth/logout',
+              {},
+              {
+                  withCredentials: true,
+              },
+          );
+          await navigate('/sign-in');
+      } catch (e) {
+          toast.error('Something went wrong', {
+              position: 'top-right',
+              autoClose: 3000,
+          });
+      }
+  };
 
     return (
         <div className="">
@@ -203,7 +225,7 @@ const Navbar = () => {
                                         </Link>
                                         <button
                                             onClick={() => {
-                                                // handleLogout();
+                                                handleLogout();
                                                 setIsOpen(false);
                                             }}
                                             className="w-full font-semibold text-left px-4 py-2 text-sm text-red-500 hover:bg-[#FFA666] cursor-pointer"

@@ -38,6 +38,8 @@ const Profile = () => {
     const [isDragging, setIsDragging] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [fileImage, setFileImage] = useState('');
+    const [isModalProfile, setIsModalProfile] = useState(false);
+    const [hasNewMessage, setHasNewMessage] = useState(false);
 
     const [err, setErr] = useState({
         username: null,
@@ -328,7 +330,7 @@ const Profile = () => {
         setIsDragging(false);
         const file = e.dataTransfer.files[0];
         if (file && file.type.startsWith('image/')) {
-            handleImageChange({ target: { files: [file] } }); // panggil handler kamu yang udah ada
+            handleImageChange({ target: { files: [file] } });
         }
     };
 
@@ -339,6 +341,23 @@ const Profile = () => {
             setFileImage(null);
         }
     }, [isModalOpen]);
+
+    const handleNotificationClick = () => {
+        setIsModalProfile(true);
+        setHasNewMessage(false);
+    };
+
+    const triggerNewMessage = () => {
+        setHasNewMessage(true);
+        toast.info('You have a new message!', {
+            position: 'top-right',
+            autoClose: 3000,
+            hideProgressBar: false,
+            pauseOnHover: true,
+            draggable: true,
+        });
+    };
+
     return (
         <div className="w-full bg-[#221122] flex lg:h-screen items-center justify-center p-5 lg:p-10 text-white">
             <ToastContainer />
@@ -574,10 +593,18 @@ const Profile = () => {
                             <p className="font-quicksand">{user.name}</p>
                         </div>
                     </div>
-                    <div className="hidden lg:flex">
-                        <button className="border-white border-2 text-white font-quicksand p-2 rounded-lg cursor-pointer">
+                    <div className="hidden lg:flex relative">
+                        <button
+                            onClick={handleNotificationClick}
+                            className={`border-white border-2 p-2 rounded-lg cursor-pointer hover:bg-[#FFA666] transition duration-300 ${
+                                hasNewMessage ? 'animate-shake' : ''
+                            }`}
+                        >
                             <IoIosNotifications size={24} />
                         </button>
+                        {hasNewMessage && (
+                            <span className="absolute top-0 right-0 size-5 bg-red-600 rounded-full translate-x-1/4 -translate-y-1/4" />
+                        )}
                     </div>
                 </div>
 
@@ -600,11 +627,11 @@ const Profile = () => {
                                     }
                                     placeholder="Your Username"
                                     className={`
-                                             ${
-                                                 err.username
-                                                     ? 'border-red-500'
-                                                     : 'border-white'
-                                             }
+                                            ${
+                                                err.username
+                                                    ? 'border-red-500'
+                                                    : 'border-white'
+                                            }
                                         flex-3 p-3 font-quicksand rounded text-white border  w-full focus:outline-none`}
                                 />
                                 <div className="error text-red-500 text-sm">
@@ -664,11 +691,11 @@ const Profile = () => {
                                     type="email"
                                     placeholder="Your Email"
                                     className={`
-                                           ${
-                                               err.email
-                                                   ? 'border-red-500'
-                                                   : 'border-white'
-                                           }
+                                        ${
+                                            err.email
+                                                ? 'border-red-500'
+                                                : 'border-white'
+                                        }
                                         flex-3 p-3 font-quicksand rounded text-white border w-full border-white focus:outline-none`}
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
@@ -787,7 +814,7 @@ const Profile = () => {
                                     <label
                                         htmlFor="dropzone-file"
                                         className={`flex flex-col items-center justify-center rounded-full
-                                             overflow-hidden h-59 border-2 border-dashed  aspect-1/1 cursor-pointer transition
+                                            overflow-hidden h-59 border-2 border-dashed  aspect-1/1 cursor-pointer transition
                                                 ${isDragging ? 'border-[#FFA666] bg-gray-800' : 'border-gray-300 hover:bg-gray-700'}`}
                                     >
                                         {selectedImage ? (
@@ -853,6 +880,100 @@ const Profile = () => {
                                     className="text-white bg-blue-600 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 cursor-pointer"
                                 >
                                     Save Changes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {isModalProfile && (
+                    <div className="fixed inset-0 flex items-center justify-center bg-black/50 bg-opacity-80 backdrop-blur-md z-50 font-quicksand top-20 lg:top-0">
+                        <div className="relative p-4 py-0 w-full max-w-7xl rounded-lg shadow-lg bg-[#252527] lg:max-h-[90vh] max-h-[70vh] overflow-y-auto">
+                            <div className="sticky top-0 bg-[#252527] z-10 p-4 pt-8 border-b rounded-t border-gray-600">
+                                <div className="flex items-center justify-between">
+                                    <h3 className="text-xl font-semibold text-white">
+                                        Message Notification
+                                    </h3>
+                                    <button
+                                        onClick={() => setIsModalProfile(false)}
+                                        className="text-white bg-transparent hover:bg-white hover:text-[#FFA666] rounded-sm text-2xl cursor-pointer"
+                                    >
+                                        <IoClose />
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="p-6 space-y-4">
+                                {/* Contoh notifikasi */}
+                                {[
+                                    {
+                                        id: 1,
+                                        sender: 'Admin',
+                                        message:
+                                            'Your profile has been updated successfully.',
+                                        time: '2 minutes ago',
+                                    },
+                                    {
+                                        id: 2,
+                                        sender: 'Support',
+                                        message:
+                                            "Don't forget to verify your email address.",
+                                        time: '10 minutes ago',
+                                    },
+                                    {
+                                        id: 3,
+                                        sender: 'System',
+                                        message:
+                                            'New update available for your dashboard.',
+                                        time: '1 hour ago',
+                                    },
+                                    {
+                                        id: 4,
+                                        sender: 'System',
+                                        message:
+                                            'New update available for your dashboard.',
+                                        time: '1 hour ago',
+                                    },
+                                    {
+                                        id: 5,
+                                        sender: 'System',
+                                        message:
+                                            'New update available for your dashboard.',
+                                        time: '1 hour ago',
+                                    },
+                                    {
+                                        id: 6,
+                                        sender: 'System',
+                                        message:
+                                            'New update available for your dashboard.',
+                                        time: '1 hour ago',
+                                    },
+                                ].map((notif) => (
+                                    <div
+                                        key={notif.id}
+                                        className="bg-[#333339] border border-gray-600 rounded-lg px-4 py-3 text-white"
+                                    >
+                                        <div className="flex justify-between items-center mb-1">
+                                            <span className="font-semibold">
+                                                {notif.sender}
+                                            </span>
+                                            <span className="text-sm text-gray-400">
+                                                {notif.time}
+                                            </span>
+                                        </div>
+                                        <p className="text-sm text-gray-300">
+                                            {notif.message}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="sticky bottom-0 bg-[#252527] z-10 p-4 pb-6 border-t border-gray-600 rounded-b flex justify-end">
+                                <button
+                                    onClick={() => setIsModalProfile(false)}
+                                    className="py-2.5 px-5 text-sm font-semibold text-black rounded-lg hover:bg-gray-400 bg-white cursor-pointer"
+                                >
+                                    Close
                                 </button>
                             </div>
                         </div>
