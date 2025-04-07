@@ -4,7 +4,6 @@ import Navbar from '../components/navbar';
 import SearchDestination from '../components/searchDestination';
 import DestinationMap from '../components/destination/destinationMap';
 import DestinationGroup from '../components/destination/destinationGroup';
-import PageIndexer from '../components/destination/destinationPageIndexer';
 import JoinUs from '../components/joinUs';
 import Footer from '../components/footer';
 import HeroSection from '../components/heroSection';
@@ -15,7 +14,7 @@ import 'swiper/css/pagination';
 import { showLoading, hideLoading } from '../stores/loadingReducer';
 import axios, { AxiosError } from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import DestinationFilter from '../util/DestinationFilter';
 import LoginModal from '../components/loginModal';
 import { nanoid } from 'nanoid';
@@ -23,12 +22,11 @@ import { nanoid } from 'nanoid';
 const maxCardsToIndexable = 16;
 const DestinationPage = () => {
     const dispatch = useDispatch();
-    const changePaginationCount = useRef(0);
-    const destinationList = useRef([]);
+    const userId = useSelector((state) => state.user.data.id);
     const destinationListContainer = useRef(null);
-    const [destinationDisplay, setDestinationDisplay] = useState([]);
-    const [currentPageIndex, setCurrentPageIndex] = useState(null);
+    // const [currentPageIndex, setCurrentPageIndex] = useState(null);
     const [pageIndex, setPageIndex] = useState(0);
+    const [destinations, setDestinations] = useState([]);
     const [provinces, setProvinces] = useState([]);
     const loginModal = useRef(null);
     const [isLoading, setLoading] = useState(false);
@@ -68,12 +66,12 @@ const DestinationPage = () => {
                 setHasMore(() => false);
             }
             if (append) {
-                return setDestinationDisplay((state) => [
+                return setDestinations((state) => [
                     ...state,
                     ...response.data.data,
                 ]);
             }
-            return setDestinationDisplay(response.data.data);
+            return setDestinations(response.data.data);
         } catch (e) {
             console.log(e);
             toast.error(
@@ -104,7 +102,12 @@ const DestinationPage = () => {
         let tags = [...activeTags];
         let filterToggle = [];
 
+        if (type === DestinationFilter.WRITTEN_BY_YOU && !userId) {
+            setLoginModalVisible(true);
+            return;
+        }
         loading();
+
         if (!active) {
             setActive(false);
             tags = tags.filter((tag) => tag.type !== type);
@@ -179,24 +182,24 @@ const DestinationPage = () => {
         loginModal.current.showModal();
     };
 
-    useEffect(() => {
-        // Keep track of side effects to prevent accidental early scroll
-        changePaginationCount.current++;
-        if (destinationListContainer && changePaginationCount.current > 3)
-            window.scrollTo({
-                // Scroll when changing pagination
-                behavior: 'smooth',
-                top: destinationListContainer.current.offsetTop - 100,
-            });
+    // useEffect(() => {
+    //     // Keep track of side effects to prevent accidental early scroll
+    //     changePaginationCount.current++;
+    //     if (destinationListContainer && changePaginationCount.current > 3)
+    //         window.scrollTo({
+    //             // Scroll when changing pagination
+    //             behavior: 'smooth',
+    //             top: destinationListContainer.current.offsetTop - 100,
+    //         });
 
-        // Display Destinations after pagination
-        setDestinationDisplay(
-            destinationList.current.slice(
-                currentPageIndex * maxCardsToIndexable,
-                (currentPageIndex + 1) * maxCardsToIndexable,
-            ),
-        );
-    }, [currentPageIndex]);
+    //     // Display Destinations after pagination
+    //     setDestinationDisplay(
+    //         destinationList.current.slice(
+    //             currentPageIndex * maxCardsToIndexable,
+    //             (currentPageIndex + 1) * maxCardsToIndexable,
+    //         ),
+    //     );
+    // }, [currentPageIndex]);
 
     const onProvinceSelected = async (province) => {
         const keyLoading = nanoid();
@@ -274,7 +277,7 @@ const DestinationPage = () => {
                 <DestinationGroup
                     containerRef={destinationListContainer}
                     tags={[activeTags, setActiveTags]}
-                    destinations={destinationDisplay}
+                    destinations={destinations}
                     maxIndexable={maxCardsToIndexable}
                     tagsChangeHandler={tagsChangeHandler}
                     setLoginModalVisible={setLoginModalVisible}
@@ -286,7 +289,7 @@ const DestinationPage = () => {
                         <span className="loading loading-spinner loading-xl text-[#FFA666]"></span>
                     </div>
                 )}
-                {maxPages.current > 0 ? (
+                {/* {maxPages.current > 0 ? (
                     <PageIndexer
                         current={{
                             get: currentPageIndex,
@@ -294,7 +297,7 @@ const DestinationPage = () => {
                         }}
                         count={maxPages}
                     />
-                ) : null}
+                ) : null} */}
             </div>
 
             <JoinUs />

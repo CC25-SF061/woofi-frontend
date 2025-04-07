@@ -6,8 +6,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserProfile, setData } from '../stores/userReducer';
 import { AnimatePresence, motion } from 'framer-motion';
 import defaultProfile from '../assets/icons/profile_outline.svg';
-import { toast, ToastContainer } from 'react-toastify';
 import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -31,6 +32,8 @@ const Navbar = () => {
             });
         }
     };
+    const navigate = useNavigate();
+
     useEffect(() => {
         function handleClickOutside(e) {
             if (

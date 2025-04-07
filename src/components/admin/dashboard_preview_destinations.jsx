@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import LogoUsers from '../../assets/icons/admin/users.svg';
+import LogoDatabase from '../../assets/icons/admin/database.svg';
 
-const Dashboard = () => {
-    const userDataPerYear = {
+const dashboard_preview_destinations = () => {
+    const destinationDataPerYear = {
         2023: [
             { month: 'January', color: '#8979FF', amount: 12 },
             { month: 'February', color: '#FF928A', amount: 24 },
@@ -52,17 +52,17 @@ const Dashboard = () => {
     const [hoverData, setHoverData] = useState(null);
 
     const visibleMonths = 6;
-    const rawUserData = userDataPerYear[selectedYear] || [];
-    const visibleData = rawUserData.slice(
+    const rawDestinationData = destinationDataPerYear[selectedYear] || [];
+    const visibleData = rawDestinationData.slice(
         startMonthIndex,
         startMonthIndex + visibleMonths,
     );
 
-    const getModeUser = () =>
-        [...rawUserData].sort((a, b) => b.amount - a.amount)[0];
+    const getModeDestination = () =>
+        [...rawDestinationData].sort((a, b) => b.amount - a.amount)[0];
     const totalBlockChartIndices = 7;
 
-    const generateUserDataBlockChart = {
+    const generateDestinationDataBlockChart = {
         monthBlock: (v, i, context) => (
             <div
                 key={i}
@@ -92,16 +92,16 @@ const Dashboard = () => {
                         borderColor: v.color,
                         borderTopWidth: '2px',
                         width: '100%',
-                        height: `${(v.amount / getModeUser().amount) * 100.0}%`,
+                        height: `${(v.amount / getModeDestination().amount) * 100.0}%`,
                     }}
                     className="border-t-2 rounded-t-sm transition-all duration-300"
                 ></div>
             </div>
         ),
         countIndices: (index) => {
-            const modeUser = getModeUser().amount;
+            const totalUser = getModeDestination().amount;
             return Math.round(
-                (modeUser / (totalBlockChartIndices - 1)) *
+                (totalUser / (totalBlockChartIndices - 1)) *
                     Math.min(index - 1, totalBlockChartIndices),
             );
         },
@@ -110,9 +110,9 @@ const Dashboard = () => {
     return (
         <div className="relative px-5 flex flex-col items-center pb-5 w-full font-quicksand">
             <div className="py-8 flex flex-col w-full items-center bg-[#252527] rounded-md shadow-lg mb-4">
-                <img src={LogoUsers} alt="Users Icon" className="w-8 mb-1" />
+                <img src={LogoDatabase} alt="Users Icon" className="w-8 mb-1" />
                 <h2 className="text-[#aaa] tracking-wide text-xl">
-                    Overview User Data
+                    Overview Destination Data
                 </h2>
             </div>
 
@@ -129,7 +129,7 @@ const Dashboard = () => {
                                 setStartMonthIndex(0);
                             }}
                         >
-                            {Object.keys(userDataPerYear).map((year) => (
+                            {Object.keys(destinationDataPerYear).map((year) => (
                                 <option key={year} value={year}>
                                     {year}
                                 </option>
@@ -155,7 +155,7 @@ const Dashboard = () => {
                                         key={i}
                                         className="font-light text-xs text-[#ccc] w-full h-[0.5rem] text-right px-1"
                                     >
-                                        {generateUserDataBlockChart.countIndices(
+                                        {generateDestinationDataBlockChart.countIndices(
                                             totalBlockChartIndices - i / 2,
                                         )}
                                     </p>
@@ -176,7 +176,7 @@ const Dashboard = () => {
                         {/* Bar Chart */}
                         <div className="absolute ml-7 pt-[0.5rem] w-4/5 h-full flex flex-row justify-around">
                             {visibleData.map(
-                                generateUserDataBlockChart.monthBlock,
+                                generateDestinationDataBlockChart.monthBlock,
                             )}
                         </div>
 
@@ -196,7 +196,7 @@ const Dashboard = () => {
                                     {hoverData.month} {hoverData.year}
                                 </div>
                                 <div className="text-xs">
-                                    Total Users: {hoverData.amount}
+                                    Total Destinations: {hoverData.amount}
                                 </div>
                             </div>
                         )}
@@ -220,14 +220,15 @@ const Dashboard = () => {
                             onClick={() =>
                                 setStartMonthIndex((prev) =>
                                     Math.min(
-                                        rawUserData.length - visibleMonths,
+                                        rawDestinationData.length -
+                                            visibleMonths,
                                         prev + visibleMonths,
                                     ),
                                 )
                             }
                             disabled={
                                 startMonthIndex + visibleMonths >=
-                                rawUserData.length
+                                rawDestinationData.length
                             }
                         >
                             Next →
@@ -260,4 +261,4 @@ const Dashboard = () => {
     );
 };
 
-export default Dashboard;
+export default dashboard_preview_destinations;

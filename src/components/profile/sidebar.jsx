@@ -11,7 +11,7 @@ const Sidebar = () => {
       <div className="flex flex-col items-center justify-between rounded-lg overflow-hidden shadow-lg pt-22 lg:pt-5 bg-[#252527] p-5 h-full w-full">
         <Link
           to="/"
-          className="flex gap-1 bg-[#252527] shadow-lg shadow-stone-950/50 p-2 border-white border-1 rounded-lg"
+          className="flex gap-1 bg-[#252527] shadow-lg shadow-stone-950/50 p-2 border-white border-2 rounded-lg hover:bg-[#FFA666] transition duration-300 font-semibold"
         >
           <img src={LogoHome} alt="Home Icon" className="w-6 h-6" />
           <p className="font-quicksand text-lg">Back To Home</p>
