@@ -7,7 +7,7 @@ import LogoDate from '../../assets/icons/admin/date.svg';
 import { FaSearch } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
 
-const Header = ({ search }) => {
+const Header = ({ search, onNotifClick, hasNewMessage }) => {
     const location = useLocation();
     let pathName =
         location.pathname.charAt(location.pathname.length - 1) === '/'
@@ -29,9 +29,6 @@ const Header = ({ search }) => {
     const handleDataRefresh = () => {
         // do stuff based on the current location
     };
-    const showNotifs = () => {
-        // do stuff
-    };
 
     return (
         <div className="fixed overflow-hidden h-fit w-full font-quicksand pb-5 z-10">
@@ -48,13 +45,18 @@ const Header = ({ search }) => {
                 </h1>
 
                 <div className="flex flex-row ml-auto gap-3">
-                    <button onClick={showNotifs}>
-                        <img
-                            src={LogoNotif}
-                            alt="Notification Icon"
-                            className="w-9 h-9 cursor-pointer"
-                        />
-                    </button>
+                    <div className="relative flex items-center justify-center cursor-pointer">
+                        <button onClick={onNotifClick}>
+                            <img
+                                src={LogoNotif}
+                                alt="Notification Icon"
+                                className="w-9 h-9 cursor-pointer"
+                            />
+                        </button>
+                        {hasNewMessage && (
+                            <span className="absolute top-0 right-0 w-3 h-3 bg-red-600 rounded-full translate-x-1/4 -translate-y-1/4"></span>
+                        )}
+                    </div>
                     <Link
                         to="/profile"
                         className="flex items-center justify-center cursor-pointer"
