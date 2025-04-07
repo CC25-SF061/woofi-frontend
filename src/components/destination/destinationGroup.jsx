@@ -1,13 +1,14 @@
-import { React } from 'react';
+import { React, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DestinationFilter from './destinationTag';
 import DestinationCard from './destinationCard';
 import DestinationFilterConstant from '../../util/DestinationFilter.js';
+import { useVirtualizer, useWindowVirtualizer } from '@tanstack/react-virtual';
 
 const DestinationGroup = ({
     containerRef,
     tagsChangeHandler,
-    destinations,
+    destinations = [],
     setLoginModalVisible,
 }) => {
     const navigate = useNavigate();
@@ -16,6 +17,37 @@ const DestinationGroup = ({
         // TODO? : Add to user statistic
         navigate(`/destination/${id}`);
     };
+    const listRef = useRef(null);
+    const [lane, setLane] = useState(
+        (window.innerWidth >= 1536 && 5) ||
+            (window.innerWidth >= 1280 && 4) ||
+            (window.innerWidth >= 1024 && 3) ||
+            (window.innerWidth >= 768 && 2) ||
+            1,
+    );
+    useEffect(() => {
+        const handleResize = () => {
+            setLane(
+                (window.innerWidth >= 1536 && 5) ||
+                    (window.innerWidth >= 1280 && 4) ||
+                    (window.innerWidth >= 1024 && 3) ||
+                    (window.innerWidth >= 768 && 2) ||
+                    1,
+            );
+        };
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    });
+    const virtualizer = useWindowVirtualizer({
+        count: destinations.length,
+        overscan: 5,
+        lanes: lane,
+        gap: 15,
+        estimateSize: () => 380,
+        scrollMargin: listRef.current?.offsetTop ?? 0,
+    });
     return (
         <div ref={containerRef} className="mt-15 flex flex-col w-full">
             <div className="relative w-full caret-transparent">
@@ -51,28 +83,55 @@ const DestinationGroup = ({
             </div>
 
             {/* The Cards */}
-            <div className="mt-8 mb-10 grid justify-stretch items-stretch 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-5 caret-transparent">
-                {destinations.map((element, order) => {
-                    return (
-                        <DestinationCard
-                            key={element.id}
-                            id={element.id}
-                            order={order}
-                            picture={
-                                new URL(
-                                    element.image,
-                                    import.meta.env.VITE_STATIC_ASSET_BASE_URL,
-                                ).href
-                            }
-                            name={element.name}
-                            detail={element.detail}
-                            isWishlisted={element.isWishlisted}
-                            rating={element.rating}
-                            onclick={onCardClick}
-                            setLoginModalVisible={setLoginModalVisible}
-                        ></DestinationCard>
-                    );
-                })}
+            <div ref={listRef} className="mt-5 mb-10">
+                <div
+                    style={{
+                        height: `${virtualizer.getTotalSize()}px`,
+                        width: '100%',
+                        position: 'relative',
+                    }}
+                >
+                    {virtualizer.getVirtualItems().map((item) => {
+                        const row = item.index;
+                        const element = destinations[row];
+
+                        return (
+                            <div
+                                key={item.index}
+                                style={{
+                                    // padding: '0px 5px 30px',
+                                    paddingInline: '10px',
+                                    position: 'absolute',
+                                    top: 0,
+                                    left: `${item.lane * (100 / virtualizer.options.lanes)}%`,
+                                    width: `calc(100% / ${virtualizer.options.lanes})`,
+                                    height: `${380}px`,
+                                    transform: `translateY(${
+                                        item.start -
+                                        virtualizer.options.scrollMargin
+                                    }px)`,
+                                }}
+                            >
+                                <DestinationCard
+                                    key={element.id}
+                                    id={element.id}
+                                    picture={
+                                        new URL(
+                                            element.image,
+                                            import.meta.env.VITE_STATIC_ASSET_BASE_URL,
+                                        ).href
+                                    }
+                                    name={element.name}
+                                    detail={element.detail}
+                                    isWishlisted={element.isWishlisted}
+                                    rating={element.rating}
+                                    onclick={onCardClick}
+                                    setLoginModalVisible={setLoginModalVisible}
+                                ></DestinationCard>
+                            </div>
+                        );
+                    })}
+                </div>
             </div>
         </div>
     );

@@ -9,7 +9,6 @@ import JoinUs from '../components/joinUs';
 import Footer from '../components/footer';
 import HeroSection from '../components/heroSection';
 import Image1 from '../assets/gallery/image1.webp';
-import { motion } from 'framer-motion';
 import 'swiper/css';
 import 'swiper/css/effect-fade';
 import 'swiper/css/pagination';
@@ -23,7 +22,6 @@ import LoginModal from '../components/loginModal';
 const maxCardsToIndexable = 16;
 const DestinationPage = () => {
     const dispatch = useDispatch();
-
     const changePaginationCount = useRef(0);
     const destinationList = useRef([]);
     const destinationListContainer = useRef(null);
@@ -63,7 +61,7 @@ const DestinationPage = () => {
                     filter: filter,
                 },
             });
-            refreshDisplay(response.data.data);
+            setDestinationDisplay(response.data.data);
         } catch (e) {
             console.log(e);
             toast.error(

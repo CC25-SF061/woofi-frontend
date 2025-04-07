@@ -96,7 +96,7 @@ const DestinationCard = ({
         }
     }
     return (
-        <div className="relative bg-[#252527] font-quicksand rounded-lg mx-auto w-73 sm:w-85 md:w-full h-95 shadow-lg overflow-hidden flex flex-col duration-75 scale-100 hover:scale-[103%] ease-in">
+        <div className="relative bg-[#252527] font-quicksand rounded-lg mx-auto sm:max-w-90  w-full h-95 shadow-lg overflow-hidden flex flex-col duration-75 scale-100 hover:scale-[103%] ease-in">
             {/* Image Section */}
             <div className="skeleton w-full h-40 rounded-b-none">
                 <img

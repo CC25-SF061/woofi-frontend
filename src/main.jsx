@@ -6,14 +6,9 @@ import App from './App.jsx';
 import QueryString from 'qs';
 import { Provider } from 'react-redux';
 import store from './stores/store.js';
-import { HttpsAgent, HttpAgent } from 'agentkeepalive';
 
 axios.defaults.baseURL = import.meta.env.VITE_SERVER_URL;
 axios.defaults.timeout = 1000 * 60;
-
-// axios.defaults.httpAgent = new HttpAgent({
-//     freeSocketTimeout: 1000 * 60,
-// });
 axios.defaults.paramsSerializer = (params) =>
     QueryString.stringify(params, { arrayFormat: 'repeat' });
 axios.interceptors.request.use(
