@@ -19,10 +19,13 @@ const Header = ({ search, onNotifClick, hasNewMessage }) => {
             name = 'Admin Dashboard';
             break;
         case '/admin/users':
-            name = 'Admin Dashboard / Users';
+            name = 'Admin Dashboard / Users ';
             break;
         case '/admin/posts':
             name = 'Admin Dashboard / Posts';
+            break;
+        case '/admin/contact':
+            name = 'Admin Dashboard / Contact';
             break;
     }
 
@@ -68,46 +71,6 @@ const Header = ({ search, onNotifClick, hasNewMessage }) => {
                         />
                     </Link>
                 </div>
-            </div>
-            <div className="relative flex flex-row-reverse items-center w-full tracking-wide text-[#aaa] gap-6 px-5 mt-5 z-100">
-                {search ? (
-                    <div className="relative w-32 md:w-96">
-                        <input
-                            id="destinationName"
-                            name="destinationName"
-                            className="bg-[#252527] w-full text-nowrap px-5 py-2 pr-12 text-white font-quicksand placeholder-[#ffffff32] shadow-lg shadow-[#00000033] rounded-lg"
-                            type="text"
-                            value={search.get}
-                            onChange={(e) => {
-                                search.set(e.target.value.trim());
-                            }}
-                            placeholder="Search data"
-                        />
-                        <div className="absolute inset-y-0 right-0 flex items-center p-2 pl-4">
-                            <FaSearch className="text-xl text-[#FFA666aa]" />
-                        </div>
-                    </div>
-                ) : (
-                    <></>
-                )}
-                <button
-                    className="flex items-center flex-row gap-2 cursor-pointer"
-                    onClick={handleDataRefresh}
-                >
-                    <img
-                        src={LogoRefresh}
-                        alt="Refresh Icon"
-                        className="w-5 h-5"
-                    />
-                    <p className="underline">Refresh Data</p>
-                </button>
-                <div
-                    className="absolute w-full h-20 -z-10 -top-5"
-                    style={{
-                        background:
-                            'linear-gradient(to bottom, #221122 30%, rgba(34, 17, 34, 0.00) 85%)',
-                    }}
-                ></div>
             </div>
         </div>
     );

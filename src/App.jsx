@@ -25,7 +25,7 @@ import DataDestination from './pages/profilePages/dataDestination.jsx';
 import Dashboard from './pages/adminPages/dashboard.jsx';
 import UsersDashboard from './pages/adminPages/user_dashboard.jsx';
 import PostsDashboard from './pages/adminPages/post_dashboard.jsx';
-
+import ContactDashboard from './pages/adminPages/contact_dashboard.jsx';
 import ScrollToTop from './scrollToTop';
 import PageWrapper from './components/loading/pageWrapper';
 import AuthGuard from './components/authGuard.jsx';
@@ -132,6 +132,10 @@ const App = () => {
                     <Route
                         path="/admin/posts"
                         element={<PostsDashboard />}
+                    ></Route>
+                    <Route
+                        path="/admin/contact"
+                        element={<ContactDashboard />}
                     ></Route>
                     <Route path="*" element={<NotFound />}></Route>
                 </Routes>

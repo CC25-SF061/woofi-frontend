@@ -38,6 +38,16 @@ const Sidebar = () => {
                     >
                         Posts
                     </Link>
+                    <Link
+                        to="/admin/contact"
+                        className={`py-1 hover:text-gray-300 transition ${
+                            location.pathname === '/admin/contact'
+                                ? 'text-[#FFA666] font-bold'
+                                : ''
+                        }`}
+                    >
+                        Contact
+                    </Link>
                 </div>
             </div>
 
