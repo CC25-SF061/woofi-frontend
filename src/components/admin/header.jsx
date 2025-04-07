@@ -7,7 +7,7 @@ import LogoDate from '../../assets/icons/admin/date.svg';
 import { FaSearch } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
 
-const Header = ({ selectedDate, search }) => {
+const Header = ({ search }) => {
     const location = useLocation();
     let pathName =
         location.pathname.charAt(location.pathname.length - 1) === '/'
@@ -27,9 +27,6 @@ const Header = ({ selectedDate, search }) => {
     }
 
     const handleDataRefresh = () => {
-        // do stuff based on the current location
-    };
-    const showDate = () => {
         // do stuff based on the current location
     };
     const showNotifs = () => {
@@ -92,7 +89,7 @@ const Header = ({ selectedDate, search }) => {
                     <></>
                 )}
                 <button
-                    className="flex flex-row gap-2 cursor-pointer"
+                    className="flex items-center flex-row gap-2 cursor-pointer"
                     onClick={handleDataRefresh}
                 >
                     <img
@@ -101,17 +98,6 @@ const Header = ({ selectedDate, search }) => {
                         className="w-5 h-5"
                     />
                     <p className="underline">Refresh Data</p>
-                </button>
-                <button
-                    className="flex flex-row gap-2 cursor-pointer"
-                    onClick={showDate}
-                >
-                    <img
-                        src={LogoDate}
-                        alt="Actions Icon"
-                        className="w-5 h-5"
-                    />
-                    <p className="underline">Select Date</p>
                 </button>
                 <div
                     className="absolute w-full h-20 -z-10 -top-5"

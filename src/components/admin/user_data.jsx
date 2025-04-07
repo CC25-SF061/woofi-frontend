@@ -127,7 +127,7 @@ const UserDataTable = () => {
                         onChange={handleSelectAll}
                     />
                     <div>
-                        <p>Name</p>
+                        <p>User Data</p>
                     </div>
                     <div>
                         <p>Role</p>
