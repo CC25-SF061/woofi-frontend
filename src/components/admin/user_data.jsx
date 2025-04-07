@@ -150,7 +150,6 @@ const UserData = ({
 
 const UserDataTable = () => {
     const tableRowTemplate = { gridTemplateColumns: '20fr 15fr 1fr' };
-    const [selectedAll, setSelectedAll] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [roleFilter, setRoleFilter] = useState('all');
     const [activeDropdownIndex, setActiveDropdownIndex] = useState(null);

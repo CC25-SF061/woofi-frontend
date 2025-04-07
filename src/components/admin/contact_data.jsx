@@ -45,6 +45,9 @@ const ContactData = ({
                         <button className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left">
                             Reply Messsage
                         </button>
+                        <button className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left">
+                            See Detail
+                        </button>
                     </div>
                 )}
             </div>
