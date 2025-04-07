@@ -734,7 +734,7 @@ const Profile = () => {
                             </div>
                             <div>
                                 <button
-                                    className="lg:px-10 py-3 bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition cursor-pointer font-semibold"
+                                    className="lg:px-10 py-3 w-full bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition cursor-pointer font-semibold"
                                     onClick={openPopUpPassword}
                                 >
                                     Edit
