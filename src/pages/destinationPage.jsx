@@ -4,7 +4,6 @@ import Navbar from '../components/navbar';
 import SearchDestination from '../components/searchDestination';
 import DestinationMap from '../components/destination/destinationMap';
 import DestinationGroup from '../components/destination/destinationGroup';
-import PageIndexer from '../components/destination/destinationPageIndexer';
 import JoinUs from '../components/joinUs';
 import Footer from '../components/footer';
 import HeroSection from '../components/heroSection';
@@ -22,11 +21,8 @@ import LoginModal from '../components/loginModal';
 const maxCardsToIndexable = 16;
 const DestinationPage = () => {
     const dispatch = useDispatch();
-    const changePaginationCount = useRef(0);
-    const destinationList = useRef([]);
     const destinationListContainer = useRef(null);
-    const [destinationDisplay, setDestinationDisplay] = useState([]);
-    const [currentPageIndex, setCurrentPageIndex] = useState(null);
+    const [destinations, setDestinations] = useState([]);
     const [provinces, setProvinces] = useState([]);
     const loginModal = useRef(null);
     const [mapDisplay, setMapDisplay] = useState({
@@ -38,19 +34,6 @@ const DestinationPage = () => {
     const [searchState, setSearchState] = useState();
     const [activeTags, setActiveTags] = useState([]);
 
-    const maxPages = useRef(0);
-
-    const refreshDisplay = (newData) => {
-        // Index pages & rerender when destinationList refresh
-        destinationList.current = newData;
-        setCurrentPageIndex(0);
-        if (newData.length <= maxCardsToIndexable) {
-            return;
-        }
-        const pagesCount = Math.ceil(newData.length / maxCardsToIndexable);
-        maxPages.current = pagesCount;
-    };
-
     const searchDestination = async (province, name, filter = []) => {
         try {
             dispatch(showLoading('DestinationPageLoading'));
@@ -61,7 +44,7 @@ const DestinationPage = () => {
                     filter: filter,
                 },
             });
-            setDestinationDisplay(response.data.data);
+            setDestinations(response.data.data);
         } catch (e) {
             console.log(e);
             toast.error(
@@ -145,25 +128,6 @@ const DestinationPage = () => {
         loginModal.current.showModal();
     };
 
-    useEffect(() => {
-        // Keep track of side effects to prevent accidental early scroll
-        changePaginationCount.current++;
-        if (destinationListContainer && changePaginationCount.current > 3)
-            window.scrollTo({
-                // Scroll when changing pagination
-                behavior: 'smooth',
-                top: destinationListContainer.current.offsetTop - 100,
-            });
-
-        // Display Destinations after pagination
-        setDestinationDisplay(
-            destinationList.current.slice(
-                currentPageIndex * maxCardsToIndexable,
-                (currentPageIndex + 1) * maxCardsToIndexable,
-            ),
-        );
-    }, [currentPageIndex]);
-
     const onProvinceSelected = (province) => {
         setSearchState((state) => ({ ...state, province: province }));
         searchDestination(
@@ -234,20 +198,11 @@ const DestinationPage = () => {
                 <DestinationGroup
                     containerRef={destinationListContainer}
                     tags={[activeTags, setActiveTags]}
-                    destinations={destinationDisplay}
+                    destinations={destinations}
                     maxIndexable={maxCardsToIndexable}
                     tagsChangeHandler={tagsChangeHandler}
                     setLoginModalVisible={setLoginModalVisible}
                 />
-                {maxPages.current > 0 ? (
-                    <PageIndexer
-                        current={{
-                            get: currentPageIndex,
-                            set: setCurrentPageIndex,
-                        }}
-                        count={maxPages}
-                    />
-                ) : null}
             </div>
             <JoinUs />
             <Footer />
