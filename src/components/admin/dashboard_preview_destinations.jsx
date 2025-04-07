@@ -58,10 +58,8 @@ const dashboard_preview_destinations = () => {
         startMonthIndex + visibleMonths,
     );
 
-    const getTotalDestinations = () =>
-        visibleData.reduce((acc, v) => acc + v.amount, 0);
     const getModeDestination = () =>
-        [...visibleData].sort((a, b) => b.amount - a.amount)[0];
+        [...rawDestinationData].sort((a, b) => b.amount - a.amount)[0];
     const totalBlockChartIndices = 7;
 
     const generateDestinationDataBlockChart = {
@@ -101,7 +99,7 @@ const dashboard_preview_destinations = () => {
             </div>
         ),
         countIndices: (index) => {
-            const totalUser = getTotalDestinations();
+            const totalUser = getModeDestination().amount;
             return Math.round(
                 (totalUser / (totalBlockChartIndices - 1)) *
                     Math.min(index - 1, totalBlockChartIndices),
@@ -238,11 +236,11 @@ const dashboard_preview_destinations = () => {
                     </div>
 
                     {/* Legend */}
-                    <div className="px-15 mt-3 flex flex-row flex-wrap justify-evenly h-fit gap-1 text-xs">
+                    <div className="px-15 mt-3 flex flex-row flex-wrap justify-evenly h-fit gap-3 text-xs">
                         {visibleData.map((v, idx) => (
                             <div
                                 key={idx}
-                                className="flex flex-row items-center gap-2"
+                                className="flex flex-row items-center gap-1"
                             >
                                 <div
                                     className="rounded-full w-2 aspect-square"

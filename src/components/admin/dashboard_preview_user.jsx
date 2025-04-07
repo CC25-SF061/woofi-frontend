@@ -58,10 +58,8 @@ const Dashboard = () => {
         startMonthIndex + visibleMonths,
     );
 
-    const getTotalUsers = () =>
-        visibleData.reduce((acc, v) => acc + v.amount, 0);
     const getModeUser = () =>
-        [...visibleData].sort((a, b) => b.amount - a.amount)[0];
+        [...rawUserData].sort((a, b) => b.amount - a.amount)[0];
     const totalBlockChartIndices = 7;
 
     const generateUserDataBlockChart = {
@@ -101,9 +99,9 @@ const Dashboard = () => {
             </div>
         ),
         countIndices: (index) => {
-            const totalUser = getTotalUsers();
+            const modeUser = getModeUser().amount;
             return Math.round(
-                (totalUser / (totalBlockChartIndices - 1)) *
+                (modeUser / (totalBlockChartIndices - 1)) *
                     Math.min(index - 1, totalBlockChartIndices),
             );
         },
@@ -237,11 +235,11 @@ const Dashboard = () => {
                     </div>
 
                     {/* Legend */}
-                    <div className="px-15 mt-3 flex flex-row flex-wrap justify-evenly h-fit gap-1 text-xs">
+                    <div className="px-15 mt-3 flex flex-row flex-wrap justify-evenly h-fit gap-3 text-xs">
                         {visibleData.map((v, idx) => (
                             <div
                                 key={idx}
-                                className="flex flex-row items-center gap-2"
+                                className="flex flex-row items-center gap-1"
                             >
                                 <div
                                     className="rounded-full w-2 aspect-square"
