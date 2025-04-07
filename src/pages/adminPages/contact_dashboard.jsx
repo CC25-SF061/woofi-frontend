@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
 import SidebarAdmin from '../../components/admin/sidebar';
 import HeaderAdmin from '../../components/admin/header';
-import PostsData from '../../components/admin/post_data';
-import { IoClose } from 'react-icons/io5';
+import ContactData from '../../components/admin/contact_data';
 
-const Dashboard = () => {
-    const [search, setSearch] = useState('');
-    const [selectedDate, setSelectedDate] = useState(new Date());
+const contact_dashboard = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [hasNewMessage, setHasNewMessage] = useState(true);
 
     const notifications = [
         {
@@ -30,21 +26,12 @@ const Dashboard = () => {
             time: '1 hour ago',
         },
     ];
-
     return (
-        <div className="w-full flex text-white overflow-y-auto">
+        <div className='className="w-full flex text-white overflow-y-auto"'>
             <SidebarAdmin />
-            <HeaderAdmin
-                selectedDate={{ get: selectedDate, set: setSelectedDate }}
-                search={{ get: search, set: setSearch }}
-                onNotifClick={() => {
-                    setIsModalOpen(true);
-                    setHasNewMessage(false);
-                }}
-                hasNewMessage={hasNewMessage}
-            />
+            <HeaderAdmin />
             <div className="pl-50 w-full">
-                <PostsData />
+                <ContactData />
             </div>
 
             {isModalOpen && (
@@ -100,4 +87,4 @@ const Dashboard = () => {
     );
 };
 
-export default Dashboard;
+export default contact_dashboard;

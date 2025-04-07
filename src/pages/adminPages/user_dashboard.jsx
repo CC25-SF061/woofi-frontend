@@ -32,7 +32,7 @@ const Dashboard = () => {
     ];
 
     return (
-        <div className="w-full bg-[#221122] flex text-white overflow-y-auto">
+        <div className="w-full flex text-white overflow-y-auto">
             <SidebarAdmin />
             <HeaderAdmin
                 selectedDate={{ get: selectedDate, set: setSelectedDate }}

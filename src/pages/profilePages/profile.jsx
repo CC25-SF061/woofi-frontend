@@ -20,6 +20,7 @@ import imgURL from '../../util/imgURL.js';
 import { nanoid } from 'nanoid';
 import { hideLoading, showLoading } from '../../stores/loadingReducer.js';
 import { useNavigate } from 'react-router-dom';
+import DeleteConfirmationModal from '../../components/dataDestination/deleteConfirm.jsx';
 
 const Profile = () => {
     const [showPassword, setShowPassword] = useState({
@@ -40,6 +41,7 @@ const Profile = () => {
     const [fileImage, setFileImage] = useState('');
     const [isModalProfile, setIsModalProfile] = useState(false);
     const [hasNewMessage, setHasNewMessage] = useState(false);
+    const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
     const [err, setErr] = useState({
         username: null,
@@ -85,6 +87,8 @@ const Profile = () => {
                 position: 'top-right',
                 autoClose: 3000,
             });
+        } finally {
+            setShowLogoutConfirm(false);
         }
     };
     const handleEditProfileImage = async () => {
@@ -774,11 +778,32 @@ const Profile = () => {
                     </div>
                     <button
                         className="w-38 mt-10 p-3 bg-red-600 text-white font-quicksand rounded hover:bg-red-800 transition cursor-pointer font-semibold"
-                        onClick={handleLogout}
+                        onClick={() => setShowLogoutConfirm(true)}
                     >
                         Logout
                     </button>
                 </div>
+
+                <DeleteConfirmationModal
+                    isOpen={showLogoutConfirm}
+                    item={{ name: 'your session' }}
+                    title="Confirm Logout"
+                    message={
+                        <>
+                            Are you sure you want to{' '}
+                            <span className="text-red-500 font-bold">
+                                {user.username}
+                            </span>
+                            ?
+                        </>
+                    }
+                    onCancel={() => setShowLogoutConfirm(false)}
+                    onConfirm={handleLogout}
+                    cancelText="Stay Logged In"
+                    confirmText="Yes, Logout"
+                    confirmBg="bg-red-600"
+                    confirmHover="hover:bg-red-800"
+                />
 
                 {isModalOpen && (
                     <div className="fixed inset-0 flex items-center justify-center bg-black/50 bg-opacity-80 backdrop-blur-md z-50 font-quicksand top-20 lg:top-0">

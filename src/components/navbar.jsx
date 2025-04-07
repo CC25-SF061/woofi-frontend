@@ -9,6 +9,7 @@ import defaultProfile from '../assets/icons/profile_outline.svg';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import DeleteConfirmationModal from '../components/dataDestination/deleteConfirm';
 
 const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -19,6 +20,9 @@ const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
     const buttonRef = useRef(null);
+    const navigate = useNavigate();
+    const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+
     const handleLogout = async () => {
         try {
             await axios.post('/api/auth/logout', {}, { withCredentials: true });
@@ -30,9 +34,10 @@ const Navbar = () => {
                 autoClose: 3000,
                 position: 'top-right',
             });
+        } finally {
+            setShowLogoutConfirm(false);
         }
     };
-    const navigate = useNavigate();
 
     useEffect(() => {
         function handleClickOutside(e) {
@@ -223,7 +228,7 @@ const Navbar = () => {
                                         </Link>
                                         <button
                                             onClick={() => {
-                                                handleLogout();
+                                                setShowLogoutConfirm(true);
                                                 setIsOpen(false);
                                             }}
                                             className="w-full font-semibold text-left px-4 py-2 text-sm text-red-500 hover:bg-[#FFA666] cursor-pointer"
@@ -340,7 +345,7 @@ const Navbar = () => {
                                                 </Link>
                                                 <button
                                                     onClick={() => {
-                                                        // handleLogout();
+                                                        setShowLogoutConfirm(true);
                                                         setIsOpen(false);
                                                     }}
                                                     className="w-full text-left px-4 py-2 font-semibold text-sm text-red-500 hover:bg-[#FFA666] cursor-pointer"
@@ -415,6 +420,26 @@ const Navbar = () => {
                     </motion.div>
                 )}
             </AnimatePresence>
+            <DeleteConfirmationModal
+                isOpen={showLogoutConfirm}
+                item={{ name: 'your session' }}
+                title="Confirm Logout"
+                message={
+                    <>
+                        Are you sure you want to{' '}
+                        <span className="text-red-500 font-bold">
+                            {user.username}
+                        </span>
+                        ?
+                    </>
+                }
+                onCancel={() => setShowLogoutConfirm(false)}
+                onConfirm={handleLogout}
+                cancelText="Stay Logged In"
+                confirmText="Yes, Logout"
+                confirmBg="bg-red-600"
+                confirmHover="hover:bg-red-800"
+            />
         </div>
     );
 };
