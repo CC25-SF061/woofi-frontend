@@ -24,7 +24,6 @@ const DestinationPage = () => {
     const dispatch = useDispatch();
     const userId = useSelector((state) => state.user.data.id);
     const destinationListContainer = useRef(null);
-    // const [currentPageIndex, setCurrentPageIndex] = useState(null);
     const [pageIndex, setPageIndex] = useState(0);
     const [destinations, setDestinations] = useState([]);
     const [provinces, setProvinces] = useState([]);
@@ -182,25 +181,6 @@ const DestinationPage = () => {
         loginModal.current.showModal();
     };
 
-    // useEffect(() => {
-    //     // Keep track of side effects to prevent accidental early scroll
-    //     changePaginationCount.current++;
-    //     if (destinationListContainer && changePaginationCount.current > 3)
-    //         window.scrollTo({
-    //             // Scroll when changing pagination
-    //             behavior: 'smooth',
-    //             top: destinationListContainer.current.offsetTop - 100,
-    //         });
-
-    //     // Display Destinations after pagination
-    //     setDestinationDisplay(
-    //         destinationList.current.slice(
-    //             currentPageIndex * maxCardsToIndexable,
-    //             (currentPageIndex + 1) * maxCardsToIndexable,
-    //         ),
-    //     );
-    // }, [currentPageIndex]);
-
     const onProvinceSelected = async (province) => {
         const keyLoading = nanoid();
         dispatch(showLoading(keyLoading));
@@ -210,7 +190,7 @@ const DestinationPage = () => {
             searchState?.destination?.name,
             searchState?.tags,
         ).catch((e) => {});
-        hideLoading(keyLoading);
+        dispatch(hideLoading(keyLoading));
         setMapDisplay((state) => ({
             ...state,
             zoom: 7,
@@ -289,15 +269,6 @@ const DestinationPage = () => {
                         <span className="loading loading-spinner loading-xl text-[#FFA666]"></span>
                     </div>
                 )}
-                {/* {maxPages.current > 0 ? (
-                    <PageIndexer
-                        current={{
-                            get: currentPageIndex,
-                            set: setCurrentPageIndex,
-                        }}
-                        count={maxPages}
-                    />
-                ) : null} */}
             </div>
 
             <JoinUs />
