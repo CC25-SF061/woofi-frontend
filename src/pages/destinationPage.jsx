@@ -14,14 +14,17 @@ import 'swiper/css/pagination';
 import { showLoading, hideLoading } from '../stores/loadingReducer';
 import axios, { AxiosError } from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import DestinationFilter from '../util/DestinationFilter';
 import LoginModal from '../components/loginModal';
 
 const maxCardsToIndexable = 16;
 const DestinationPage = () => {
     const dispatch = useDispatch();
+    const userId = useSelector((state) => state.user.data.id);
+
     const destinationListContainer = useRef(null);
+
     const [destinations, setDestinations] = useState([]);
     const [provinces, setProvinces] = useState([]);
     const loginModal = useRef(null);
@@ -61,6 +64,11 @@ const DestinationPage = () => {
     const tagsChangeHandler = ({ type, active, setActive }) => {
         let tags = [...activeTags];
         let filterToggle = [];
+
+        if (type === DestinationFilter.WRITTEN_BY_YOU && !userId) {
+            setLoginModalVisible(true);
+            return;
+        }
 
         if (!active) {
             setActive(false);
