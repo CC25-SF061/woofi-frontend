@@ -96,7 +96,7 @@ const Dashboard = () => {
                         width: '100%',
                         height: `${(v.amount / getModeUser().amount) * 100.0}%`,
                     }}
-                    className="border-t-2 rounded-sm transition-all duration-300"
+                    className="border-t-2 rounded-t-sm transition-all duration-300"
                 ></div>
             </div>
         ),
@@ -140,7 +140,7 @@ const Dashboard = () => {
                     </div>
 
                     {/* Grafik */}
-                    <div className="relative w-full aspect-[2/1] max-h-[400px]">
+                    <div className="relative w-full flex justify-center aspect-[2/1] max-h-[400px]">
                         {/* Grid garis bantu */}
                         <div
                             className="absolute inset-0 grid items-end"
@@ -176,10 +176,7 @@ const Dashboard = () => {
                         </div>
 
                         {/* Bar Chart */}
-                        <div
-                            className="absolute ml-10 w-4/5 flex flex-row justify-around"
-                            style={{ height: 'calc(100% - 0.5rem)' }}
-                        >
+                        <div className="absolute ml-7 pt-[0.5rem] w-4/5 h-full flex flex-row justify-around">
                             {visibleData.map(
                                 generateUserDataBlockChart.monthBlock,
                             )}

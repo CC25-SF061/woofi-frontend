@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React, { useState } from 'react';
 import LogoDatabase from '../../assets/icons/admin/database.svg';
 
 const dashboard_preview_destinations = () => {
@@ -46,7 +46,7 @@ const dashboard_preview_destinations = () => {
             { month: 'December', color: '#6186CC', amount: 81 },
         ],
     };
-    
+
     const [selectedYear, setSelectedYear] = useState(2025);
     const [startMonthIndex, setStartMonthIndex] = useState(0);
     const [hoverData, setHoverData] = useState(null);
@@ -96,7 +96,7 @@ const dashboard_preview_destinations = () => {
                         width: '100%',
                         height: `${(v.amount / getModeDestination().amount) * 100.0}%`,
                     }}
-                    className="border-t-2 rounded-sm transition-all duration-300"
+                    className="border-t-2 rounded-t-sm transition-all duration-300"
                 ></div>
             </div>
         ),
@@ -140,7 +140,7 @@ const dashboard_preview_destinations = () => {
                     </div>
 
                     {/* Grafik */}
-                    <div className="relative w-full aspect-[2/1] max-h-[400px]">
+                    <div className="relative w-full flex justify-center aspect-[2/1] max-h-[400px]">
                         {/* Grid garis bantu */}
                         <div
                             className="absolute inset-0 grid items-end"
@@ -176,10 +176,7 @@ const dashboard_preview_destinations = () => {
                         </div>
 
                         {/* Bar Chart */}
-                        <div
-                            className="absolute ml-10 w-4/5 flex flex-row justify-around"
-                            style={{ height: 'calc(100% - 0.5rem)' }}
-                        >
+                        <div className="absolute ml-7 pt-[0.5rem] w-4/5 h-full flex flex-row justify-around">
                             {visibleData.map(
                                 generateDestinationDataBlockChart.monthBlock,
                             )}
@@ -225,7 +222,8 @@ const dashboard_preview_destinations = () => {
                             onClick={() =>
                                 setStartMonthIndex((prev) =>
                                     Math.min(
-                                        rawDestinationData.length - visibleMonths,
+                                        rawDestinationData.length -
+                                            visibleMonths,
                                         prev + visibleMonths,
                                     ),
                                 )
