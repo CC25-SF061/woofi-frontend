@@ -13,6 +13,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import { FaChevronDown } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import ErrorConstant from '../../util/ErrorConstant';
+import DeleteConfirmationModal from '../../components/dataDestination/deleteConfirm';
 
 const DataDestination = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -283,46 +284,28 @@ const DataDestination = () => {
                 </div>
             </div>
 
-            {selectedItemToDelete && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black/50 bg-opacity-80 backdrop-blur-md z-50 font-quicksand top-20 lg:top-0">
-                    <div className="relative p-4 w-full max-w-lg rounded-lg shadow-lg bg-[#252527]">
-                        <div className="flex items-center justify-between border-b p-4 rounded-t border-gray-600">
-                            <h3 className="text-xl font-semibold text-white">
-                                Confirm Delete
-                            </h3>
-                            <button
-                                onClick={() => setSelectedItemToDelete(null)}
-                                className="text-white bg-transparent hover:bg-white hover:text-[#FFA666] rounded-sm text-2xl cursor-pointer"
-                            >
-                                <IoClose />
-                            </button>
-                        </div>
-                        <div className="p-4 space-y-4">
-                            <p className="text-base leading-relaxed text-white">
-                                Are you sure you want to delete{' '}
-                                <span className="text-red-600 font-bold">
-                                    {selectedItemToDelete.name}
-                                </span>
-                                ?
-                            </p>
-                        </div>
-                        <div className="flex items-center justify-end p-4 border-t border-gray-200 rounded-b border-gray-600 gap-3">
-                            <button
-                                onClick={() => setSelectedItemToDelete(null)}
-                                className="py-2.5 px-5 text-sm font-semibold text-black rounded-lg hover:bg-gray-400 bg-white cursor-pointer"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                onClick={handleDelete}
-                                className="text-white bg-red-600 hover:bg-red-800 font-semibold rounded-lg text-sm px-5 py-2.5 cursor-pointer"
-                            >
-                                Yes, Delete
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+            <DeleteConfirmationModal
+                isOpen={!!selectedItemToDelete}
+                item={selectedItemToDelete}
+                title="Remove Destination"
+                message={
+                    <>
+                        Do you really want to remove{' '}
+                        <span className="text-red-600 font-bold">
+                            {selectedItemToDelete?.name}
+                        </span>
+                        ? This action cannot be undone.
+                    </>
+                }
+                onCancel={() => setSelectedItemToDelete(null)}
+                onConfirm={handleDelete}
+                cancelText="No, Keep"
+                confirmText="Delete Forever"
+                confirmBg="bg-red-600"
+                confirmHover="hover:bg-red-800"
+                cancelBg="bg-gray-200"
+                cancelHover="hover:bg-gray-400"
+            />
 
             {selectedItemToEdit && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black/50 bg-opacity-80 backdrop-blur-md z-50 font-quicksand top-20 lg:top-0">
