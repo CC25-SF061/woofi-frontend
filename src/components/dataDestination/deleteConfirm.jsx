@@ -16,19 +16,23 @@ const deleteConfirm = ({
     cancelBg = 'bg-white',
     cancelHover = 'hover:bg-gray-400',
 }) => {
-    if (!isOpen || !item) return null;
+    const MotionDiv = motion.div;
+
+    const handleCloseModal = () => {
+        onCancel(null);
+    };
 
     return (
         <div>
             <AnimatePresence>
                 {isOpen && item && (
-                    <motion.div
+                    <MotionDiv
                         className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 bg-opacity-80 backdrop-blur-md font-quicksand top-20 lg:top-0"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                     >
-                        <motion.div
+                        <MotionDiv
                             className="relative p-4 w-full max-w-lg rounded-lg shadow-lg bg-[#252527]"
                             initial={{ y: '-20%', opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
@@ -44,7 +48,7 @@ const deleteConfirm = ({
                                     {title}
                                 </h3>
                                 <button
-                                    onClick={onCancel}
+                                    onClick={handleCloseModal}
                                     className="text-white bg-transparent hover:bg-white hover:text-[#FFA666] rounded-sm text-2xl cursor-pointer"
                                 >
                                     <IoClose />
@@ -67,7 +71,7 @@ const deleteConfirm = ({
                             </div>
                             <div className="flex items-center justify-end p-4 border-t border-gray-200 rounded-b border-gray-600 gap-3">
                                 <button
-                                    onClick={onCancel}
+                                    onClick={handleCloseModal}
                                     className={`py-2.5 px-5 text-sm font-semibold text-black rounded-lg ${cancelBg} ${cancelHover} cursor-pointer`}
                                 >
                                     {cancelText}
@@ -79,8 +83,8 @@ const deleteConfirm = ({
                                     {confirmText}
                                 </button>
                             </div>
-                        </motion.div>
-                    </motion.div>
+                        </MotionDiv>
+                    </MotionDiv>
                 )}
             </AnimatePresence>
         </div>
