@@ -9,12 +9,17 @@ import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { hideLoading, showLoading } from '../../stores/loadingReducer';
 import { nanoid } from 'nanoid';
+import DeleteConfirm from '../../components/dataDestination/deleteConfirm';
+import { toast } from 'react-toastify';
 
 const Wishlist = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const navigate = useNavigate();
     const [wishlistDestinations, setWishlistDestinations] = useState([]);
     const dispatch = useDispatch();
+    const [selectedToDelete, setSelectedToDelete] = useState(null);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
     useEffect(() => {
         (async () => {
             const keyLoading = nanoid();
@@ -33,6 +38,44 @@ const Wishlist = () => {
     const onCardClick = (id) => {
         navigate(`/destination/${id}`);
     };
+
+    const handleRequestDelete = (source, id) => {
+        if (source !== 'wishlist') return;
+        setSelectedToDelete(id);
+        setIsDeleteModalOpen(true);
+    };
+
+    const handleCancelDelete = () => {
+        setSelectedToDelete(null);
+        setIsDeleteModalOpen(false);
+    };
+
+    const handleConfirmDelete = async () => {
+        try {
+            setIsDeleteModalOpen(false);
+            await axios.delete(`/api/user/wishlist/${selectedToDelete}`);
+            toast.success('Removed from wishlist', {
+                position: 'top-right',
+                autoClose: 3000,
+            });
+    
+            // Hapus dari daftar
+            setWishlistDestinations(prev =>
+                prev.filter(item => item.id !== selectedToDelete)
+            );
+    
+            setSelectedToDelete(null);
+        } catch {
+            toast.error('Failed to remove from wishlist', {
+                position: 'top-right',
+                autoClose: 3000,
+            });
+        }
+    };
+
+    const selectedItem = wishlistDestinations.find(
+        (item) => item.id === selectedToDelete
+    );    
 
     return (
         <div className="min-h-screen bg-[#221122] flex flex-col items-center lg:justify-center">
@@ -97,8 +140,21 @@ const Wishlist = () => {
                                     detail={element.detail}
                                     rating={element.rating}
                                     onclick={onCardClick}
+                                    onRequestDelete={(source) => handleRequestDelete(source, element.id)}
                                 />
                             ))}
+
+                            <DeleteConfirm
+                                isOpen={isDeleteModalOpen}
+                                item={selectedToDelete}
+                                title="Remove from Wishlist"
+                                message={`Are you sure you want to remove "${selectedItem?.name}" from your wishlist?`}
+                                onCancel={handleCancelDelete}
+                                onConfirm={handleConfirmDelete}
+                                confirmText="Remove"
+                                confirmBg="bg-red-600"
+                                confirmHover="hover:bg-red-800"
+                            />
                         </div>
                     </div>
                 </div>

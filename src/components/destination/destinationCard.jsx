@@ -49,7 +49,12 @@ const DestinationCard = ({
             setLoginModalVisible();
             return;
         }
-        !wishlist ? await addWishlist() : await removeWishlist();
+        if (wishlist) {
+            // Tampilkan popup deleteConfirm
+            onRequestDelete('wishlist');  // gunakan callback dari parent
+        } else {
+            await addWishlist(); // tetap jalankan seperti biasa
+        }
     }
 
     async function addWishlist() {
@@ -80,21 +85,6 @@ const DestinationCard = ({
         }
     }
 
-    async function removeWishlist() {
-        try {
-            setWishlist(false);
-            await axios.delete(`/api/user/wishlist/${id}`);
-            toast.info('Removed from wishlist', {
-                position: 'top-right',
-                autoClose: 3000,
-            });
-        } catch (e) {
-            toast.error('Something went wrong while removing from wishlist', {
-                position: 'top-right',
-                autoClose: 3000,
-            });
-        }
-    }
     return (
         <div className="relative bg-[#252527] font-quicksand rounded-lg mx-auto sm:max-w-90  w-full h-95 shadow-lg overflow-hidden flex flex-col duration-75 scale-100 hover:scale-[103%] ease-in">
             {/* Image Section */}
@@ -202,7 +192,7 @@ const DestinationCard = ({
                                 </button>
                                 <button
                                     className="block w-full text-left px-4 py-2 hover:bg-gray-600 cursor-pointer rounded-b-md"
-                                    onClick={() => onRequestDelete()}
+                                    onClick={() => onRequestDelete('dropdown')}
                                 >
                                     Delete
                                 </button>
