@@ -426,7 +426,7 @@ const Navbar = () => {
                 title="Confirm Logout"
                 message={
                     <>
-                        Are you sure you want to{' '}
+                        Are you sure you want to loged out from {' '}
                         <span className="text-red-500 font-bold">
                             {user.username}
                         </span>
