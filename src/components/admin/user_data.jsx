@@ -49,7 +49,7 @@ const UserData = ({
     };
 
     const handleCancelChangeRole = () => {
-        setShowConfirmModal(false); 
+        setShowConfirmModal(false);
     };
 
     const handleBanSubmit = (e) => {
@@ -271,6 +271,7 @@ const UserDataTable = () => {
                 {filteredUsers.length > 0 ? (
                     filteredUsers.map((v, index) => (
                         <UserData
+                            key={v.email}
                             pfp={v.pic}
                             name={v.name}
                             email={v.email}

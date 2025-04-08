@@ -14,13 +14,14 @@ const PostData = ({
     onToggle,
 }) => {
     const states = [
-        <div className="w-fit px-4 py-1 text-black font-semibold bg-[#63ffa1] text-sm tracking-wider rounded-md">
-            <p>Posted</p>
-        </div>,
         <div className="w-fit px-4 py-1 bg-red-500 text-white text-sm tracking-wider rounded-md">
             <p>Deleted</p>
         </div>,
+        <div className="w-fit px-4 py-1 text-black font-semibold bg-[#63ffa1] text-sm tracking-wider rounded-md">
+            <p>Posted</p>
+        </div>,
     ];
+    console.log(state);
 
     const [postStatus, setPostStatus] = useState(state);
 
@@ -29,12 +30,12 @@ const PostData = ({
         onToggle();
     };
 
-    const handleEdit = ()=>{
+    const handleEdit = () => {
         // To do handle edit
-    }
-    const seeDetail = ()=>{
+    };
+    const seeDetail = () => {
         // To do see detail
-    }
+    };
     return (
         <div
             className="grid w-full items-center bg-[#252527] py-3 px-5 text-white relative"
@@ -77,14 +78,16 @@ const PostData = ({
                         >
                             Change to {postStatus === 0 ? 'Deleted' : 'Posted'}
                         </button>
-                        <button 
+                        <button
                             onClick={handleEdit}
-                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left text-gray-400">
+                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left text-gray-400"
+                        >
                             Edit Destination
                         </button>
-                        <button 
+                        <button
                             onclick={seeDetail}
-                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left text-gray-400">
+                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left text-gray-400"
+                        >
                             See Detail
                         </button>
                     </div>
@@ -124,20 +127,22 @@ const PostDataTable = () => {
         },
     ]);
 
-    const filteredPost = post.filter((user) => {
+    const filteredPost = post.filter((post) => {
         const matchesSearch =
-            user.destination_name
+            post.destination_name
                 .toLowerCase()
-                .includes(searchTerm.toLowerCase()) ||
-            user.email.toLowerCase().includes(searchTerm.toLowerCase());
+                .trim()
+                .includes(searchTerm.toLowerCase().trim()) ||
+            post.email.toLowerCase().includes(searchTerm.toLowerCase());
 
         const matchesPost =
             stateFilter === 'all' ||
-            (stateFilter === 'Posted' && user.state === 1) ||
-            (stateFilter === 'Deleted' && user.state === 0);
+            (stateFilter === 'Posted' && post.state === 1) ||
+            (stateFilter === 'Deleted' && post.state === 0);
 
         return matchesSearch && matchesPost;
     });
+    console.log(filteredPost);
 
     return (
         <div className="flex flex-col items-stretch justify-center p-6 pt-28 h-fit gap-8 font-quicksand ">
@@ -194,6 +199,7 @@ const PostDataTable = () => {
                 {filteredPost.length > 0 ? (
                     filteredPost.map((v, index) => (
                         <PostData
+                            key={v.destination_name}
                             pic={v.pic}
                             destination_name={v.destination_name}
                             email={v.email}
