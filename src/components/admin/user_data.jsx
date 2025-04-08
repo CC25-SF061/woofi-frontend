@@ -57,6 +57,9 @@ const UserData = ({
         closePopupBan();
     };
 
+    const seeDetailUser = () =>{
+        // To do remove user
+    }
     return (
         <div
             className="grid w-full items-center bg-[#252527] py-3 px-5 text-white relative"
@@ -83,24 +86,24 @@ const UserData = ({
                 </button>
 
                 {isOpen && (
-                    <div className="absolute right-0 mt-2 z-20 w-44 bg-[#1E1E20] text-white border border-[#444] rounded-md shadow-xl overflow-hidden">
+                    <div className="absolute right-0 mt-2 z-20 w-44 bg-[#1E1E20] text-gray-400 border border-[#444] rounded-md shadow-xl overflow-hidden">
                         <button
                             onClick={changeRole}
-                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left"
+                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left "
                         >
-                            🔁 Change to {userRole === 0 ? 'Admin' : 'User'}
+                            Change to {userRole === 0 ? 'Admin' : 'User'}
                         </button>
                         <button
                             onClick={openPopupBan}
-                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#552020] text-sm text-left text-red-400"
+                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left "
                         >
-                            🚫 Ban User
+                            Ban User
                         </button>
                         <button
-                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left text-gray-400"
-                            disabled
+                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left "
+                            onClick={seeDetailUser}
                         >
-                            🗑️ Remove User
+                            See detail
                         </button>
                     </div>
                 )}

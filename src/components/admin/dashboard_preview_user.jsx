@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import LogoUsers from '../../assets/icons/admin/users.svg';
 
-const Dashboard = () => {
+const DashboardUser = () => {
     const userDataPerYear = {
         2023: [
             { month: 'January', color: '#8979FF', amount: 12 },
@@ -186,7 +186,7 @@ const Dashboard = () => {
                                 className="absolute z-50 bg-black text-white text-sm p-2 rounded shadow-lg pointer-events-none transition-opacity duration-200"
                                 style={{
                                     top: hoverData.y - 140,
-                                    left: hoverData.x - 200,
+                                    left: hoverData.x - 280,
                                     minWidth: 160,
                                     backgroundColor: '#1c1c1c',
                                     border: `1px solid ${hoverData.color}`,
@@ -260,4 +260,4 @@ const Dashboard = () => {
     );
 };
 
-export default Dashboard;
+export default DashboardUser;

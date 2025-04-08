@@ -27,7 +27,7 @@ const contact_dashboard = () => {
         },
     ];
     return (
-        <div className='className="w-full flex text-white overflow-y-auto"'>
+        <div className='w-full flex text-white overflow-y-auto pl-10'>
             <SidebarAdmin />
             <HeaderAdmin />
             <div className="pl-50 w-full">

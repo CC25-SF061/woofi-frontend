@@ -2,75 +2,80 @@ import React from "react";
 import Logo from "../../assets/navbar/logo.webp";
 import LogoHome from "../../assets/profile/material-symbols--home-outline-rounded.svg";
 import { Link, useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  User,
+  PlusCircle,
+  Heart,
+  MapPin,
+} from "lucide-react"; // lucide-react icons
 
 const Sidebar = () => {
   const location = useLocation();
 
+  const navLinks = [
+    { name: "Profile", path: "/profile", icon: <User size={18} /> },
+    { name: "Add Data", path: "/profile/add-data", icon: <PlusCircle size={18} /> },
+    { name: "Wishlist", path: "/profile/wishlist", icon: <Heart size={18} /> },
+    { name: "Data Destination", path: "/profile/data-destination", icon: <MapPin size={18} /> },
+  ];
+
   return (
-    <>
-      <div className="flex flex-col items-center justify-between rounded-lg overflow-hidden shadow-lg pt-22 lg:pt-5 bg-[#252527] p-5 h-full w-full">
-        <Link
-          to="/"
-          className="flex gap-1 bg-[#252527] shadow-lg shadow-stone-950/50 p-2 border-white border-2 rounded-lg hover:bg-[#FFA666] transition duration-300 font-semibold"
-        >
-          <img src={LogoHome} alt="Home Icon" className="w-6 h-6" />
-          <p className="font-quicksand text-lg">Back To Home</p>
-        </Link>
+    <div className="flex flex-col items-center justify-between rounded-lg overflow-hidden shadow-lg pt-20 lg:pt-5 bg-[#252527] p-6 h-full w-full">
+      <Link
+        to="/"
+        className="flex items-center gap-2 bg-[#252527] shadow-sm shadow-stone-950/50 px-4 py-2 rounded-xl border-2 border-white hover:bg-[#FFA666] transition duration-300 font-semibold"
+      >
+        <img src={LogoHome} alt="Home Icon" className="w-5 h-5" />
+        <p className="font-quicksand text-base">Back To Home</p>
+      </Link>
 
-        <div className="flex flex-col items-center justify-center gap-5">
-          <img src={Logo} alt="Logo Woofi" className="w-25" />
+      {/* Logo + Navigation */}
+      <div className="flex flex-col items-center gap-6">
+        <img src={Logo} alt="Logo Woofi" className="w-18 h-auto" />
 
-          <div className="text-center flex flex-col overflow-x-auto text-lg font-quicksand font-medium scroll-smooth whitespace-nowrap divide-y-1 divide-white rounded-lg justify-start md:justify-center w-50">
-            <Link
-              to="/profile"
-              className={`py-1 hover:text-gray-300 transition ${
-                location.pathname === "/profile"
-                  ? "text-[#FFA666] font-bold"
-                  : ""
-              }`}
-            >
-              Profile
-            </Link>
-            <Link
-              to="/profile/add-data"
-              className={`py-1 hover:text-gray-300 transition ${
-                location.pathname === "/profile/add-data"
-                  ? "text-[#FFA666] font-bold"
-                  : ""
-              }`}
-            >
-              Add Data
-            </Link>
-            <Link
-              to="/profile/wishlist"
-              className={`py-1 hover:text-gray-300 transition ${
-                location.pathname === "/profile/wishlist"
-                  ? "text-[#FFA666] font-bold"
-                  : ""
-              }`}
-            >
-              Wishlist
-            </Link>
-            <Link
-              to="/profile/data-destination"
-              className={`py-1 hover:text-gray-300 transition ${
-                location.pathname === "/profile/data-destination"
-                  ? "text-[#FFA666] font-bold"
-                  : ""
-              }`}
-            >
-              Data Destination
-            </Link>
-          </div>
-        </div>
+        <div className="relative flex flex-col text-base font-quicksand font-medium rounded-lg w-56">
+          {navLinks.map((link) => {
+            const isActive = location.pathname === link.path;
+            return (
+              <div key={link.path} className="relative py-1.5 px-3">
+                <AnimatePresence>
+                  {isActive && (
+                    <motion.div
+                      layoutId="sidebar-active"
+                      className="absolute inset-0 rounded-md bg-[#FFA666]/20 z-0"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.25 }}
+                    />
+                  )}
+                </AnimatePresence>
 
-        <div className="flex flex-row gap-2">
-          <div className="rounded-full border-white border-2 p-2"></div>
-          <div className="rounded-full border-white border-2 p-2"></div>
-          <div className="rounded-full border-white border-2 p-2"></div>
+                <Link
+                  to={link.path}
+                  className={`relative z-10 flex items-center gap-4 transition duration-200 ${
+                    isActive
+                      ? "text-[#FFA666] font-bold"
+                      : "text-white hover:text-gray-300"
+                  }`}
+                >
+                  <span>{link.icon}</span>
+                  {link.name}
+                </Link>
+              </div>
+            );
+          })}
         </div>
       </div>
-    </>
+
+      {/* Footer dots */}
+      <div className="flex items-center justify-center gap-2 mt-8">
+        <div className="rounded-full border-white border-2 w-3 h-3"></div>
+        <div className="rounded-full border-white border-2 w-3 h-3"></div>
+        <div className="rounded-full border-white border-2 w-3 h-3"></div>
+      </div>
+    </div>
   );
 };
 

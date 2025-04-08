@@ -67,12 +67,12 @@ const ContactData = ({
                 </button>
 
                 {isOpen && (
-                    <div className="absolute right-0 mt-2 z-20 w-44 bg-[#1E1E20] text-white border border-[#444] rounded-md shadow-xl overflow-hidden">
+                    <div className="absolute right-0 mt-2 z-20 w-44 bg-[#1E1E20] text-gray-400 border border-[#444] rounded-md shadow-xl overflow-hidden">
                         <button
                             onClick={changeStatus}
                             className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left"
                         >
-                            🔁 Change to {contactStatus === 0 ? 'review' : 'Succes'}
+                            Change to {contactStatus === 0 ? 'review' : 'Succes'}
                         </button>
                         <button 
                             onClick={handleReply}
