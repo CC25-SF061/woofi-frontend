@@ -26,7 +26,7 @@ const PostData = ({
 
     const changeStatus = () => {
         setPostStatus((prev) => (prev === 0 ? 1 : 0));
-        onToggle(); // fix typo from ontoggle
+        onToggle(); 
     };
 
     return (
