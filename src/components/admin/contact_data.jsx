@@ -3,7 +3,8 @@ import TempUserProfile from '../../assets/logIn/image2.webp';
 import TempUserProfile2 from '../../assets/logIn/image4.webp';
 import { FaSearch } from 'react-icons/fa';
 import LogoUsers from '../../assets/icons/admin/users.svg';
-
+import ModalConfirm from '../dataDestination/deleteConfirm';
+import ModalReply from '../profile/modalEdit';
 const ContactData = ({
     pfp,
     name,
@@ -15,7 +16,6 @@ const ContactData = ({
     isOpen,
     onToggle,
 }) => {
-    
     const states = [
         <div className="w-fit px-4 py-1 text-black font-semibold bg-[#63ffa1] text-sm tracking-wider rounded-md">
             <p>Succes is replyed</p>
@@ -26,20 +26,41 @@ const ContactData = ({
     ];
 
     const [contactStatus, setContactStatus] = useState(state);
-
+    const [isReplyModalOpen, setIsReplyModalOpen] = useState(false);
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [replyValue,setReplyValue] = useState('');
     const changeStatus = () => {
         setContactStatus((prev) => (prev === 0 ? 1 : 0));
-        onToggle(); 
+        onToggle();
     };
 
     const handleDetail = () => {
         // To do contact detail here
-    }
+    };
 
-    const handleReply = () => {
-        // To do handle reply here
-    }
-    
+    const openReplyModal = () => {
+        setIsReplyModalOpen(true);
+    };
+
+    const closeReplyModal = () => {
+        setIsReplyModalOpen(false);
+    };
+
+    const handleChangeStatusClick = () => {
+        setShowConfirmModal(true);
+    };
+
+    const handleCloseChangeStatus = () => {
+        setShowConfirmModal(false);
+    };
+
+    const handleReplySubmit = (e) => {
+        e.preventDefault();
+        console.log( `Reply message for ${name}:`, replyValue);
+        setReplyValue('');
+        closeReplyModal();
+    };
+
     return (
         <div
             className="grid w-full items-center bg-[#1E1E20] py-3 px-5 text-white"
@@ -56,7 +77,7 @@ const ContactData = ({
                     <p className="text-sm text-gray-400">{email}</p>
                 </div>
             </div>
-            <p className="text-sm text-gray-300">{reason}</p>            
+            <p className="text-sm text-gray-300">{reason}</p>
             <div>{states[contactStatus]}</div>
             <div className="relative">
                 <button
@@ -69,24 +90,60 @@ const ContactData = ({
                 {isOpen && (
                     <div className="absolute right-0 mt-2 z-20 w-44 bg-[#1E1E20] text-gray-400 border border-[#444] rounded-md shadow-xl overflow-hidden">
                         <button
-                            onClick={changeStatus}
+                            onClick={handleChangeStatusClick}
                             className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left"
                         >
-                            Change to {contactStatus === 0 ? 'review' : 'Succes'}
+                            Change to{' '}
+                            {contactStatus === 0 ? 'review' : 'succes'}
                         </button>
-                        <button 
-                            onClick={handleReply}
-                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left">
+                        <ModalConfirm
+                            isOpen={showConfirmModal}
+                            item={{
+                                name: contactStatus === 0 ? 'review' : 'succes',
+                            }}
+                            title="Change Contact Status"
+                            message={`Are you sure you want to change this contact's status to ${contactStatus === 0 ? 'On review' : 'Succes'}?`}
+                            onCancel={handleCloseChangeStatus}
+                            onConfirm={changeStatus}
+                            confirmText="Yes, Change"
+                            confirmBg="bg-blue-600"
+                            confirmHover="hover:bg-blue-800"
+                        />
+                        <button
+                            onClick={openReplyModal}
+                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left"
+                        >
                             Reply Messsage
                         </button>
-                        <button 
+                        <button
                             onClick={handleDetail}
-                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left">
+                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left"
+                        >
                             See Detail
                         </button>
                     </div>
                 )}
             </div>
+            <ModalReply
+                isOpen={isReplyModalOpen}
+                onClose={closeReplyModal}
+                onSubmit={handleReplySubmit}
+                title="Reply Message"
+            >
+                <p className="text-sm text-gray-300 mb-2">
+                    Reply message for{' '}
+                    <span className="font-semibold text-white">{name}</span>{' '}
+                </p>
+
+                <textarea
+                    required
+                    className="bg-[#1E1E20] border border-[#444] w-full p-3 rounded text-white resize-none focus:outline-none focus:ring-2 focus:ring-red-400"
+                    rows={4}
+                    placeholder="Enter your reply here..."
+                    value={replyValue}
+                    onChange={(e) => setReplyValue(e.target.value)}
+                />
+            </ModalReply>
         </div>
     );
 };
@@ -96,7 +153,7 @@ const ContactDataTable = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [activeDropdownIndex, setActiveDropdownIndex] = useState(null);
     const [stateFilter, setStateFilter] = useState('all');
-    
+
     const [contacts] = useState([
         {
             pic: TempUserProfile,
