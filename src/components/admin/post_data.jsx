@@ -17,13 +17,14 @@ const PostData = ({
     onToggle,
 }) => {
     const states = [
-        <div className="w-fit px-4 py-1 text-black font-semibold bg-[#63ffa1] text-sm tracking-wider rounded-md">
-            <p>Posted</p>
-        </div>,
         <div className="w-fit px-4 py-1 bg-red-500 text-white text-sm tracking-wider rounded-md">
             <p>Deleted</p>
         </div>,
+        <div className="w-fit px-4 py-1 text-black font-semibold bg-[#63ffa1] text-sm tracking-wider rounded-md">
+            <p>Posted</p>
+        </div>,
     ];
+    console.log(state);
 
     const [postStatus, setPostStatus] = useState(state);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -186,20 +187,22 @@ const PostDataTable = () => {
         },
     ]);
 
-    const filteredPost = post.filter((user) => {
+    const filteredPost = post.filter((post) => {
         const matchesSearch =
-            user.destination_name
+            post.destination_name
                 .toLowerCase()
-                .includes(searchTerm.toLowerCase()) ||
-            user.email.toLowerCase().includes(searchTerm.toLowerCase());
+                .trim()
+                .includes(searchTerm.toLowerCase().trim()) ||
+            post.email.toLowerCase().includes(searchTerm.toLowerCase());
 
         const matchesPost =
             stateFilter === 'all' ||
-            (stateFilter === 'Posted' && user.state === 1) ||
-            (stateFilter === 'Deleted' && user.state === 0);
+            (stateFilter === 'Posted' && post.state === 1) ||
+            (stateFilter === 'Deleted' && post.state === 0);
 
         return matchesSearch && matchesPost;
     });
+    console.log(filteredPost);
 
     return (
         <div className="flex flex-col items-stretch justify-center p-6 pt-28 h-fit gap-8 font-quicksand ">
@@ -256,6 +259,7 @@ const PostDataTable = () => {
                 {filteredPost.length > 0 ? (
                     filteredPost.map((v, index) => (
                         <PostData
+                            key={v.destination_name}
                             pic={v.pic}
                             destination_name={v.destination_name}
                             email={v.email}
