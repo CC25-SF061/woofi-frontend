@@ -1,9 +1,12 @@
-import React, { useEffect, useState,useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import LogoUsers from '../../assets/icons/admin/users.svg';
 import TempUserProfile from '../../assets/logIn/image2.webp';
 import TempUserProfile2 from '../../assets/logIn/image4.webp';
 import { Link } from 'react-router-dom';
 import { FaSearch } from 'react-icons/fa';
+import { IoClose } from 'react-icons/io5';
+import ModalEdit from '../profile/modalEdit';
+import DeleteConfirm from '../dataDestination/deleteConfirm';
 
 const UserData = ({
     pfp,
@@ -25,29 +28,28 @@ const UserData = ({
 
     const [userRole, setUserRole] = useState(role);
     const [banReason, setBanReason] = useState('');
-    const dialogRef = useRef(null);
+    const [isBanModalOpen, setIsBanModalOpen] = useState(false);
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
 
     const changeRole = () => {
         setUserRole(userRole === 0 ? 1 : 0);
-        onToggle(); // close dropdown
+        setShowConfirmModal(false);
     };
 
     const openPopupBan = () => {
-        const dialog = dialogRef.current;
-        if (dialog) {
-            dialog.showModal();
-            dialog.classList.remove('fade-out');
-            dialog.classList.add('fade-in');
-        }
+        setIsBanModalOpen(true);
     };
 
     const closePopupBan = () => {
-        const dialog = dialogRef.current;
-        if (dialog) {
-            dialog.classList.remove('fade-in');
-            dialog.classList.add('fade-out');
-            setTimeout(() => dialog.close(), 300);
-        }
+        setIsBanModalOpen(false);
+    };
+
+    const handleChangeRoleClick = () => {
+        setShowConfirmModal(true);
+    };
+
+    const handleCancelChangeRole = () => {
+        setShowConfirmModal(false); 
     };
 
     const handleBanSubmit = (e) => {
@@ -57,9 +59,9 @@ const UserData = ({
         closePopupBan();
     };
 
-    const seeDetailUser = () =>{
+    const seeDetailUser = () => {
         // To do remove user
-    }
+    };
     return (
         <div
             className="grid w-full items-center bg-[#252527] py-3 px-5 text-white relative"
@@ -88,19 +90,30 @@ const UserData = ({
                 {isOpen && (
                     <div className="absolute right-0 mt-2 z-20 w-44 bg-[#1E1E20] text-gray-400 border border-[#444] rounded-md shadow-xl overflow-hidden">
                         <button
-                            onClick={changeRole}
-                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left "
+                            onClick={handleChangeRoleClick}
+                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left cursor-pointer"
                         >
                             Change to {userRole === 0 ? 'Admin' : 'User'}
                         </button>
+                        <DeleteConfirm
+                            isOpen={showConfirmModal}
+                            item={{ name: userRole === 0 ? 'Admin' : 'User' }}
+                            title="Change Role Confirmation"
+                            message={`Are you sure you want to change this user's role to ${userRole === 0 ? 'Admin' : 'User'}?`}
+                            onCancel={handleCancelChangeRole}
+                            onConfirm={changeRole}
+                            confirmText="Yes, Change"
+                            confirmBg="bg-blue-600"
+                            confirmHover="hover:bg-blue-800"
+                        />
                         <button
                             onClick={openPopupBan}
-                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left "
+                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left cursor-pointer"
                         >
                             Ban User
                         </button>
                         <button
-                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left "
+                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left cursor-pointer"
                             onClick={seeDetailUser}
                         >
                             See detail
@@ -110,43 +123,27 @@ const UserData = ({
             </div>
 
             {/* Modal Ban */}
-            <dialog
-                ref={dialogRef}
-                id="modal-ban-user"
-                className="modal bg-[#1E1E20] backdrop:bg-black/40 rounded-lg p-6 w-[90%] max-w-md fade-in"
+            <ModalEdit
+                isOpen={isBanModalOpen}
+                onClose={closePopupBan}
+                onSubmit={handleBanSubmit}
+                title="Ban User"
             >
-                <form onSubmit={handleBanSubmit} className="flex flex-col gap-4">
-                    <h1 className="text-xl font-bold text-red-400">Ban User</h1>
-                    <p className="text-sm text-gray-300">
-                        Please provide a reason why <span className="font-semibold text-white">{name}</span> should be banned.
-                    </p>
+                <p className="text-sm text-gray-300 mb-2">
+                    Please provide a reason why{' '}
+                    <span className="font-semibold text-white">{name}</span>{' '}
+                    should be banned.
+                </p>
 
-                    <textarea
-                        required
-                        className="bg-[#1E1E20] border border-[#444] p-3 rounded text-white resize-none focus:outline-none focus:ring-2 focus:ring-red-400"
-                        rows={4}
-                        placeholder="Enter reason here..."
-                        value={banReason}
-                        onChange={(e) => setBanReason(e.target.value)}
-                    ></textarea>
-
-                    <div className="flex justify-end gap-3 mt-2">
-                        <button
-                            type="button"
-                            onClick={closePopupBan}
-                            className="px-4 py-2 rounded bg-gray-600 text-white hover:bg-gray-700 transition-all"
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            type="submit"
-                            className="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600 transition-all"
-                        >
-                            Confirm Ban
-                        </button>
-                    </div>
-                </form>
-            </dialog>
+                <textarea
+                    required
+                    className="bg-[#1E1E20] border border-[#444] w-full p-3 rounded text-white resize-none focus:outline-none focus:ring-2 focus:ring-red-400"
+                    rows={4}
+                    placeholder="Enter reason here..."
+                    value={banReason}
+                    onChange={(e) => setBanReason(e.target.value)}
+                />
+            </ModalEdit>
         </div>
     );
 };

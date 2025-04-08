@@ -401,19 +401,61 @@ const Profile = () => {
 
     useEffect(() => {
         const timer = setTimeout(() => {
-          setHasNewMessage(true);
+            setHasNewMessage(true);
         }, 3000);
         return () => clearTimeout(timer);
-      }, []);
+    }, []);
 
-      const handleOpenModal = () => {
+    const handleOpenModal = () => {
         setIsModalMessage(true);
         setHasNewMessage(false);
-      };
+    };
 
     return (
         <div className="w-full bg-[#221122] flex lg:h-screen items-center justify-center p-5 lg:p-10 text-white">
             <ToastContainer />
+
+            <ModalMessage
+                isOpen={isModalMessage}
+                onClose={() => setIsModalMessage(false)}
+            >
+                {/* Konten notifikasi */}
+                {[
+                    {
+                        id: 1,
+                        sender: 'Admin',
+                        message: 'Your profile has been updated successfully.',
+                        time: '2 minutes ago',
+                    },
+                    {
+                        id: 2,
+                        sender: 'Support',
+                        message: "Don't forget to verify your email address.",
+                        time: '10 minutes ago',
+                    },
+                    {
+                        id: 3,
+                        sender: 'System',
+                        message: 'New update available for your dashboard.',
+                        time: '1 hour ago',
+                    },
+                ].map((notif) => (
+                    <div
+                        key={notif.id}
+                        className="bg-[#333339] border border-gray-600 rounded-lg px-4 py-3 text-white"
+                    >
+                        <div className="flex justify-between items-center mb-1">
+                            <span className="font-semibold">
+                                {notif.sender}
+                            </span>
+                            <span className="text-sm text-gray-400">
+                                {notif.time}
+                            </span>
+                        </div>
+                        <p className="text-sm text-gray-300">{notif.message}</p>
+                    </div>
+                ))}
+            </ModalMessage>
 
             {/* Header Mobile */}
             <div className="lg:hidden p-5 fixed z-30 top-0 w-full bg-[#252527] flex justify-between items-center shadow-xl">
@@ -427,9 +469,19 @@ const Profile = () => {
                         <RiMenu2Line size={24} />
                     )}
                 </button>
-                <button className="bg-[#FFA666] text-black font-quicksand p-2 rounded-lg cursor-pointer">
-                    <IoIosNotifications size={24} />
-                </button>
+                <div className="flex relative lg:hidden">
+                    <button
+                        onClick={handleOpenModal}
+                        className={`p-2 rounded-lg cursor-pointer transition duration-300 bg-[#FFA666] text-black ${
+                            hasNewMessage ? 'animate-shake' : ''
+                        }`}
+                    >
+                        <IoIosNotifications size={24} />
+                    </button>
+                    {hasNewMessage && (
+                        <span className="absolute top-0 right-0 size-5 bg-red-600 rounded-full translate-x-1/4 -translate-y-1/4" />
+                    )}
+                </div>
             </div>
 
             {/* Sidebar */}
@@ -566,53 +618,6 @@ const Profile = () => {
                         {hasNewMessage && (
                             <span className="absolute top-0 right-0 size-5 bg-red-600 rounded-full translate-x-1/4 -translate-y-1/4" />
                         )}
-
-                        <ModalMessage
-                            isOpen={isModalMessage}
-                            onClose={() => setIsModalMessage(false)}
-                        >
-                            {/* Konten notifikasi */}
-                            {[
-                                {
-                                    id: 1,
-                                    sender: 'Admin',
-                                    message:
-                                        'Your profile has been updated successfully.',
-                                    time: '2 minutes ago',
-                                },
-                                {
-                                    id: 2,
-                                    sender: 'Support',
-                                    message:
-                                        "Don't forget to verify your email address.",
-                                    time: '10 minutes ago',
-                                },
-                                {
-                                    id: 3,
-                                    sender: 'System',
-                                    message:
-                                        'New update available for your dashboard.',
-                                    time: '1 hour ago',
-                                },
-                            ].map((notif) => (
-                                <div
-                                    key={notif.id}
-                                    className="bg-[#333339] border border-gray-600 rounded-lg px-4 py-3 text-white"
-                                >
-                                    <div className="flex justify-between items-center mb-1">
-                                        <span className="font-semibold">
-                                            {notif.sender}
-                                        </span>
-                                        <span className="text-sm text-gray-400">
-                                            {notif.time}
-                                        </span>
-                                    </div>
-                                    <p className="text-sm text-gray-300">
-                                        {notif.message}
-                                    </p>
-                                </div>
-                            ))}
-                        </ModalMessage>
                     </div>
                 </div>
 
@@ -889,7 +894,7 @@ const Profile = () => {
                             onClose={closePopUpPassword}
                             onSubmit={handleEditPassword}
                         >
-                            <form className="space-y-4">
+                            <div className="space-y-4">
                                 <div className="flex flex-col">
                                     <label htmlFor="input-newPassword">
                                         Old password
@@ -1036,7 +1041,7 @@ const Profile = () => {
                                         {passwordError.confirmationPassword}
                                     </div>
                                 </div>
-                            </form>
+                            </div>
                         </ModalEdit>
                     </div>
 
