@@ -3,7 +3,7 @@ import { IoClose } from 'react-icons/io5';
 import { FaChevronDown } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const EditDestinationModal = ({
+const EditConfirm = ({
     selectedItemToEdit,
     setSelectedItemToEdit,
     handleProvinceChange,
@@ -301,4 +301,4 @@ const EditDestinationModal = ({
     );
 };
 
-export default EditDestinationModal;
+export default EditConfirm;

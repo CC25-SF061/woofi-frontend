@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import LogoPosts from '../../assets/icons/admin/database.svg';
 import TempUserProfile from '../../assets/logIn/image2.webp';
 import { FaSearch } from 'react-icons/fa';
-import { IoClose } from 'react-icons/io5';
-import ModalEdit from '../profile/modalEdit';
+import EditConfirm from '../dataDestination/editConfirm';
 import ModalConfirm from '../dataDestination/deleteConfirm';
 
 const PostData = ({
@@ -27,20 +26,16 @@ const PostData = ({
     console.log(state);
 
     const [postStatus, setPostStatus] = useState(state);
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [selectedItemToEdit, setSelectedItemToEdit] = useState(null);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [filteredProvinces, setFilteredProvinces] = useState([]);
+    const [isDragging, setIsDragging] = useState(false);
+    const [errors, setErrors] = useState({});
 
     const changeStatus = () => {
         setPostStatus((prev) => (prev === 0 ? 1 : 0));
         onToggle();
-    };
-
-    const openEditModal = () => {
-        setIsEditModalOpen(true);
-    };
-
-    const closeEditModal = () => {
-        setIsEditModalOpen(false);
     };
 
     const handleChangeStatusClick = () => {
@@ -51,15 +46,91 @@ const PostData = ({
         setShowConfirmModal(false);
     };
 
-    const handleEditSubmit = (e) =>{
-        e.preventDefault();
-        console.log(`Edit destination data `)
-        closeEditModal();
-    }
-
     const seeDetail = () => {
         // To do see detail
     };
+
+    const handleProvinceChange = (e) => {
+        const input = e.target.value;
+        const filtered = allProvinces.filter((province) =>
+            province.name.toLowerCase().includes(input.toLowerCase())
+        );
+    
+        setSelectedItemToEdit((prev) => ({
+            ...prev,
+            province: input,
+        }));
+    
+        setFilteredProvinces(filtered);
+    };
+
+    const toggleDropdown = () => {
+        setDropdownOpen(!dropdownOpen);
+    };
+
+    const handleSelectProvince = (province) => {
+        setSelectedItemToEdit((prev) => ({
+            ...prev,
+            province: province.name,
+        }));
+        setDropdownOpen(false);
+    };
+
+    const handleDragOver = (e) => {
+        e.preventDefault();
+        setIsDragging(true);
+    };
+
+    const handleDragLeave = () => {
+        setIsDragging(false);
+    };
+
+    const handleDrop = (e) => {
+        e.preventDefault();
+        const file = e.dataTransfer.files[0];
+        if (file) {
+            setSelectedItemToEdit((prev) => ({
+                ...prev,
+                imageFile: file,
+            }));
+        }
+        setIsDragging(false);
+    };
+
+    const allProvinces = [
+        { name: 'Jakarta' },
+        { name: 'Bali' },
+        { name: 'Yogyakarta' },
+        { name: 'Bandung' },
+        { name: 'Surabaya' },
+    ];
+
+    const handleEdit = (closeModal) => {
+        const newErrors = {};
+        if (!selectedItemToEdit.name) newErrors.name = 'Name is required';
+        if (!selectedItemToEdit.location) newErrors.location = 'Location is required';
+        if (!selectedItemToEdit.province) newErrors.province = 'Province is required';
+        if (!selectedItemToEdit.detail) newErrors.detail = 'Description is required';
+        if (!selectedItemToEdit.imageFile) newErrors.image = 'Image is required';
+    
+        setErrors(newErrors);
+    
+        if (Object.keys(newErrors).length === 0) {
+            console.log('Updated Data:', selectedItemToEdit);
+            closeModal(null); // close the modal
+        }
+    };
+
+    const openEditModal = () => {
+        setSelectedItemToEdit({
+            name: destination_name,
+            location: 'Some Location', // Ganti dengan data asli jika tersedia
+            province: 'Jakarta',       // Ganti dengan data asli
+            detail: 'Some details here...', // Ganti dengan detail asli
+            imageFile: null,
+        });
+        setDropdownOpen(false);
+    };    
 
     return (
         <div
@@ -99,7 +170,7 @@ const PostData = ({
                     <div className="absolute right-0 mt-2 z-20 w-44 bg-[#1E1E20] text-white border border-[#444] rounded-md shadow-xl overflow-hidden">
                         <button
                             onClick={handleChangeStatusClick}
-                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left text-gray-400"
+                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left text-gray-400 cursor-pointer"
                         >
                             Change to {postStatus === 0 ? 'Deleted' : 'Posted'}
                         </button>
@@ -118,13 +189,13 @@ const PostData = ({
                         />
                         <button
                             onClick={openEditModal}
-                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left text-gray-400"
+                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left text-gray-400 cursor-pointer"
                         >
                             Edit Destination
                         </button>
                         <button
-                            onclick={seeDetail}
-                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left text-gray-400"
+                            onClick={seeDetail}
+                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left text-gray-400 cursor-pointer"
                         >
                             See Detail
                         </button>
@@ -132,27 +203,22 @@ const PostData = ({
                 )}
             </div>
 
-            {/* Modal Ban */}
-            <ModalEdit
-                isOpen={isEditModalOpen}
-                onClose={closeEditModal}
-                onSubmit={handleEditSubmit}
-                title="Ban User"
-            >
-                <p className="text-sm text-gray-300 mb-2">
-                    Please provide a reason why{' '}
-                    <span className="font-semibold text-white">{name}</span>{' '}
-                    should be banned.
-                </p>
-
-                
-                <textarea
-                    required
-                    className="bg-[#1E1E20] border border-[#444] w-full p-3 rounded text-white resize-none focus:outline-none focus:ring-2 focus:ring-red-400"
-                    rows={4}
-                    placeholder="Enter reason here..."
-                />
-            </ModalEdit>
+            {/* Modal Edit Destination */}
+            <EditConfirm
+                selectedItemToEdit={selectedItemToEdit}
+                setSelectedItemToEdit={setSelectedItemToEdit}
+                handleProvinceChange={handleProvinceChange}
+                toggleDropdown={toggleDropdown}
+                handleSelectProvince={handleSelectProvince}
+                dropdownOpen={dropdownOpen}
+                filteredProvinces={filteredProvinces}
+                isDragging={isDragging}
+                handleDragOver={handleDragOver}
+                handleDragLeave={handleDragLeave}
+                handleDrop={handleDrop}
+                errors={errors}
+                handleEdit={handleEdit}
+            />
         </div>
     );
 };
