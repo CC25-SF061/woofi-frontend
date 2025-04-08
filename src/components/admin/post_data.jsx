@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import LogoPosts from '../../assets/icons/admin/database.svg';
 import TempUserProfile from '../../assets/logIn/image2.webp';
 import { FaSearch } from 'react-icons/fa';
+import { IoClose } from 'react-icons/io5';
+import ModalEdit from '../profile/modalEdit';
+import ModalConfirm from '../dataDestination/deleteConfirm';
 
 const PostData = ({
     pic,
@@ -23,18 +26,40 @@ const PostData = ({
     ];
 
     const [postStatus, setPostStatus] = useState(state);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
 
     const changeStatus = () => {
         setPostStatus((prev) => (prev === 0 ? 1 : 0));
         onToggle();
     };
 
-    const handleEdit = ()=>{
-        // To do handle edit
+    const openEditModal = () => {
+        setIsEditModalOpen(true);
+    };
+
+    const closeEditModal = () => {
+        setIsEditModalOpen(false);
+    };
+
+    const handleChangeStatusClick = () => {
+        setShowConfirmModal(true);
+    };
+
+    const handleCancelChangeStatus = () => {
+        setShowConfirmModal(false);
+    };
+
+    const handleEditSubmit = (e) =>{
+        e.preventDefault();
+        console.log(`Edit destination data `)
+        closeEditModal();
     }
-    const seeDetail = ()=>{
+
+    const seeDetail = () => {
         // To do see detail
-    }
+    };
+
     return (
         <div
             className="grid w-full items-center bg-[#252527] py-3 px-5 text-white relative"
@@ -72,24 +97,61 @@ const PostData = ({
                 {isOpen && (
                     <div className="absolute right-0 mt-2 z-20 w-44 bg-[#1E1E20] text-white border border-[#444] rounded-md shadow-xl overflow-hidden">
                         <button
-                            onClick={changeStatus}
+                            onClick={handleChangeStatusClick}
                             className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left text-gray-400"
                         >
                             Change to {postStatus === 0 ? 'Deleted' : 'Posted'}
                         </button>
-                        <button 
-                            onClick={handleEdit}
-                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left text-gray-400">
+                        <ModalConfirm
+                            isOpen={showConfirmModal}
+                            item={{
+                                name: postStatus === 0 ? 'Deleted' : 'Posted',
+                            }}
+                            title="Change Status Confirmation"
+                            message={`Are you sure you want to change this destination's status to ${postStatus === 0 ? 'Deleted' : 'Posted'}?`}
+                            onCancel={handleCancelChangeStatus}
+                            onConfirm={changeStatus}
+                            confirmText="Yes, Change"
+                            confirmBg="bg-blue-600"
+                            confirmHover="hover:bg-blue-800"
+                        />
+                        <button
+                            onClick={openEditModal}
+                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left text-gray-400"
+                        >
                             Edit Destination
                         </button>
-                        <button 
+                        <button
                             onclick={seeDetail}
-                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left text-gray-400">
+                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left text-gray-400"
+                        >
                             See Detail
                         </button>
                     </div>
                 )}
             </div>
+
+            {/* Modal Ban */}
+            <ModalEdit
+                isOpen={isEditModalOpen}
+                onClose={closeEditModal}
+                onSubmit={handleEditSubmit}
+                title="Ban User"
+            >
+                <p className="text-sm text-gray-300 mb-2">
+                    Please provide a reason why{' '}
+                    <span className="font-semibold text-white">{name}</span>{' '}
+                    should be banned.
+                </p>
+
+                
+                <textarea
+                    required
+                    className="bg-[#1E1E20] border border-[#444] w-full p-3 rounded text-white resize-none focus:outline-none focus:ring-2 focus:ring-red-400"
+                    rows={4}
+                    placeholder="Enter reason here..."
+                />
+            </ModalEdit>
         </div>
     );
 };
@@ -144,7 +206,7 @@ const PostDataTable = () => {
             <div className="py-6 flex flex-col items-center bg-[#252527] rounded-md shadow-lg shadow-[#00000055]">
                 <img src={LogoPosts} alt="Users Icon" className="w-8 mb-1" />
                 <h2 className="text-[#aaa] tracking-wide text-xl">
-                    See all User Data
+                    See all Destination Data
                 </h2>
             </div>
 
