@@ -34,7 +34,7 @@ const Dashboard = () => {
     ];
 
     return (
-        <div className="w-full bg-[#221122] flex lg:h-screen text-white overflow-y-auto">
+        <div className="w-full bg-[#221122] flex lg:h-screen text-white pl-10 overflow-y-auto">
             <SidebarAdmin />
             <HeaderAdmin
                 selectedDate={{ get: selectedDate, set: setSelectedDate }}

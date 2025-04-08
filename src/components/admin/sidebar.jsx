@@ -1,63 +1,67 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from "react-router-dom";
+import {
+  LayoutDashboard,
+  Users,
+  FileText,
+  Mail,
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion"; 
 
-const Sidebar = () => {
-    const location = useLocation();
+const AdminSidebar = () => {
+  const location = useLocation();
 
-    return (
-        <div className="fixed flex flex-col items-center justify-between overflow-hidden shadow-lg mt-19 pb-25 px-3 bg-[#252527] h-full w-fit font-quicksand z-20">
-            <div className="flex flex-col items-center justify-center gap-5">
-                <div className="text-center flex flex-col overflow-x-auto text-lg font-medium scroll-smooth whitespace-nowrap divide-y divide-[#ffffff3] rounded-lg justify-start md:justify-center w-45">
-                    <Link
-                        to="/admin"
-                        className={`py-1 hover:text-gray-300 transition ${
-                            location.pathname === '/admin'
-                                ? 'text-[#FFA666] font-bold'
-                                : ''
-                        }`}
-                    >
-                        Dashboard
-                    </Link>
-                    <Link
-                        to="/admin/users"
-                        className={`py-1 hover:text-gray-300 transition ${
-                            location.pathname === '/admin/users'
-                                ? 'text-[#FFA666] font-bold'
-                                : ''
-                        }`}
-                    >
-                        Users
-                    </Link>
-                    <Link
-                        to="/admin/posts"
-                        className={`py-1 hover:text-gray-300 transition ${
-                            location.pathname === '/admin/posts'
-                                ? 'text-[#FFA666] font-bold'
-                                : ''
-                        }`}
-                    >
-                        Posts
-                    </Link>
-                    <Link
-                        to="/admin/contact"
-                        className={`py-1 hover:text-gray-300 transition ${
-                            location.pathname === '/admin/contact'
-                                ? 'text-[#FFA666] font-bold'
-                                : ''
-                        }`}
-                    >
-                        Contact
-                    </Link>
-                </div>
+  const menuItems = [
+    { name: "Dashboard", path: "/admin", icon: <LayoutDashboard size={20} /> },
+    { name: "Users", path: "/admin/users", icon: <Users size={20} /> },
+    { name: "Posts", path: "/admin/posts", icon: <FileText size={20} /> },
+    { name: "Contact", path: "/admin/contact", icon: <Mail size={20} /> },
+  ];
+
+  return (
+    <div className="fixed top-0 left-0 h-full w-56 bg-[#252527] shadow-xl z-30 flex flex-col justify-between py-6 px-4 font-quicksand">
+      <div className="relative space-y-2">
+        {menuItems.map((item) => {
+          const isActive = location.pathname === item.path;
+          return (
+            <div key={item.path} className="relative">
+              {/* Animate background for active item */}
+              <AnimatePresence>
+                {isActive && (
+                  <motion.div
+                    layoutId="sidebar-active"
+                    className="absolute inset-0 rounded-lg bg-[#FFA666]/20 z-0"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.25 }}
+                  />
+                )}
+              </AnimatePresence>
+
+              <Link
+                to={item.path}
+                className={`relative z-10 flex items-center gap-3 px-4 py-2 rounded-lg transition-all duration-200 ${
+                  isActive
+                    ? "text-[#FFA666] font-bold"
+                    : "text-white hover:bg-white/10 hover:text-[#FFA666]"
+                }`}
+              >
+                {item.icon}
+                <span className="whitespace-nowrap">{item.name}</span>
+              </Link>
             </div>
+          );
+        })}
+      </div>
 
-            <div className="flex flex-row gap-2">
-                <div className="rounded-full border-white border-2 p-2"></div>
-                <div className="rounded-full border-white border-2 p-2"></div>
-                <div className="rounded-full border-white border-2 p-2"></div>
-            </div>
-        </div>
-    );
+      {/* Footer dots */}
+      <div className="flex items-center justify-center gap-2 mt-8">
+        <div className="rounded-full border-white border-2 w-3 h-3"></div>
+        <div className="rounded-full border-white border-2 w-3 h-3"></div>
+        <div className="rounded-full border-white border-2 w-3 h-3"></div>
+      </div>
+    </div>
+  );
 };
 
-export default Sidebar;
+export default AdminSidebar;

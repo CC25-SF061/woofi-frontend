@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import LogoPosts from '../../assets/icons/admin/database.svg';
 import TempUserProfile from '../../assets/logIn/image2.webp';
 import { FaSearch } from 'react-icons/fa';
+import { IoClose } from 'react-icons/io5';
+import ModalEdit from '../profile/modalEdit';
+import ModalConfirm from '../dataDestination/deleteConfirm';
 
 const PostData = ({
     pic,
@@ -14,39 +17,80 @@ const PostData = ({
     onToggle,
 }) => {
     const states = [
-        <div className="w-fit px-4 py-1 text-black font-semibold bg-[#63ffa1] text-sm tracking-wider rounded-md">
-            <p>Posted</p>
-        </div>,
         <div className="w-fit px-4 py-1 bg-red-500 text-white text-sm tracking-wider rounded-md">
             <p>Deleted</p>
         </div>,
+        <div className="w-fit px-4 py-1 text-black font-semibold bg-[#63ffa1] text-sm tracking-wider rounded-md">
+            <p>Posted</p>
+        </div>,
     ];
+    console.log(state);
 
     const [postStatus, setPostStatus] = useState(state);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
 
     const changeStatus = () => {
         setPostStatus((prev) => (prev === 0 ? 1 : 0));
-        onToggle(); 
+        onToggle();
+    };
+
+    const openEditModal = () => {
+        setIsEditModalOpen(true);
+    };
+
+    const closeEditModal = () => {
+        setIsEditModalOpen(false);
+    };
+
+    const handleChangeStatusClick = () => {
+        setShowConfirmModal(true);
+    };
+
+    const handleCancelChangeStatus = () => {
+        setShowConfirmModal(false);
+    };
+
+    const handleEditSubmit = (e) =>{
+        e.preventDefault();
+        console.log(`Edit destination data `)
+        closeEditModal();
+    }
+
+    const seeDetail = () => {
+        // To do see detail
     };
 
     return (
         <div
-            className="relative grid w-full items-center bg-[#252527] py-3 px-5 text-white"
+            className="grid w-full items-center bg-[#252527] py-3 px-5 text-white relative"
             style={tableRowTemplate}
         >
             <div className="flex items-center gap-3">
-                <img className="h-9 aspect-square rounded-md object-cover" src={pic} alt="Profile" />
+                <img
+                    className="h-9 aspect-square rounded-md object-cover"
+                    src={pic}
+                    alt="Profile"
+                />
                 <div className="flex flex-col">
-                    <p className="tracking-wide font-semibold">{destination_name}</p>
-                    <p className="tracking-tight text-gray-400 text-sm">{username}</p>
-                    <p className="tracking-tight text-gray-500 text-xs">{email}</p>
+                    <p className="tracking-wide font-semibold">
+                        {destination_name}
+                    </p>
+                    <p className="tracking-tight text-gray-400 text-sm">
+                        {username}
+                    </p>
+                    <p className="tracking-tight text-gray-500 text-xs">
+                        {email}
+                    </p>
                 </div>
             </div>
+
             <div>{states[postStatus]}</div>
+
             <div className="relative">
                 <button
                     onClick={onToggle}
-                    className="font-bold text-xl px-3 py-1 hover:text-[#FFA666]"
+                    className="font-bold tracking-wider cursor-pointer px-2 py-1 rounded hover:bg-[#333]"
                 >
                     ...
                 </button>
@@ -54,23 +98,67 @@ const PostData = ({
                 {isOpen && (
                     <div className="absolute right-0 mt-2 z-20 w-44 bg-[#1E1E20] text-white border border-[#444] rounded-md shadow-xl overflow-hidden">
                         <button
-                            onClick={changeStatus}
-                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left"
+                            onClick={handleChangeStatusClick}
+                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left text-gray-400"
                         >
-                            🔁 Change to {postStatus === 0 ? 'Deleted' : 'Posted'}
+                            Change to {postStatus === 0 ? 'Deleted' : 'Posted'}
                         </button>
-                        <button className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left text-gray-400">
-                            👁️ See Detail
+                        <ModalConfirm
+                            isOpen={showConfirmModal}
+                            item={{
+                                name: postStatus === 0 ? 'Deleted' : 'Posted',
+                            }}
+                            title="Change Status Confirmation"
+                            message={`Are you sure you want to change this destination's status to ${postStatus === 0 ? 'Deleted' : 'Posted'}?`}
+                            onCancel={handleCancelChangeStatus}
+                            onConfirm={changeStatus}
+                            confirmText="Yes, Change"
+                            confirmBg="bg-blue-600"
+                            confirmHover="hover:bg-blue-800"
+                        />
+                        <button
+                            onClick={openEditModal}
+                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left text-gray-400"
+                        >
+                            Edit Destination
+                        </button>
+                        <button
+                            onclick={seeDetail}
+                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left text-gray-400"
+                        >
+                            See Detail
                         </button>
                     </div>
                 )}
             </div>
+
+            {/* Modal Ban */}
+            <ModalEdit
+                isOpen={isEditModalOpen}
+                onClose={closeEditModal}
+                onSubmit={handleEditSubmit}
+                title="Ban User"
+            >
+                <p className="text-sm text-gray-300 mb-2">
+                    Please provide a reason why{' '}
+                    <span className="font-semibold text-white">{name}</span>{' '}
+                    should be banned.
+                </p>
+
+                
+                <textarea
+                    required
+                    className="bg-[#1E1E20] border border-[#444] w-full p-3 rounded text-white resize-none focus:outline-none focus:ring-2 focus:ring-red-400"
+                    rows={4}
+                    placeholder="Enter reason here..."
+                />
+            </ModalEdit>
         </div>
     );
 };
 
 const PostDataTable = () => {
-    const tableRowTemplate = { gridTemplateColumns: '2fr 1fr 1fr' };
+    const tableRowTemplate = { gridTemplateColumns: '20fr 15fr 1fr' };
     const [searchTerm, setSearchTerm] = useState('');
     const [stateFilter, setStateFilter] = useState('all');
     const [activeDropdownIndex, setActiveDropdownIndex] = useState(null);
@@ -99,30 +187,34 @@ const PostDataTable = () => {
         },
     ]);
 
-    const filteredPost = post.filter((user) => {
+    const filteredPost = post.filter((post) => {
         const matchesSearch =
-            user.destination_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            user.email.toLowerCase().includes(searchTerm.toLowerCase());
+            post.destination_name
+                .toLowerCase()
+                .trim()
+                .includes(searchTerm.toLowerCase().trim()) ||
+            post.email.toLowerCase().includes(searchTerm.toLowerCase());
 
         const matchesPost =
             stateFilter === 'all' ||
-            (stateFilter === 'Posted' && user.state === 1) ||
-            (stateFilter === 'Deleted' && user.state === 0);
+            (stateFilter === 'Posted' && post.state === 1) ||
+            (stateFilter === 'Deleted' && post.state === 0);
 
         return matchesSearch && matchesPost;
     });
+    console.log(filteredPost);
 
     return (
         <div className="flex flex-col items-stretch justify-center p-6 pt-28 h-fit gap-8 font-quicksand ">
-            <div className="py-6 flex flex-col items-center bg-[#252527] rounded-md shadow-lg shadow-[#00000055] mb-5">
-                <img src={LogoPosts} alt="Database Icon" className="w-7 mb-1" />
+            <div className="py-6 flex flex-col items-center bg-[#252527] rounded-md shadow-lg shadow-[#00000055]">
+                <img src={LogoPosts} alt="Users Icon" className="w-8 mb-1" />
                 <h2 className="text-[#aaa] tracking-wide text-xl">
                     See all Destination Data
                 </h2>
             </div>
 
             <div className="flex gap-4 mb-2 w-full items-center">
-                <div className="relative w-full md:w-1/2">
+                <div className="relative w-1/2">
                     <input
                         type="text"
                         className="w-full p-2 rounded-md bg-[#1E1E20] text-white border border-[#444] focus:outline-none focus:ring-2 focus:ring-[#FFA666]"
@@ -148,20 +240,26 @@ const PostDataTable = () => {
                 </div>
             </div>
 
-            <div className="flex flex-col divide-y divide-[#333]">
+            <div className="flex flex-col divide-white divide-y">
                 <div
                     className="grid w-full items-center bg-[#FFA666] py-3 px-5 rounded-tl-lg rounded-tr-lg text-black font-semibold tracking-wide"
                     style={tableRowTemplate}
                 >
-                    <div>Destination Information</div>
-                    <div>Status</div>
-                    <div>Actions</div>
+                    <div>
+                        <p>Destination Information</p>
+                    </div>
+                    <div>
+                        <p>Status</p>
+                    </div>
+                    <div>
+                        <p>Actions</p>
+                    </div>
                 </div>
 
                 {filteredPost.length > 0 ? (
                     filteredPost.map((v, index) => (
                         <PostData
-                            key={index}
+                            key={v.destination_name}
                             pic={v.pic}
                             destination_name={v.destination_name}
                             email={v.email}
@@ -178,7 +276,7 @@ const PostDataTable = () => {
                         />
                     ))
                 ) : (
-                    <div className="text-center text-white py-6 bg-[#1E1E20] rounded-b-lg">
+                    <div className="text-center text-white py-6 bg-[#1E1E20]">
                         No destinations found.
                     </div>
                 )}

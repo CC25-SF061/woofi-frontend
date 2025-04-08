@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import LogoDatabase from '../../assets/icons/admin/database.svg';
 
-const dashboard_preview_destinations = () => {
+const DashboardDestination = () => {
     const destinationDataPerYear = {
         2023: [
             { month: 'January', color: '#8979FF', amount: 12 },
@@ -186,7 +186,7 @@ const dashboard_preview_destinations = () => {
                                 className="absolute z-50 bg-black text-white text-sm p-2 rounded shadow-lg pointer-events-none transition-opacity duration-200"
                                 style={{
                                     top: hoverData.y - 140,
-                                    left: hoverData.x - 200,
+                                    left: hoverData.x - 280,
                                     minWidth: 160,
                                     backgroundColor: '#1c1c1c',
                                     border: `1px solid ${hoverData.color}`,
@@ -261,4 +261,4 @@ const dashboard_preview_destinations = () => {
     );
 };
 
-export default dashboard_preview_destinations;
+export default DashboardDestination;

@@ -2,77 +2,73 @@ import React from 'react';
 import Logo from '../../assets/navbar/logo.webp';
 import LogoProfile from '../../assets/icons/profile_outline.svg';
 import LogoNotif from '../../assets/icons/notification_outline.svg';
-import LogoRefresh from '../../assets/icons/admin/refresh.svg';
-import LogoDate from '../../assets/icons/admin/date.svg';
-import { FaSearch } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
 
-const Header = ({ search, onNotifClick, hasNewMessage }) => {
+const Header = ({ onNotifClick, hasNewMessage }) => {
     const location = useLocation();
-    let pathName =
-        location.pathname.charAt(location.pathname.length - 1) === '/'
-            ? location.pathname.slice(0, location.pathname.length - 1)
-            : location.pathname;
-    let name = '';
-    switch (pathName) {
-        case '/admin':
-            name = 'Admin Dashboard';
-            break;
-        case '/admin/users':
-            name = 'Admin Dashboard / Users ';
-            break;
-        case '/admin/posts':
-            name = 'Admin Dashboard / Posts';
-            break;
-        case '/admin/contact':
-            name = 'Admin Dashboard / Contact';
-            break;
-    }
-
-    const handleDataRefresh = () => {
-        // do stuff based on the current location
+    const pathMap = {
+        '/admin': 'Dashboard',
+        '/admin/users': 'Users',
+        '/admin/posts': 'Posts',
+        '/admin/contact': 'Contact',
     };
 
-    return (
-        <div className="fixed overflow-hidden h-fit w-full font-quicksand pb-5 z-10">
-            <div className="relative flex flex-row items-center shadow-lg bg-[#252527] p-4 pt-5">
-                <div className="flex flex-row w-fit items-center gap-3 mr-5 divide-white">
-                    <img src={Logo} alt="Logo Woofi" className="w-15" />
-                    <h1 className="text-xl text-white tracking-wide">
-                        Woofi Admin
-                    </h1>
-                </div>
-                <div className="bg-white h-10 w-[1px] mr-5"></div>
-                <h1 className="text-2xl text-[#d2d2d2] tracking-wider">
-                    {name}
-                </h1>
+    const currentPath =
+        location.pathname.endsWith('/')
+            ? location.pathname.slice(0, -1)
+            : location.pathname;
 
-                <div className="flex flex-row ml-auto gap-3">
-                    <div className="relative flex items-center justify-center cursor-pointer">
-                        <button onClick={onNotifClick}>
+    const title = pathMap[currentPath] || 'Dashboard';
+
+    return (
+        <header className="fixed top-0 left-0 right-0 z-10 bg-[#252527] shadow-md px-6 py-4 font-quicksand pl-64">
+            <div className="flex items-center justify-between">
+                {/* Logo & Title */}
+                <div className="flex items-center gap-4">
+                    <img src={Logo} alt="Logo Woofi" className="w-16 h-auto" />
+                    <div>
+                        <h1 className="text-white text-xl font-semibold tracking-wide">
+                            Woofi Admin
+                        </h1>
+                        <p className="text-sm text-gray-400">/ {title}</p>
+                    </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex items-center gap-5">
+                    {/* Notification Icon */}
+                    <div className="relative">
+                        <button
+                            onClick={onNotifClick}
+                            className="hover:bg-white/10 p-2 rounded-full transition"
+                            title="Notifications"
+                        >
                             <img
                                 src={LogoNotif}
-                                alt="Notification Icon"
-                                className="w-9 h-9 cursor-pointer"
+                                alt="Notification"
+                                className="w-7 h-7"
                             />
                         </button>
                         {hasNewMessage && (
-                            <span className="absolute top-0 right-0 w-3 h-3 bg-red-600 rounded-full translate-x-1/4 -translate-y-1/4"></span>
+                            <span className="absolute top-1 right-1 w-3 h-3 bg-red-500 rounded-full animate-ping" />
                         )}
                     </div>
+
+                    {/* Profile Icon */}
                     <Link
                         to="/profile"
-                        className="flex items-center justify-center cursor-pointer"
+                        title="Profile"
+                        className="hover:bg-white/10 p-2 rounded-full transition"
                     >
                         <img
                             src={LogoProfile}
-                            alt="Profile Icon"
-                            className="w-9 h-9"
+                            alt="Profile"
+                            className="w-7 h-7"
                         />
                     </Link>
                 </div>
             </div>
-        </div>
+        </header>
     );
 };
 
