@@ -230,7 +230,6 @@ const DestinationPage = () => {
                 const response = await axios.get('/api/geolocation/provinces');
                 setProvinces(response.data.data || []);
                 await destination.catch((e) => {});
-                dispatch(hideLoading(keyLoading));
             } catch (e) {
                 if (!(e instanceof AxiosError)) {
                     return toast.error(
@@ -248,6 +247,8 @@ const DestinationPage = () => {
                         },
                     );
                 }
+            } finally {
+                dispatch(hideLoading(keyLoading));
             }
         })();
     }, []);
