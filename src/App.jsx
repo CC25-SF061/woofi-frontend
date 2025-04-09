@@ -10,6 +10,7 @@ import DestinationPage from './pages/destinationPage';
 import DestinationViewPage from './pages/destinationViewPage';
 import NotFound from './pages/notFound';
 import ContactUs from './pages/contactUs';
+import InterestPage from './pages/interestPage.jsx';
 
 import Signin from './pages/loginPages/signin';
 import Register from './pages/loginPages/register';
@@ -85,6 +86,8 @@ const App = () => {
                     ></Route>
                     <Route path="/gallery" element={<GalleryPage />}></Route>
                     <Route path="/contact-us" element={<ContactUs />}></Route>
+                    <Route path="/user-interest" element={<InterestPage />}></Route>
+
                     <Route path="/sign-in" element={<Signin />}></Route>
                     <Route path="/register" element={<Register />}></Route>
                     <Route
