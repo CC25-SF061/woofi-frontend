@@ -2,7 +2,7 @@ import React from 'react';
 import { IoClose } from 'react-icons/io5';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const ModalMessage = ({ isOpen, onClose, children }) => {
+const ModalMessage = ({ isOpen, onClose, children, title = 'Message Notification', maxWidth = 'max-w-5xl' }) => {
     const MotionDiv = motion.div;
 
     return (
@@ -15,7 +15,7 @@ const ModalMessage = ({ isOpen, onClose, children }) => {
                     exit={{ opacity: 0 }}
                 >
                     <motion.div
-                        className="relative p-4 py-0 w-full max-w-5xl rounded-lg shadow-lg bg-[#252527] lg:max-h-[80vh] max-h-[70vh] overflow-y-auto"
+                        className={`relative p-4 py-0 w-full ${maxWidth} rounded-lg shadow-lg bg-[#252527] lg:max-h-[80vh] max-h-[70vh] overflow-y-auto`}
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.9, opacity: 0 }}
@@ -25,7 +25,7 @@ const ModalMessage = ({ isOpen, onClose, children }) => {
                         <div className="sticky top-0 bg-[#252527] z-10 p-4 pt-8 border-b rounded-t border-gray-600">
                             <div className="flex items-center justify-between">
                                 <h3 className="text-xl font-semibold text-white">
-                                    Message Notification
+                                    {title}
                                 </h3>
                                 <button
                                     onClick={onClose}
