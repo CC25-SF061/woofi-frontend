@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Sidebar from '../../components/profile/sidebar';
 import { HiX } from 'react-icons/hi';
 import { RiMenu2Line } from 'react-icons/ri';
@@ -11,8 +11,10 @@ import axios, { AxiosError } from 'axios';
 import { nanoid } from 'nanoid';
 import { useDispatch } from 'react-redux';
 import { hideLoading, showLoading } from '../../stores/loadingReducer.js';
+import { motion } from 'framer-motion';
 
 const AddData = () => {
+    const modal_success = useRef(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [fileImage, setFileImage] = useState('');
@@ -97,8 +99,7 @@ const AddData = () => {
             setProvince({ name: '' });
             setFileImage(null);
             setSelectedImage('');
-
-            document.getElementById('modal-success').showModal();
+            showModalSuccess();
         } catch (e) {
             if (!(e instanceof AxiosError)) {
                 return toast.error(
@@ -135,6 +136,11 @@ const AddData = () => {
     useEffect(() => {
         setFormData((prev) => ({ ...prev, province: province.name }));
     }, [province]);
+
+    const showModalSuccess = () => {
+        if (!modal_success) return;
+        modal_success.current.showModal();
+    };
 
     useEffect(() => {
         const fetchProvinces = async () => {
@@ -192,31 +198,42 @@ const AddData = () => {
     return (
         <div>
             <ToastContainer />
-            <dialog id="modal-success" className="modal">
-                <div className="modal-box">
-                    <form method="dialog">
-                        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-                            ✕
-                        </button>
-                    </form>
+            <dialog ref={modal_success} className="modal">
+                <form method="dialog" className="modal-box bg-[#252527]">
+                    <motion.button
+                        transition={{
+                            ease: 'backOut',
+                            delay: 0,
+                        }}
+                        whileHover={{ scale: 1.125 }}
+                        className="w-fit aspect-square rounded-[360px] hover:bg-gray-700 px-2 absolute right-2 top-2"
+                    >
+                        ✕
+                    </motion.button>
                     <h3 className="font-bold text-lg">
-                        Success adding Destination!
+                        Success adding your Destination!
                     </h3>
                     <p className="py-4">
-                        Click
+                        Click&nbsp;
                         <a
                             className="link link-primary"
                             href={`/destination/${postId}`}
                         >
-                            {' '}
-                            Here{' '}
+                            Here
                         </a>
-                        to go to your created destination
+                        &nbsp;to go to your created destination
                     </p>
-                    <form method="dialog">
-                        <button className="btn btn-neutral">Ok</button>
-                    </form>
-                </div>
+                    <motion.button
+                        transition={{
+                            ease: 'backOut',
+                            delay: 0,
+                        }}
+                        whileHover={{ scale: 1.05 }}
+                        className="rounded-md hover:bg-[#FFA66622] border-solid border-[#FFA666] text-[#FFA666] border-[1px] px-2 py-1 font-semibold tracking-wider"
+                    >
+                        Okay
+                    </motion.button>
+                </form>
             </dialog>
 
             <div className="w-full bg-[#221122] flex lg:h-screen items-center justify-center p-5 lg:p-10 gap-5 text-white">
