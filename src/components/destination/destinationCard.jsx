@@ -24,6 +24,7 @@ const DestinationCard = ({
     optionsIcon = null,
     setLoginModalVisible,
 }) => {
+    const MotionDiv = motion.div;
     const { whole_rating, has_half_rating, empty_rating } = countStars(rating);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [wishlist, setWishlist] = useState(isWishlisted);
@@ -135,7 +136,7 @@ const DestinationCard = ({
                             />
                         ))}
                     </div>
-                    <motion.div
+                    <MotionDiv
                         animate={{ scale: 1 }}
                         transition={{
                             duration: 0.25,
@@ -153,7 +154,7 @@ const DestinationCard = ({
                             width="21"
                             alt="Wishlist"
                         />
-                    </motion.div>
+                    </MotionDiv>
                 </div>
 
                 {/* Title and Description */}

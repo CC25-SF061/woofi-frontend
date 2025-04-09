@@ -10,7 +10,7 @@ import axios from 'axios';
 import { hideLoading, showLoading } from '../../stores/loadingReducer';
 import { nanoid } from 'nanoid';
 import DeleteConfirm from '../../components/dataDestination/deleteConfirm';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 
 const Wishlist = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -58,8 +58,7 @@ const Wishlist = () => {
                 position: 'top-right',
                 autoClose: 3000,
             });
-    
-            // Hapus dari daftar
+
             setWishlistDestinations(prev =>
                 prev.filter(item => item.id !== selectedToDelete)
             );
@@ -79,6 +78,8 @@ const Wishlist = () => {
 
     return (
         <div className="min-h-screen bg-[#221122] flex flex-col items-center lg:justify-center">
+            <ToastContainer />
+
             <div className="w-full lg:h-screen flex items-center justify-center p-5 lg:p-10 gap-5 text-white">
                 <div className="lg:hidden p-5 fixed z-60 top-0 w-full bg-[#252527] flex justify-between items-center shadow-xl">
                     <button

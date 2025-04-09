@@ -4,13 +4,11 @@ import { HiX, HiDotsHorizontal } from 'react-icons/hi';
 import { RiMenu2Line } from 'react-icons/ri';
 import { IoIosNotifications } from 'react-icons/io';
 import DestinationCard from '../../components/destination/destinationCard';
-import { IoClose } from 'react-icons/io5';
 import { useDispatch } from 'react-redux';
 import axios, { AxiosError } from 'axios';
 import { nanoid } from 'nanoid';
 import { hideLoading, showLoading } from '../../stores/loadingReducer';
 import { toast, ToastContainer } from 'react-toastify';
-import { FaChevronDown } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import ErrorConstant from '../../util/ErrorConstant';
 import DeleteConfirmationModal from '../../components/dataDestination/deleteConfirm';
@@ -71,7 +69,7 @@ const DataDestination = () => {
 
     const handleEdit = async () => {
         const formData = new FormData();
-
+    
         formData.append('name', selectedItemToEdit.name || '');
         formData.append('location', selectedItemToEdit.location || '');
         formData.append('detail', selectedItemToEdit.detail || '');
@@ -80,16 +78,33 @@ const DataDestination = () => {
             formData.append('image', selectedItemToEdit.image || '');
         }
         try {
-            await axios.put(
+            const response = await axios.put(
                 `/api/destination/${selectedItemToEdit.id}`,
                 formData,
             );
-
+    
+            // Dapatkan URL gambar baru dari respons
+            const newImageUrl = response.data.image;
+    
+            // Perbarui state destinations hanya jika ada URL gambar baru
+            setDestinations((prevDestinations) =>
+                prevDestinations.map((destination) => {
+                    if (destination.id === selectedItemToEdit.id) {
+                        return {
+                            ...destination,
+                            ...selectedItemToEdit,
+                            image: newImageUrl ? newImageUrl : destination.image, // Gunakan URL gambar baru jika ada, jika tidak, gunakan yang lama
+                        };
+                    }
+                    return destination;
+                }),
+            );
+    
             toast.success('Success editing destination', {
                 autoClose: 3000,
                 position: 'top-right',
             });
-
+    
             setSelectedItemToEdit(null);
         } catch (e) {
             if (!(e instanceof AxiosError)) {
@@ -98,20 +113,20 @@ const DataDestination = () => {
                     position: 'top-right',
                 });
             }
-
+    
             const response = e.response.data.payload;
-
+    
             if (response?.errCode === ErrorConstant.ERR_INVALID_FIELD) {
                 return invalidFieldErr(response.fields);
             }
-
+    
             toast.error('something went wrong when updating data', {
                 autoClose: 3000,
                 position: 'top-right',
             });
         }
-        // setSelectedItemToEdit(null);
     };
+    
 
     useEffect(() => {
         (async () => {
@@ -122,7 +137,7 @@ const DataDestination = () => {
                     await axios.get('/api/user/profile/destinations')
                 ).data;
                 setDestinations(response.data);
-            } catch (e) {
+            } catch {
                 toast.error('Something went wrong', {
                     position: 'top-right',
                     autoClose: 3000,
@@ -131,7 +146,7 @@ const DataDestination = () => {
                 dispatch(hideLoading(keyLoading));
             }
         })();
-    }, []);
+    }, [dispatch]);
 
     useEffect(() => {
         const fetchProvinces = async () => {
@@ -139,7 +154,7 @@ const DataDestination = () => {
                 const res = await axios.get('/api/geolocation/provinces');
                 setProvinces(res.data.data);
                 setFilteredProvinces(res.data.data);
-            } catch (err) {
+            } catch {
                 toast.error('Failed to fetch provinces!');
             }
         };
