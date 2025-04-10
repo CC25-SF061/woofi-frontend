@@ -28,7 +28,7 @@ import {
 } from '../../stores/userReducer';
 import imgURL from '../../util/imgURL.js';
 import { nanoid } from 'nanoid';
-import { hideLoading, showLoading } from '../../stores/loadingReducer.js';
+import { hideLoading } from '../../stores/loadingReducer.js';
 
 const Profile = () => {
     // Import and initial state
@@ -116,7 +116,7 @@ const Profile = () => {
                 },
             );
             localStorage.removeItem('token');
-            dispatch(setData());
+            // dispatch(setData());
             await navigate('/sign-in');
         } catch (e) {
             console.log(e);
@@ -130,31 +130,43 @@ const Profile = () => {
     };
 
     // Edit Profile Image
-    const handleEditProfileImage = async () => {
+    const handleEditProfileImage = async (e) => {
+        e?.preventDefault();
         const formData = new FormData();
         const keyLoading = nanoid();
+    
+        if (!fileImage) {
+            setErr((state) => ({
+                ...state,
+                image: 'Please select an image first',
+            }));
+            return;
+        }
+
         formData.append('image', fileImage);
-        dispatch(showLoading(keyLoading));
+
         try {
             setErr((state) => ({ ...state, image: null }));
-            //ping the route to prevent econreset
-            await axios
-                .patch('/api/user/edit/profile-picture', new FormData())
-                .catch((e) => {});
+    
             const result = (
-                await axios.patch('/api/user/edit/profile-picture', formData)
+                await axios.patch('/api/user/edit/profile-picture', formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                })
             ).data;
-
+    
             dispatch(setImage(result.data.image));
-
+    
             toast.success('Success edit profile image', {
                 position: 'top-right',
                 autoClose: 3000,
             });
-            setIsModalOpen(false);
+    
+            setIsModalProfile(false);
             setFileImage(null);
-            URL.revokeObjectURL(selectedImage);
-            setSelectedImage(null);
+            if (selectedImage) {
+                URL.revokeObjectURL(selectedImage);
+                setSelectedImage(null);
+            }
         } catch (e) {
             if (!(e instanceof AxiosError)) {
                 toast.error('Something went wrong', {
@@ -163,7 +175,7 @@ const Profile = () => {
                 });
                 return;
             }
-            if (e.response.status === 413) {
+            if (e.response?.status === 413) {
                 setErr((state) => ({
                     ...state,
                     image: 'Image size too large',
@@ -171,7 +183,7 @@ const Profile = () => {
                 return;
             }
             const response = e?.response?.data?.payload;
-            if (response.errCode === ErrorConstant.ERR_INVALID_FIELD) {
+            if (response?.errCode === ErrorConstant.ERR_INVALID_FIELD) {
                 invalidFieldErr(response.fields, { image: null }, setErr);
                 return;
             }
@@ -365,6 +377,9 @@ const Profile = () => {
     const handleImageChange = (event) => {
         const file = event.target.files[0];
         if (file) {
+            if (selectedImage) {
+                URL.revokeObjectURL(selectedImage);
+            }
             const imageUrl = URL.createObjectURL(file);
             setSelectedImage(imageUrl);
             setFileImage(file);

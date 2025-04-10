@@ -6,6 +6,7 @@ import LogoUsers from '../../assets/icons/admin/users.svg';
 import ModalConfirm from '../dataDestination/deleteConfirm';
 import ModalReply from '../profile/modalEdit';
 import axios from 'axios';
+import ModalMessage from '../profile/modalMessage';
 const ContactData = ({
     profile_image,
     name,
@@ -30,13 +31,18 @@ const ContactData = ({
     const [isReplyModalOpen, setIsReplyModalOpen] = useState(false);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [replyValue, setReplyValue] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const changeStatus = () => {
         setContactStatus((prev) => (prev === 0 ? 1 : 0));
         onToggle();
     };
 
     const handleDetail = () => {
-        // To do contact detail here
+        setIsModalOpen(true); // buka modal
+    };
+
+    const handleDetailCloseModal = () => {
+        setIsModalOpen(false); // tutup modal
     };
 
     const openReplyModal = () => {
@@ -57,6 +63,7 @@ const ContactData = ({
 
     const handleReplySubmit = (e) => {
         e.preventDefault();
+        console.log(`Reply message for ${name}:`, replyValue);
         setReplyValue('');
         closeReplyModal();
     };
@@ -95,7 +102,7 @@ const ContactData = ({
                 </button>
 
                 {isOpen && (
-                    <div className="absolute right-0 mt-2 z-20 w-44 bg-[#1E1E20] text-gray-400 border border-[#444] rounded-md shadow-xl overflow-hidden">
+                    <div className="absolute right-0 mt-2 z-30 w-44 bg-[#1E1E20] text-gray-400 border border-[#444] rounded-md shadow-xl overflow-hidden">
                         <button
                             onClick={handleChangeStatusClick}
                             className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left"
@@ -103,19 +110,24 @@ const ContactData = ({
                             Change to{' '}
                             {contactStatus === 0 ? 'review' : 'succes'}
                         </button>
-                        <ModalConfirm
-                            isOpen={showConfirmModal}
-                            item={{
-                                name: contactStatus === 0 ? 'review' : 'succes',
-                            }}
-                            title="Change Contact Status"
-                            message={`Are you sure you want to change this contact's status to ${contactStatus === 0 ? 'On review' : 'Succes'}?`}
-                            onCancel={handleCloseChangeStatus}
-                            onConfirm={changeStatus}
-                            confirmText="Yes, Change"
-                            confirmBg="bg-blue-600"
-                            confirmHover="hover:bg-blue-800"
-                        />
+                        <div className="w-sm">
+                            <ModalConfirm
+                                isOpen={showConfirmModal}
+                                item={{
+                                    name:
+                                        contactStatus === 0
+                                            ? 'review'
+                                            : 'succes',
+                                }}
+                                title="Change Contact Status"
+                                message={`Are you sure you want to change this contact's status to ${contactStatus === 0 ? 'On review' : 'Succes'}?`}
+                                onCancel={handleCloseChangeStatus}
+                                onConfirm={changeStatus}
+                                confirmText="Yes, Change"
+                                confirmBg="bg-blue-600"
+                                confirmHover="hover:bg-blue-800"
+                            />
+                        </div>
                         <button
                             onClick={openReplyModal}
                             className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left"
@@ -128,6 +140,50 @@ const ContactData = ({
                         >
                             See Detail
                         </button>
+                        <ModalMessage
+                            isOpen={isModalOpen}
+                            onClose={handleDetailCloseModal}
+                            title="Detail Contact"
+                            maxWidth="max-w-xl"
+                        >
+                            <div
+                                className="p-4 space-y-4"
+                                onSubmit={(e) => e.preventDefault()}
+                            >
+                                <div className="flex flex-col gap-2">
+                                    <label className="block text-white">
+                                        Username:
+                                    </label>
+                                    <input
+                                        readOnly
+                                        type="text"
+                                        className="w-full p-3 font-quicksand rounded text-white border bg-transparent focus:outline-none focus:ring focus:ring-[#FFA666]"
+                                    />
+                                </div>
+
+                                <div className="flex flex-col gap-2">
+                                    <label className="block text-white">
+                                        Display Name:
+                                    </label>
+                                    <input
+                                        readOnly
+                                        type="text"
+                                        className="w-full p-3 font-quicksand rounded text-white border bg-transparent focus:outline-none focus:ring focus:ring-[#FFA666]"
+                                    />
+                                </div>
+
+                                <div className="flex flex-col gap-2">
+                                    <label className="block text-white">
+                                        Email:
+                                    </label>
+                                    <input
+                                        readOnly
+                                        type="text"
+                                        className="w-full p-3 font-quicksand rounded text-white border bg-transparent focus:outline-none focus:ring focus:ring-[#FFA666]"
+                                    />
+                                </div>
+                            </div>
+                        </ModalMessage>
                     </div>
                 )}
             </div>
@@ -164,7 +220,10 @@ const ContactDataTable = () => {
     const [stateFilter, setStateFilter] = useState('all');
     const [contacts, setContacts] = useState([]);
     const prevPage = useRef(0);
-
+    const handleSearch = () => {
+        console.log('Mencari:', searchTerm);
+        // Lanjutkan logika pencarian, misalnya panggil API atau filter data
+    };
     const searchContact = async (page = 0) => {
         try {
             const response = await axios.get('/api/admin/contacts');
@@ -203,12 +262,20 @@ const ContactDataTable = () => {
                         placeholder="Search by name or email..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                handleSearch();
+                            }
+                        }}
                     />
-                    <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-                        <FaSearch className="text-xl text-[#FFA666aa]" />
-                    </div>
+                    <button
+                        onClick={handleSearch}
+                        className="absolute inset-y-0 right-0 flex items-center justify-center px-3 rounded-md hover:bg-[#FFA66622] transition duration-200 cursor-pointer"
+                        title="Search"
+                    >
+                        <FaSearch className="text-xl text-[#FFA666]" />
+                    </button>
                 </div>
-
                 <div className="w-40">
                     <select
                         value={stateFilter}

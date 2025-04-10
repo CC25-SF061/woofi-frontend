@@ -4,13 +4,11 @@ import { HiX, HiDotsHorizontal } from 'react-icons/hi';
 import { RiMenu2Line } from 'react-icons/ri';
 import { IoIosNotifications } from 'react-icons/io';
 import DestinationCard from '../../components/destination/destinationCard';
-import { IoClose } from 'react-icons/io5';
 import { useDispatch } from 'react-redux';
 import axios, { AxiosError } from 'axios';
 import { nanoid } from 'nanoid';
 import { hideLoading, showLoading } from '../../stores/loadingReducer';
 import { toast, ToastContainer } from 'react-toastify';
-import { FaChevronDown } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import ErrorConstant from '../../util/ErrorConstant';
 import DeleteConfirmationModal from '../../components/dataDestination/deleteConfirm';
@@ -26,6 +24,7 @@ const DataDestination = () => {
     const dispatch = useDispatch();
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [filteredProvinces, setFilteredProvinces] = useState([]);
+    const [deleteType, setDeleteType] = useState(null);
     const [errors, setErrors] = useState({
         name: '',
         detail: '',
@@ -52,22 +51,60 @@ const DataDestination = () => {
         setErrors((state) => ({ ...state, ...newObjErr }));
     };
     const handleDelete = async () => {
+        if (!selectedItemToDelete || !deleteType) return;
+
         try {
-            await axios.delete(`/api/destination/${selectedItemToDelete.id}`);
-            toast.success('Success deleting destination', {
+            if (deleteType === 'wishlist') {
+                await axios.delete(
+                    `/api/user/wishlist/${selectedItemToDelete.id}`,
+                );
+                setDestinations((prev) =>
+                    prev.map((item) =>
+                        item.id === selectedItemToDelete.id
+                            ? { ...item, isWishlisted: false }
+                            : item,
+                    ),
+                );
+                toast.success('Removed from wishlist', {
+                    autoClose: 3000,
+                    position: 'top-right',
+                });
+            } else if (deleteType === 'destination') {
+                await axios.delete(
+                    `/api/destination/${selectedItemToDelete.id}`,
+                );
+                toast.success('Destination deleted', {
+                    autoClose: 3000,
+                    position: 'top-right',
+                });
+
+                setDestinations((prev) =>
+                    prev.filter((d) => d.id !== selectedItemToDelete.id),
+                );
+            }
+
+            setSelectedItemToDelete(null);
+            setDeleteType(null);
+        } catch (e) {
+            console.log(e);
+            toast.error('Failed to delete', {
                 autoClose: 3000,
                 position: 'top-right',
             });
-            setDestinations(
-                destinations.filter(
-                    (destination) => destination.id !== selectedItemToDelete.id,
-                ),
-            );
-            setSelectedItemToDelete(null);
-        } catch (e) {
-            console.log(e);
         }
     };
+
+    useEffect(() => {
+        const fetchDestinations = async () => {
+            try {
+                const response = await axios.get('/api/destinations');
+                setDestinations(response.data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        fetchDestinations();
+    }, []);
 
     const handleEdit = async () => {
         const formData = new FormData();
@@ -76,16 +113,32 @@ const DataDestination = () => {
         formData.append('location', selectedItemToEdit.location || '');
         formData.append('detail', selectedItemToEdit.detail || '');
         formData.append('province', selectedItemToEdit.province || '');
-        if (
-            selectedItemToEdit.image &&
-            typeof selectedItemToEdit.image !== 'string'
-        ) {
-            formData.append('image', selectedItemToEdit.image || '');
+        if (selectedItemToEdit.imageFile) {
+            formData.append('image', selectedItemToEdit.imageFile);
         }
         try {
-            await axios.put(
+            const response = await axios.put(
                 `/api/destination/${selectedItemToEdit.id}`,
                 formData,
+            );
+
+            // Dapatkan URL gambar baru dari respons
+            const newImageUrl = response.data.image;
+
+            // Perbarui state destinations hanya jika ada URL gambar baru
+            setDestinations((prevDestinations) =>
+                prevDestinations.map((destination) => {
+                    if (destination.id === selectedItemToEdit.id) {
+                        return {
+                            ...destination,
+                            ...selectedItemToEdit,
+                            image: newImageUrl
+                                ? newImageUrl
+                                : destination.image, // Gunakan URL gambar baru jika ada, jika tidak, gunakan yang lama
+                        };
+                    }
+                    return destination;
+                }),
             );
 
             toast.success('Success editing destination', {
@@ -113,7 +166,6 @@ const DataDestination = () => {
                 position: 'top-right',
             });
         }
-        // setSelectedItemToEdit(null);
     };
 
     useEffect(() => {
@@ -124,8 +176,10 @@ const DataDestination = () => {
                 const response = (
                     await axios.get('/api/user/profile/destinations')
                 ).data;
-                setDestinations(response.data);
-            } catch (e) {
+                setDestinations(
+                    Array.isArray(response.data) ? response.data : [],
+                );
+            } catch {
                 toast.error('Something went wrong', {
                     position: 'top-right',
                     autoClose: 3000,
@@ -134,7 +188,7 @@ const DataDestination = () => {
                 dispatch(hideLoading(keyLoading));
             }
         })();
-    }, []);
+    }, [dispatch]);
 
     useEffect(() => {
         const fetchProvinces = async () => {
@@ -142,7 +196,7 @@ const DataDestination = () => {
                 const res = await axios.get('/api/geolocation/provinces');
                 setProvinces(res.data.data);
                 setFilteredProvinces(res.data.data);
-            } catch (err) {
+            } catch {
                 toast.error('Failed to fetch provinces!');
             }
         };
@@ -250,39 +304,54 @@ const DataDestination = () => {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 gap-5 w-full px-3 pb-5">
-                            {destinations.map((element, order) => (
-                                <DestinationCard
-                                    key={order}
-                                    id={element.id}
-                                    order={order}
-                                    picture={
-                                        new URL(
-                                            element.image,
-                                            import.meta.env.VITE_STATIC_ASSET_BASE_URL,
-                                        ).href
-                                    }
-                                    name={element.name}
-                                    detail={element.detail}
-                                    rating={element.rating}
-                                    onclick={onCardClick}
-                                    onRequestDelete={() =>
-                                        setSelectedItemToDelete(element)
-                                    }
-                                    setSelectedItemToEdit={() =>
-                                        setSelectedItemToEdit({
-                                            ...element,
-                                            image: null,
-                                        })
-                                    }
-                                    isWishlisted={element.isWishlisted}
-                                    optionsIcon={
-                                        <HiDotsHorizontal
-                                            size={24}
-                                            className="cursor-pointer text-white"
-                                        />
-                                    }
-                                />
-                            ))}
+                            {Array.isArray(destinations) &&
+                                destinations.map((element, order) => (
+                                    <DestinationCard
+                                        key={element.id}
+                                        id={element.id}
+                                        order={order}
+                                        picture={
+                                            new URL(
+                                                element.image,
+                                                import.meta.env.VITE_STATIC_ASSET_BASE_URL,
+                                            ).href
+                                        }
+                                        name={element.name}
+                                        detail={element.detail}
+                                        rating={element.rating}
+                                        onClick={() => onCardClick(element.id)}
+                                        onRequestDelete={() => {
+                                            setSelectedItemToDelete(element);
+                                            setDeleteType('destination');
+                                        }}
+                                        onRequestWishlistDelete={() => {
+                                            setSelectedItemToDelete({
+                                                id: element.id,
+                                                name: element.name,
+                                            });
+                                            setDeleteType('wishlist');
+                                        }}
+                                        setSelectedItemToEdit={() =>
+                                            setSelectedItemToEdit({
+                                                ...element,
+                                                image: null,
+                                            })
+                                        }
+                                        isWishlisted={element.isWishlisted}
+                                        optionsIcon={
+                                            <HiDotsHorizontal
+                                                size={24}
+                                                className="cursor-pointer text-white"
+                                            />
+                                        }
+                                        onEdit={() =>
+                                            setSelectedItemToEdit({
+                                                ...element,
+                                                image: null,
+                                            })
+                                        }
+                                    />
+                                ))}
                         </div>
                     </div>
                 </div>
@@ -291,20 +360,33 @@ const DataDestination = () => {
             <DeleteConfirmationModal
                 isOpen={!!selectedItemToDelete}
                 item={selectedItemToDelete}
-                title="Remove Destination"
+                title={
+                    deleteType === 'wishlist'
+                        ? 'Remove from Wishlist'
+                        : 'Remove Destination'
+                }
                 message={
                     <>
                         Do you really want to remove{' '}
                         <span className="text-red-600 font-bold">
                             {selectedItemToDelete?.name}
+                        </span>{' '}
+                        from your{' '}
+                        <span className="underline">
+                            {deleteType === 'wishlist'
+                                ? 'wishlist'
+                                : 'destinations'}
                         </span>
                         ? This action cannot be undone.
                     </>
                 }
-                onCancel={() => setSelectedItemToDelete(null)}
+                onCancel={() => {
+                    setSelectedItemToDelete(null);
+                    setDeleteType(null);
+                }}
                 onConfirm={handleDelete}
-                cancelText="No, Keep"
-                confirmText="Delete Forever"
+                cancelText="Cancel"
+                confirmText="Yes, Remove"
                 confirmBg="bg-red-600"
                 confirmHover="hover:bg-red-800"
                 cancelBg="bg-gray-200"
