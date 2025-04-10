@@ -13,9 +13,11 @@ axios.defaults.paramsSerializer = (params) =>
     QueryString.stringify(params, { arrayFormat: 'repeat' });
 axios.interceptors.request.use(
     function (request) {
-        request.headers['Authorization'] = `Bearer ${localStorage.getItem(
-            'token',
-        )}`;
+        if (localStorage.getItem('token')) {
+            request.headers['Authorization'] = `Bearer ${localStorage.getItem(
+                'token',
+            )}`;
+        }
 
         return request;
     },

@@ -13,10 +13,9 @@ const Header = ({ onNotifClick, hasNewMessage }) => {
         '/admin/contact': 'Contact',
     };
 
-    const currentPath =
-        location.pathname.endsWith('/')
-            ? location.pathname.slice(0, -1)
-            : location.pathname;
+    const currentPath = location.pathname.endsWith('/')
+        ? location.pathname.slice(0, -1)
+        : location.pathname;
 
     const title = pathMap[currentPath] || 'Dashboard';
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { IoClose } from 'react-icons/io5';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -21,7 +21,9 @@ const deleteConfirm = ({
     const handleCloseModal = () => {
         onCancel(null);
     };
-
+    useEffect(() => {
+        console.log(isOpen);
+    }, [isOpen]);
     return (
         <div>
             <AnimatePresence>

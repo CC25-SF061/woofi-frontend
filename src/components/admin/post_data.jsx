@@ -1,41 +1,83 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import LogoPosts from '../../assets/icons/admin/database.svg';
-import TempUserProfile from '../../assets/logIn/image2.webp';
 import { FaSearch } from 'react-icons/fa';
-import EditConfirm from '../dataDestination/editConfirm';
+import ModalEdit from '../profile/modalEdit';
 import ModalConfirm from '../dataDestination/deleteConfirm';
+import axios, { AxiosError } from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import ErrorConstant from '../../util/ErrorConstant';
+import { nanoid } from 'nanoid';
+import EditConfirm from '../dataDestination/editConfirm';
+import { useWindowVirtualizer } from '@tanstack/react-virtual';
+import { useDispatch } from 'react-redux';
+import { hideLoading, showLoading } from '../../stores/loadingReducer';
 
 const PostData = ({
+    id,
     pic,
     destination_name,
     email,
     username,
-    state,
+    status,
     tableRowTemplate,
     isOpen,
     onToggle,
+    editData,
+    onEdit = () => {},
+    onRestore = () => {},
+    onDelete = () => {},
 }) => {
-    const states = [
-        <div className="w-fit px-4 py-1 bg-red-500 text-white text-sm tracking-wider rounded-md">
-            <p>Deleted</p>
-        </div>,
-        <div className="w-fit px-4 py-1 text-black font-semibold bg-[#63ffa1] text-sm tracking-wider rounded-md">
-            <p>Posted</p>
-        </div>,
-    ];
-    console.log(state);
+    const navigate = useNavigate();
+    const [err, setErr] = useState({
+        reason: null,
+    });
 
-    const [postStatus, setPostStatus] = useState(state);
-    const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [selectedItemToEdit, setSelectedItemToEdit] = useState(null);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [filteredProvinces, setFilteredProvinces] = useState([]);
     const [isDragging, setIsDragging] = useState(false);
-    const [errors, setErrors] = useState({});
+    const [errorsEdit, setErrorsEdit] = useState({
+        name: '',
+        detail: '',
+        image: '',
+        location: '',
+        province: '',
+    });
 
-    const changeStatus = () => {
-        setPostStatus((prev) => (prev === 0 ? 1 : 0));
-        onToggle();
+    const states = {
+        deleted: (
+            <div className="w-fit px-4 py-1 bg-red-500 text-white text-sm tracking-wider rounded-md">
+                <p>Deleted</p>
+            </div>
+        ),
+        posted: (
+            <div className="w-fit px-4 py-1 text-black font-semibold bg-[#63ffa1] text-sm tracking-wider rounded-md">
+                <p>Posted</p>
+            </div>
+        ),
+    };
+    const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const invalidFieldErr = (arr, newObjErr, setErrState) => {
+        arr.forEach((element) => {
+            if (
+                Object.prototype.hasOwnProperty.call(newObjErr, element.path[0])
+            ) {
+                newObjErr[element.path[0]] = element.message;
+            }
+        });
+        setErrState(newObjErr);
+    };
+    useEffect(() => {
+        setErr((state) => ({
+            ...state,
+            reason: null,
+        }));
+    }, [isDeleteModalOpen]);
+
+    const closeEditModal = () => {
+        setDeleteModalOpen(false);
     };
 
     const handleChangeStatusClick = () => {
@@ -46,21 +88,75 @@ const PostData = ({
         setShowConfirmModal(false);
     };
 
-    const seeDetail = () => {
-        // To do see detail
+    const handleDeleteSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            await axios.post(
+                `api/admin/destination/${id}/notification-delete`,
+                Object.fromEntries(new FormData(e.target)),
+            );
+            await axios.delete(`/api/destination/${id}`);
+            onDelete(id);
+            closeEditModal();
+            toast.success('Destination deleted', {
+                position: 'top-right',
+                autoClose: 3000,
+            });
+            onToggle();
+        } catch (e) {
+            if (!(e instanceof AxiosError)) {
+                return toast.error('Something went wrong', {
+                    position: 'top-right',
+                    autoClose: 3000,
+                });
+            }
+            const response = e?.response?.data?.payload;
+            if (response.errCode === ErrorConstant.ERR_INVALID_FIELD) {
+                invalidFieldErr(response.fields, { reason: null }, setErr);
+            }
+            return toast.error('Something went wrong', {
+                position: 'top-right',
+                autoClose: 3000,
+            });
+        }
+    };
+    const handleDeleteConfirm = () => {
+        setShowConfirmModal(false);
+        setDeleteModalOpen(true);
+    };
+
+    const handleRestore = async () => {
+        try {
+            await axios.patch(`/api/admin/destination/${id}/restore`);
+            toast.success('Destination restored', {
+                position: 'top-right',
+                autoClose: 3000,
+            });
+            onRestore(id);
+            setShowConfirmModal(false);
+            onToggle();
+        } catch (e) {
+            return toast.error('Something went wrong', {
+                position: 'top-right',
+                autoClose: 3000,
+            });
+        }
+    };
+    const seeDetail = async () => {
+        await navigate(`/destination/${id}`);
     };
 
     const handleProvinceChange = (e) => {
         const input = e.target.value;
         const filtered = allProvinces.filter((province) =>
-            province.name.toLowerCase().includes(input.toLowerCase())
+            province.name.toLowerCase().includes(input.toLowerCase()),
         );
-    
+
         setSelectedItemToEdit((prev) => ({
             ...prev,
             province: input,
         }));
-    
+
         setFilteredProvinces(filtered);
     };
 
@@ -105,32 +201,64 @@ const PostData = ({
         { name: 'Surabaya' },
     ];
 
-    const handleEdit = (closeModal) => {
-        const newErrors = {};
-        if (!selectedItemToEdit.name) newErrors.name = 'Name is required';
-        if (!selectedItemToEdit.location) newErrors.location = 'Location is required';
-        if (!selectedItemToEdit.province) newErrors.province = 'Province is required';
-        if (!selectedItemToEdit.detail) newErrors.detail = 'Description is required';
-        if (!selectedItemToEdit.imageFile) newErrors.image = 'Image is required';
-    
-        setErrors(newErrors);
-    
-        if (Object.keys(newErrors).length === 0) {
-            console.log('Updated Data:', selectedItemToEdit);
-            closeModal(null); // close the modal
+    const handleEdit = async (closeModal) => {
+        const formData = new FormData();
+
+        formData.append('name', selectedItemToEdit.name || '');
+        formData.append('location', selectedItemToEdit.location || '');
+        formData.append('detail', selectedItemToEdit.detail || '');
+        formData.append('province', selectedItemToEdit.province || '');
+        if (selectedItemToEdit.imageFile) {
+            formData.append('image', selectedItemToEdit.imageFile || '');
+        }
+        try {
+            const response = await axios.put(
+                `/api/destination/${selectedItemToEdit.id}`,
+                formData,
+            );
+
+            toast.success('Success editing destination.', {
+                autoClose: 3000,
+                position: 'top-right',
+            });
+            onEdit(response.data.data);
+            closeModal();
+
+            setSelectedItemToEdit(null);
+        } catch (e) {
+            if (!(e instanceof AxiosError)) {
+                return toast.error('something went wrong when updating data', {
+                    autoClose: 3000,
+                    position: 'top-right',
+                });
+            }
+
+            const response = e.response.data.payload;
+
+            if (response?.errCode === ErrorConstant.ERR_INVALID_FIELD) {
+                return invalidFieldErr(
+                    response.fields,
+                    {
+                        name: '',
+                        detail: '',
+                        image: '',
+                        location: '',
+                        province: '',
+                    },
+                    setErrorsEdit,
+                );
+            }
+            toast.error('something went wrong when updating data', {
+                autoClose: 3000,
+                position: 'top-right',
+            });
         }
     };
 
     const openEditModal = () => {
-        setSelectedItemToEdit({
-            name: destination_name,
-            location: 'Some Location', // Ganti dengan data asli jika tersedia
-            province: 'Jakarta',       // Ganti dengan data asli
-            detail: 'Some details here...', // Ganti dengan detail asli
-            imageFile: null,
-        });
+        setSelectedItemToEdit(editData);
         setDropdownOpen(false);
-    };    
+    };
 
     return (
         <div
@@ -156,9 +284,9 @@ const PostData = ({
                 </div>
             </div>
 
-            <div>{states[postStatus]}</div>
+            <div>{states[status]}</div>
 
-            <div className="relative">
+            <div className="relative ">
                 <button
                     onClick={onToggle}
                     className="font-bold tracking-wider cursor-pointer px-2 py-1 rounded hover:bg-[#333]"
@@ -167,42 +295,69 @@ const PostData = ({
                 </button>
 
                 {isOpen && (
-                    <div className="absolute right-0 mt-2 z-20 w-44 bg-[#1E1E20] text-white border border-[#444] rounded-md shadow-xl overflow-hidden">
-                        <button
-                            onClick={handleChangeStatusClick}
-                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left text-gray-400 cursor-pointer"
-                        >
-                            Change to {postStatus === 0 ? 'Deleted' : 'Posted'}
-                        </button>
-                        <ModalConfirm
-                            isOpen={showConfirmModal}
-                            item={{
-                                name: postStatus === 0 ? 'Deleted' : 'Posted',
-                            }}
-                            title="Change Status Confirmation"
-                            message={`Are you sure you want to change this destination's status to ${postStatus === 0 ? 'Deleted' : 'Posted'}?`}
-                            onCancel={handleCancelChangeStatus}
-                            onConfirm={changeStatus}
-                            confirmText="Yes, Change"
-                            confirmBg="bg-blue-600"
-                            confirmHover="hover:bg-blue-800"
-                        />
-                        <button
-                            onClick={openEditModal}
-                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left text-gray-400 cursor-pointer"
-                        >
-                            Edit Destination
-                        </button>
-                        <button
-                            onClick={seeDetail}
-                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left text-gray-400 cursor-pointer"
-                        >
-                            See Detail
-                        </button>
+                    <div className="absolute right-0 mt-2  w-44 bg-[#1E1E20] text-white border border-[#444] rounded-md shadow-xl overflow-hidden z-100">
+                        {status === 'posted' ? (
+                            <>
+                                <button
+                                    onClick={handleChangeStatusClick}
+                                    className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left text-gray-400"
+                                >
+                                    Delete
+                                </button>
+                                <ModalConfirm
+                                    isOpen={showConfirmModal}
+                                    item={{
+                                        name: 'Deleted',
+                                    }}
+                                    title="Change Status Confirmation"
+                                    message={`Are you sure you want to delete this destination ?`}
+                                    onCancel={handleCancelChangeStatus}
+                                    onConfirm={() => handleDeleteConfirm()}
+                                    confirmText="Yes, Change"
+                                    confirmBg="bg-blue-600"
+                                    confirmHover="hover:bg-blue-800"
+                                />
+
+                                <button
+                                    onClick={openEditModal}
+                                    className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left text-gray-400"
+                                >
+                                    Edit Destination
+                                </button>
+
+                                <button
+                                    onClick={seeDetail}
+                                    className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left text-gray-400"
+                                >
+                                    See Detail
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <button
+                                    onClick={handleChangeStatusClick}
+                                    className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left text-gray-400"
+                                >
+                                    Restore
+                                </button>
+                                <ModalConfirm
+                                    isOpen={showConfirmModal}
+                                    item={{
+                                        name: 'Restore',
+                                    }}
+                                    title="Restore destination"
+                                    message={`Are you sure you want to restore this destination ?`}
+                                    onCancel={handleCancelChangeStatus}
+                                    onConfirm={handleRestore}
+                                    confirmText="Yes, Restore"
+                                    confirmBg="bg-blue-600"
+                                    confirmHover="hover:bg-blue-800"
+                                />
+                            </>
+                        )}
                     </div>
                 )}
             </div>
-
             {/* Modal Edit Destination */}
             <EditConfirm
                 selectedItemToEdit={selectedItemToEdit}
@@ -216,9 +371,34 @@ const PostData = ({
                 handleDragOver={handleDragOver}
                 handleDragLeave={handleDragLeave}
                 handleDrop={handleDrop}
-                errors={errors}
+                errors={errorsEdit}
                 handleEdit={handleEdit}
             />
+            {/* Modal Ban */}
+            <ModalEdit
+                isOpen={isDeleteModalOpen}
+                onClose={closeEditModal}
+                onSubmit={handleDeleteSubmit}
+                title="Delete Destination"
+            >
+                <p className="text-sm text-gray-300 mb-2">
+                    Please provide a reason why{' '}
+                    <span className="font-semibold text-white">
+                        {destination_name}
+                    </span>{' '}
+                    should be deleted.
+                </p>
+
+                <textarea
+                    name="reason"
+                    className="bg-[#1E1E20] border border-[#444] w-full p-3 rounded text-white resize-none focus:outline-none focus:ring-2 focus:ring-white-400"
+                    rows={4}
+                    placeholder="Enter reason here..."
+                />
+
+                <div className="error text-sm text-error">{err.reason}</div>
+            </ModalEdit>
+            <ToastContainer />
         </div>
     );
 };
@@ -226,50 +406,110 @@ const PostData = ({
 const PostDataTable = () => {
     const tableRowTemplate = { gridTemplateColumns: '20fr 15fr 1fr' };
     const [searchTerm, setSearchTerm] = useState('');
-    const [stateFilter, setStateFilter] = useState('all');
+    const [stateFilter, setStateFilter] = useState();
     const [activeDropdownIndex, setActiveDropdownIndex] = useState(null);
+    const [posts, setPosts] = useState([]);
+    const listInnerRef = useRef();
+    const hasMore = useRef(true);
+    const prevPage = useRef(0);
 
-    const [post] = useState([
-        {
-            pic: TempUserProfile,
-            destination_name: 'Bali Island',
-            username: 'Agung Mantra',
-            email: 'agung@example.com',
-            state: 0,
-        },
-        {
-            pic: TempUserProfile,
-            destination_name: 'Mount Bromo',
-            username: 'Sinta Dewi',
-            email: 'sinta@example.com',
-            state: 1,
-        },
-        {
-            pic: TempUserProfile,
-            destination_name: 'Raja Ampat',
-            username: 'Rama Pratama',
-            email: 'rama@example.com',
-            state: 0,
-        },
-    ]);
+    const dispatch = useDispatch();
 
-    const filteredPost = post.filter((post) => {
-        const matchesSearch =
-            post.destination_name
-                .toLowerCase()
-                .trim()
-                .includes(searchTerm.toLowerCase().trim()) ||
-            post.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const searchDestination = async (page = 0) => {
+        try {
+            const response = await axios.get('/api/admin/destinations', {
+                params: {
+                    page: page,
+                    status: stateFilter || undefined,
+                },
+            });
+            if (response.data.data.length === 0) {
+                hasMore.current = false;
+            }
 
-        const matchesPost =
-            stateFilter === 'all' ||
-            (stateFilter === 'Posted' && post.state === 1) ||
-            (stateFilter === 'Deleted' && post.state === 0);
+            prevPage.current = page;
 
-        return matchesSearch && matchesPost;
-    });
-    console.log(filteredPost);
+            // if (page > 0) {
+            //     setPosts([...posts, ...response.data.data]);
+            //     return;
+            // }
+            setPosts([...response.data.data]);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+    const handleEdit = (element) => {
+        const id = element.id;
 
+        const tempPosts = [...posts];
+        const updatedPostsIndex = tempPosts.findIndex((post) => post.id === id);
+        const updatedPosts = { ...tempPosts[updatedPostsIndex], ...element };
+        tempPosts[updatedPostsIndex] = updatedPosts;
+        setPosts(tempPosts);
+    };
+    // useEffect(() => {
+    //     searchDestination();
+    // }, []);
+
+    useEffect(() => {
+        (async () => {
+            const keyLoading = nanoid();
+
+            dispatch(showLoading(keyLoading));
+
+            await searchDestination();
+            dispatch(hideLoading(keyLoading));
+        })();
+    }, [stateFilter]);
+    const handleDelete = (id) => {
+        const tempPosts = [...posts];
+        const updatedPostsIndex = tempPosts.findIndex((post) => post.id === id);
+        const updatedPosts = { ...tempPosts[updatedPostsIndex] };
+
+        updatedPosts.status = 'deleted';
+        tempPosts[updatedPostsIndex] = updatedPosts;
+        setPosts(tempPosts);
+    };
+
+    const handleRestore = (id) => {
+        const tempPosts = [...posts];
+        const updatedPostsIndex = tempPosts.findIndex((post) => post.id === id);
+        const updatedPosts = { ...tempPosts[updatedPostsIndex] };
+        console.log(id);
+        updatedPosts.status = 'posted';
+        tempPosts[updatedPostsIndex] = updatedPosts;
+        setPosts(tempPosts);
+    };
+
+    const renderDestination = (index) => {
+        const v = posts[index];
+        return (
+            <PostData
+                key={v.id}
+                id={v.id}
+                pic={
+                    new URL(v.image, import.meta.env.VITE_STATIC_ASSET_BASE_URL)
+                        .href
+                }
+                destination_name={v.name}
+                email={v.email}
+                username={v.username}
+                status={v.status}
+                tableRowTemplate={tableRowTemplate}
+                index={index}
+                isOpen={activeDropdownIndex === index}
+                onToggle={() =>
+                    setActiveDropdownIndex((prev) =>
+                        prev === index ? null : index,
+                    )
+                }
+                onEdit={handleEdit}
+                editData={v}
+                onRestore={handleRestore}
+                onDelete={handleDelete}
+            />
+        );
+    };
     return (
         <div className="flex flex-col items-stretch justify-center p-6 pt-28 h-fit gap-8 font-quicksand ">
             <div className="py-6 flex flex-col items-center bg-[#252527] rounded-md shadow-lg shadow-[#00000055]">
@@ -278,7 +518,6 @@ const PostDataTable = () => {
                     See all Destination Data
                 </h2>
             </div>
-
             <div className="flex gap-4 mb-2 w-full items-center">
                 <div className="relative w-1/2">
                     <input
@@ -299,14 +538,17 @@ const PostDataTable = () => {
                         onChange={(e) => setStateFilter(e.target.value)}
                         className="w-full p-2 rounded-md bg-[#1E1E20] text-white border border-[#444] focus:outline-none focus:ring-2 focus:ring-[#FFA666]"
                     >
-                        <option value="all">All Status</option>
-                        <option value="Posted">Posted</option>
-                        <option value="Deleted">Deleted</option>
+                        <option>All Status</option>
+                        <option value="posted">Posted</option>
+                        <option value="deleted">Deleted</option>
                     </select>
                 </div>
             </div>
 
-            <div className="flex flex-col divide-white divide-y">
+            <div
+                className="flex flex-col divide-white divide-y"
+                ref={listInnerRef}
+            >
                 <div
                     className="grid w-full items-center bg-[#FFA666] py-3 px-5 rounded-tl-lg rounded-tr-lg text-black font-semibold tracking-wide"
                     style={tableRowTemplate}
@@ -321,26 +563,9 @@ const PostDataTable = () => {
                         <p>Actions</p>
                     </div>
                 </div>
-
-                {filteredPost.length > 0 ? (
-                    filteredPost.map((v, index) => (
-                        <PostData
-                            key={v.destination_name}
-                            pic={v.pic}
-                            destination_name={v.destination_name}
-                            email={v.email}
-                            username={v.username}
-                            state={v.state}
-                            tableRowTemplate={tableRowTemplate}
-                            index={index}
-                            isOpen={activeDropdownIndex === index}
-                            onToggle={() =>
-                                setActiveDropdownIndex((prev) =>
-                                    prev === index ? null : index,
-                                )
-                            }
-                        />
-                    ))
+                <ToastContainer />
+                {posts.length > 0 ? (
+                    posts.map((_, index) => renderDestination(index))
                 ) : (
                     <div className="text-center text-white py-6 bg-[#1E1E20]">
                         No destinations found.

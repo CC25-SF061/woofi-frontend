@@ -10,6 +10,7 @@ export const fetchUserProfile = createAsyncThunk(
         const state = getState();
         const keyLoading = nanoid();
         if (!state.user.data.id && localStorage.getItem('token')) {
+            // console.log('test', localStorage.getItem('token'));
             try {
                 dispatch(showLoading(keyLoading));
                 const response = (await axios.get('/api/user/profile')).data;

@@ -199,64 +199,73 @@ const EditConfirm = ({
                                     Image:
                                 </label>
                                 <div className="flex flex-col items-center gap-3 w-full">
-                                    {!selectedItemToEdit?.imageFile && (
-                                        <div className="w-full">
-                                            <label
-                                                onDragOver={handleDragOver}
-                                                onDragLeave={handleDragLeave}
-                                                onDrop={handleDrop}
-                                                htmlFor="dropzone-file"
-                                                className={`flex flex-col items-center justify-center w-full h-64 border-white border-2 border-dashed rounded-lg cursor-pointer transition
+                                    <div className="w-full">
+                                        <label
+                                            onDragOver={handleDragOver}
+                                            onDragLeave={handleDragLeave}
+                                            onDrop={handleDrop}
+                                            htmlFor="dropzone-file"
+                                            className={`flex flex-col items-center justify-center w-full h-64 border-white border-2 border-dashed rounded-lg cursor-pointer transition
                                             ${isDragging ? 'border-[#FFA666] bg-gray-800' : 'border-gray-300 hover:bg-gray-700'}`}
-                                            >
-                                                <div className="flex flex-col items-center justify-center pt-5 pb-6 text-center">
-                                                    <svg
-                                                        className="w-8 h-8 mb-4 text-gray-400"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        viewBox="0 0 24 24"
-                                                    >
-                                                        <path
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                            strokeWidth={2}
-                                                            d="M12 4v16m8-8H4"
-                                                        />
-                                                    </svg>
-                                                    <p className="text-sm text-gray-400">
-                                                        <span className="font-semibold">
-                                                            Click to upload
-                                                        </span>{' '}
-                                                        or drag and drop
-                                                    </p>
-                                                    <p className="text-xs text-gray-400">
-                                                        PNG, JPG, max 800x400px
-                                                    </p>
-                                                </div>
-                                                <input
-                                                    id="dropzone-file"
-                                                    type="file"
-                                                    accept="image/*"
-                                                    className="hidden"
-                                                    onChange={(e) => {
-                                                        const file =
-                                                            e.target.files[0];
-                                                        if (file) {
-                                                            setSelectedItemToEdit(
-                                                                {
-                                                                    ...selectedItemToEdit,
-                                                                    imageFile:
-                                                                        file,
-                                                                },
-                                                            );
-                                                            e.target.value =
-                                                                null;
-                                                        }
-                                                    }}
+                                        >
+                                            {!selectedItemToEdit?.imageFile ? (
+                                                <>
+                                                    <div className="flex flex-col items-center justify-center pt-5 pb-6 text-center">
+                                                        <svg
+                                                            className="w-8 h-8 mb-4 text-gray-400"
+                                                            fill="none"
+                                                            stroke="currentColor"
+                                                            viewBox="0 0 24 24"
+                                                        >
+                                                            <path
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                                strokeWidth={2}
+                                                                d="M12 4v16m8-8H4"
+                                                            />
+                                                        </svg>
+                                                        <p className="text-sm text-gray-400">
+                                                            <span className="font-semibold">
+                                                                Click to upload
+                                                            </span>{' '}
+                                                            or drag and drop
+                                                        </p>
+                                                        <p className="text-xs text-gray-400">
+                                                            PNG, JPG, max
+                                                            800x400px
+                                                        </p>
+                                                    </div>
+                                                </>
+                                            ) : (
+                                                <img
+                                                    src={URL.createObjectURL(
+                                                        selectedItemToEdit.imageFile,
+                                                    )}
+                                                    alt="Selected"
+                                                    className="object-cover w-full h-full rounded-lg"
                                                 />
-                                            </label>
-                                        </div>
-                                    )}
+                                            )}
+
+                                            <input
+                                                id="dropzone-file"
+                                                type="file"
+                                                accept="image/*"
+                                                className="hidden"
+                                                onChange={(e) => {
+                                                    const file =
+                                                        e.target.files[0];
+                                                    if (file) {
+                                                        setSelectedItemToEdit({
+                                                            ...selectedItemToEdit,
+                                                            imageFile: file,
+                                                        });
+                                                        e.target.value = null;
+                                                    }
+                                                }}
+                                            />
+                                        </label>
+                                    </div>
+
                                     {selectedItemToEdit?.imageFile && (
                                         <p className="text-sm text-white text-center">
                                             Selected file:{' '}

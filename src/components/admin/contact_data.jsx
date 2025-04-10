@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
-import TempUserProfile from '../../assets/logIn/image2.webp';
-import TempUserProfile2 from '../../assets/logIn/image4.webp';
+import React, { useEffect, useRef, useState } from 'react';
+import defaultProfile from '../../assets/icons/profile_outline.svg';
+
 import { FaSearch } from 'react-icons/fa';
 import LogoUsers from '../../assets/icons/admin/users.svg';
 import ModalConfirm from '../dataDestination/deleteConfirm';
 import ModalReply from '../profile/modalEdit';
+import axios from 'axios';
 const ContactData = ({
-    pfp,
+    profile_image,
     name,
     email,
     reason,
@@ -28,7 +29,7 @@ const ContactData = ({
     const [contactStatus, setContactStatus] = useState(state);
     const [isReplyModalOpen, setIsReplyModalOpen] = useState(false);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
-    const [replyValue,setReplyValue] = useState('');
+    const [replyValue, setReplyValue] = useState('');
     const changeStatus = () => {
         setContactStatus((prev) => (prev === 0 ? 1 : 0));
         onToggle();
@@ -56,7 +57,6 @@ const ContactData = ({
 
     const handleReplySubmit = (e) => {
         e.preventDefault();
-        console.log( `Reply message for ${name}:`, replyValue);
         setReplyValue('');
         closeReplyModal();
     };
@@ -69,7 +69,14 @@ const ContactData = ({
             <div className="flex items-center gap-3">
                 <img
                     className="h-9 w-9 rounded-full object-cover"
-                    src={pfp}
+                    src={
+                        profile_image
+                            ? new URL(
+                                  profile_image,
+                                  import.meta.env.VITE_STATIC_ASSET_BASE_URL,
+                              ).href
+                            : defaultProfile
+                    }
                     alt="User"
                 />
                 <div className="flex flex-col">
@@ -132,7 +139,9 @@ const ContactData = ({
             >
                 <p className="text-sm text-gray-300 mb-2">
                     Reply message for{' '}
-                    <span className="font-semibold text-white">{name}</span>{' '}
+                    <span className="font-semibold text-white">
+                        {name}
+                    </span>{' '}
                 </p>
 
                 <textarea
@@ -153,79 +162,28 @@ const ContactDataTable = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [activeDropdownIndex, setActiveDropdownIndex] = useState(null);
     const [stateFilter, setStateFilter] = useState('all');
+    const [contacts, setContacts] = useState([]);
+    const prevPage = useRef(0);
 
-    const [contacts] = useState([
-        {
-            pic: TempUserProfile,
-            name: 'John Doe',
-            email: 'john@example.com',
-            reason: 'Interested in support',
-            message: 'Can I get help with my account?',
-            state: 0,
-        },
-        {
-            pic: TempUserProfile2,
-            name: 'Jane Smith',
-            email: 'jane@example.com',
-            reason: 'Feedback',
-            message: 'Great site! Just wanted to say thanks!',
-            state: 1,
-        },
-        {
-            pic: TempUserProfile,
-            name: 'Michael Johnson',
-            email: 'michael@example.com',
-            reason: 'Bug Report',
-            message: 'There’s a bug when submitting the form.',
-            state: 1,
-        },
-        {
-            pic: TempUserProfile,
-            name: 'Emily Davis',
-            email: 'emily@example.com',
-            reason: 'Help needed',
-            message: 'I can’t reset my password.',
-            state: 1,
-        },
-        {
-            pic: TempUserProfile2,
-            name: 'Robert Brown',
-            email: 'robert@example.com',
-            reason: 'Business Inquiry',
-            message: 'I’d like to collaborate with you.',
-            state: 0,
-        },
-        {
-            pic: TempUserProfile2,
-            name: 'Lisa White',
-            email: 'lisa@example.com',
-            reason: 'Other',
-            message: 'Just reaching out to say hi!',
-            state: 1,
-        },
-        {
-            pic: TempUserProfile,
-            name: 'Kevin Lee',
-            email: 'kevin@example.com',
-            reason: 'Technical Issue',
-            message: 'Error when uploading images.',
-            state: 1,
-        },
-    ]);
+    const searchContact = async (page = 0) => {
+        try {
+            const response = await axios.get('/api/admin/contacts');
+            setContacts(response.data.data);
 
-    const filteredContacts = contacts.filter((user) => {
-        const matchesSearch =
-            user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            user.email.toLowerCase().includes(searchTerm.toLowerCase());
-
-        const matchesContact =
-            stateFilter === 'all' ||
-            (stateFilter === 'succes' && user.state === 1) ||
-            (stateFilter === 'review' && user.state === 0);
-
-        return matchesSearch && matchesContact;
-    });
-
+            prevPage.current = page;
+        } catch (e) {
+            console.log(e);
+            return toast.error('Something went wrong', {
+                position: 'top-right',
+                autoClose: 3000,
+            });
+        }
+    };
+    useEffect(() => {
+        (async () => {
+            await searchContact();
+        })();
+    }, []);
     return (
         <div className="flex flex-col items-stretch justify-center p-6 pt-28 gap-8 font-quicksand">
             {/* Title Section */}
@@ -258,8 +216,8 @@ const ContactDataTable = () => {
                         className="w-full p-2 rounded-md bg-[#1E1E20] text-white border border-[#444] focus:outline-none focus:ring-2 focus:ring-[#FFA666]"
                     >
                         <option value="all">All Status</option>
-                        <option value="succes">Succes is replyed</option>
-                        <option value="review">On review</option>
+                        <option value="succes">Replied</option>
+                        <option value="review">Not Replied</option>
                     </select>
                 </div>
             </div>
@@ -278,14 +236,16 @@ const ContactDataTable = () => {
                 </div>
 
                 {/* Data Rows */}
-                {filteredContacts.length > 0 ? (
-                    filteredContacts.map((v, index) => (
+                {contacts.length > 0 ? (
+                    contacts.map((v, index) => (
                         <ContactData
                             key={index}
-                            pfp={v.pic}
+                            id={v.id}
+                            profile_image={v.profile_image}
                             name={v.name}
                             email={v.email}
                             reason={v.reason}
+                            message={v.message}
                             state={v.state}
                             tableRowTemplate={tableRowTemplate}
                             index={index}

@@ -76,7 +76,10 @@ const DataDestination = () => {
         formData.append('location', selectedItemToEdit.location || '');
         formData.append('detail', selectedItemToEdit.detail || '');
         formData.append('province', selectedItemToEdit.province || '');
-        if (selectedItemToEdit.image) {
+        if (
+            selectedItemToEdit.image &&
+            typeof selectedItemToEdit.image !== 'string'
+        ) {
             formData.append('image', selectedItemToEdit.image || '');
         }
         try {

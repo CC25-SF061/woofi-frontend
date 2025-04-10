@@ -33,6 +33,7 @@ import AuthGuard from './components/authGuard.jsx';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setData } from './stores/userReducer.js';
+import { ToastContainer } from 'react-toastify';
 
 const App = () => {
     const dispatch = useDispatch();
@@ -55,7 +56,7 @@ const App = () => {
                     localStorage.setItem('token', refreshToken.data.token);
                     return axios(originalRequest);
                 } catch (_) {
-                    localStorage.setItem('token', null);
+                    localStorage.removeItem('token');
 
                     dispatch(setData());
                     return Promise.reject(error);
@@ -86,7 +87,10 @@ const App = () => {
                     ></Route>
                     <Route path="/gallery" element={<GalleryPage />}></Route>
                     <Route path="/contact-us" element={<ContactUs />}></Route>
-                    <Route path="/user-interest" element={<InterestPage />}></Route>
+                    <Route
+                        path="/user-interest"
+                        element={<InterestPage />}
+                    ></Route>
 
                     <Route path="/sign-in" element={<Signin />}></Route>
                     <Route path="/register" element={<Register />}></Route>
@@ -142,6 +146,7 @@ const App = () => {
                     ></Route>
                     <Route path="*" element={<NotFound />}></Route>
                 </Routes>
+                {/* <ToastContainer /> */}
             </Router>
         </GoogleOAuthProvider>
     );

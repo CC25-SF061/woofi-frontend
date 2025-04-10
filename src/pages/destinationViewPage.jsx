@@ -9,6 +9,7 @@ import axios, { AxiosError } from 'axios';
 import { useDispatch } from 'react-redux';
 import { toast, ToastContainer } from 'react-toastify';
 import ErrorConstant from '../util/ErrorConstant.js';
+import { nanoid } from 'nanoid';
 
 const DestinationViewPage = () => {
     const { destinationId } = useParams();
@@ -18,12 +19,12 @@ const DestinationViewPage = () => {
 
     useEffect(() => {
         (async () => {
+            const keyLoading = nanoid();
             try {
-                dispatch(showLoading('DestinationViewPageLoading'));
+                dispatch(showLoading(keyLoading));
                 const response = (
                     await axios.get(`/api/destination/${destinationId}`)
                 ).data;
-                console.log(response.data);
                 setDestination(response.data || null);
             } catch (e) {
                 if (!(e instanceof AxiosError)) {
@@ -39,10 +40,10 @@ const DestinationViewPage = () => {
                     !response ||
                     response.data.payload.code !== ErrorConstant.ERR_NOT_FOUND
                 ) {
-                    await navigate('/not-found');
+                    await navigate('/not-found', { replace: true });
                 }
             } finally {
-                dispatch(hideLoading('DestinationViewPageLoading'));
+                dispatch(hideLoading(keyLoading));
             }
         })();
         // eslint-disable-next-line react-hooks/exhaustive-deps

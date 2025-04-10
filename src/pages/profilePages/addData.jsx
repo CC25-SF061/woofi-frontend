@@ -146,6 +146,7 @@ const AddData = () => {
         const fetchProvinces = async () => {
             try {
                 const res = await axios.get('/api/geolocation/provinces');
+                console.log(res);
                 setProvinces(res.data.data);
                 setFilteredProvinces(res.data.data);
             } catch (err) {
