@@ -134,7 +134,7 @@ const Profile = () => {
         e?.preventDefault();
         const formData = new FormData();
         const keyLoading = nanoid();
-    
+
         if (!fileImage) {
             setErr((state) => ({
                 ...state,
@@ -147,20 +147,20 @@ const Profile = () => {
 
         try {
             setErr((state) => ({ ...state, image: null }));
-    
+
             const result = (
                 await axios.patch('/api/user/edit/profile-picture', formData, {
                     headers: { 'Content-Type': 'multipart/form-data' },
                 })
             ).data;
-    
+
             dispatch(setImage(result.data.image));
-    
+
             toast.success('Success edit profile image', {
                 position: 'top-right',
                 autoClose: 3000,
             });
-    
+
             setIsModalProfile(false);
             setFileImage(null);
             if (selectedImage) {
@@ -835,7 +835,7 @@ const Profile = () => {
                                 </label>
                                 <input
                                     id="email"
-                                    type="email"
+                                    // type="email"
                                     value={newEmail}
                                     onChange={(e) =>
                                         setNewEmail(e.target.value)

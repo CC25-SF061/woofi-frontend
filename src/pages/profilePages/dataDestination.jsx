@@ -51,37 +51,16 @@ const DataDestination = () => {
         setErrors((state) => ({ ...state, ...newObjErr }));
     };
     const handleDelete = async () => {
-        if (!selectedItemToDelete || !deleteType) return;
-
         try {
-            if (deleteType === 'wishlist') {
-                await axios.delete(
-                    `/api/user/wishlist/${selectedItemToDelete.id}`,
-                );
-                setDestinations((prev) =>
-                    prev.map((item) =>
-                        item.id === selectedItemToDelete.id
-                            ? { ...item, isWishlisted: false }
-                            : item,
-                    ),
-                );
-                toast.success('Removed from wishlist', {
-                    autoClose: 3000,
-                    position: 'top-right',
-                });
-            } else if (deleteType === 'destination') {
-                await axios.delete(
-                    `/api/destination/${selectedItemToDelete.id}`,
-                );
-                toast.success('Destination deleted', {
-                    autoClose: 3000,
-                    position: 'top-right',
-                });
+            await axios.delete(`/api/destination/${selectedItemToDelete.id}`);
+            toast.success('Destination deleted', {
+                autoClose: 3000,
+                position: 'top-right',
+            });
 
-                setDestinations((prev) =>
-                    prev.filter((d) => d.id !== selectedItemToDelete.id),
-                );
-            }
+            setDestinations((prev) =>
+                prev.filter((d) => d.id !== selectedItemToDelete.id),
+            );
 
             setSelectedItemToDelete(null);
             setDeleteType(null);
@@ -93,18 +72,6 @@ const DataDestination = () => {
             });
         }
     };
-
-    useEffect(() => {
-        const fetchDestinations = async () => {
-            try {
-                const response = await axios.get('/api/destinations');
-                setDestinations(response.data);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-        fetchDestinations();
-    }, []);
 
     const handleEdit = async () => {
         const formData = new FormData();
@@ -304,54 +271,53 @@ const DataDestination = () => {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 gap-5 w-full px-3 pb-5">
-                            {Array.isArray(destinations) &&
-                                destinations.map((element, order) => (
-                                    <DestinationCard
-                                        key={element.id}
-                                        id={element.id}
-                                        order={order}
-                                        picture={
-                                            new URL(
-                                                element.image,
-                                                import.meta.env.VITE_STATIC_ASSET_BASE_URL,
-                                            ).href
-                                        }
-                                        name={element.name}
-                                        detail={element.detail}
-                                        rating={element.rating}
-                                        onClick={() => onCardClick(element.id)}
-                                        onRequestDelete={() => {
-                                            setSelectedItemToDelete(element);
-                                            setDeleteType('destination');
-                                        }}
-                                        onRequestWishlistDelete={() => {
-                                            setSelectedItemToDelete({
-                                                id: element.id,
-                                                name: element.name,
-                                            });
-                                            setDeleteType('wishlist');
-                                        }}
-                                        setSelectedItemToEdit={() =>
-                                            setSelectedItemToEdit({
-                                                ...element,
-                                                image: null,
-                                            })
-                                        }
-                                        isWishlisted={element.isWishlisted}
-                                        optionsIcon={
-                                            <HiDotsHorizontal
-                                                size={24}
-                                                className="cursor-pointer text-white"
-                                            />
-                                        }
-                                        onEdit={() =>
-                                            setSelectedItemToEdit({
-                                                ...element,
-                                                image: null,
-                                            })
-                                        }
-                                    />
-                                ))}
+                            {destinations.map((element, order) => (
+                                <DestinationCard
+                                    key={element.id}
+                                    id={element.id}
+                                    order={order}
+                                    picture={
+                                        new URL(
+                                            element.image,
+                                            import.meta.env.VITE_STATIC_ASSET_BASE_URL,
+                                        ).href
+                                    }
+                                    name={element.name}
+                                    detail={element.detail}
+                                    rating={element.rating}
+                                    onClick={() => onCardClick(element.id)}
+                                    onRequestDelete={() => {
+                                        setSelectedItemToDelete(element);
+                                        setDeleteType('destination');
+                                    }}
+                                    onRequestWishlistDelete={() => {
+                                        setSelectedItemToDelete({
+                                            id: element.id,
+                                            name: element.name,
+                                        });
+                                        setDeleteType('wishlist');
+                                    }}
+                                    setSelectedItemToEdit={() =>
+                                        setSelectedItemToEdit({
+                                            ...element,
+                                            image: null,
+                                        })
+                                    }
+                                    isWishlisted={element.isWishlisted}
+                                    optionsIcon={
+                                        <HiDotsHorizontal
+                                            size={24}
+                                            className="cursor-pointer text-white"
+                                        />
+                                    }
+                                    onEdit={() =>
+                                        setSelectedItemToEdit({
+                                            ...element,
+                                            image: null,
+                                        })
+                                    }
+                                />
+                            ))}
                         </div>
                     </div>
                 </div>

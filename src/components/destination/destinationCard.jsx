@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import axios, { AxiosError } from 'axios';
 import ErrorConstant from '../../util/ErrorConstant.js';
+import { useNavigate } from 'react-router-dom';
 
 const DestinationCard = ({
     id,
@@ -18,25 +19,23 @@ const DestinationCard = ({
     detail,
     isWishlisted,
     rating,
-    onclick,
     onRequestDelete,
     onConfirmRemoveWishlist,
     setSelectedItemToEdit,
     optionsIcon = null,
     setLoginModalVisible,
-    onRequestWishlistDelete
+    onRequestWishlistDelete,
 }) => {
     const MotionDiv = motion.div;
     const { whole_rating, has_half_rating, empty_rating } = countStars(rating);
-    const [dropdownOpen, setDropdownOpen] = useState(false);        
+    const [dropdownOpen, setDropdownOpen] = useState(false);
     const userId = useSelector((state) => state.user.data.id);
     const [wishlist, setWishlist] = useState(isWishlisted);
     const button = useRef(null);
+    const navigate = useNavigate();
     // Format detail description
     const formattedDetail = detail.replaceAll(/([\n]+[\w.,/ ]+)/g, '...');
-    useEffect(() => {
-        setWishlist(isWishlisted);
-    }, [isWishlisted]);    
+
     useEffect(() => {
         const handleOutsideClick = (e) => {
             if (button.current && !button.current.contains(e.target)) {
@@ -51,23 +50,19 @@ const DestinationCard = ({
         };
     }, [dropdownOpen]);
 
-    const handleWishlist = async () => {
-        if (!userId) {
-            setLoginModalVisible();
-            return;
-        }
-    
-        if (wishlist) {
-            if (onRequestWishlistDelete) {
-                onRequestWishlistDelete({
-                    id,
-                    name,
-                    isWishlisted: wishlist,
-                    onConfirm: handleConfirmRemoveWishlist,
-                });
-            }
-        } else {
-            await addWishlist();
+    const handleRemoveWishlist = async () => {
+        try {
+            await axios.delete(`/api/user/wishlist/${id}`);
+            setWishlist(false);
+            toast.success('Removed from wishlist', {
+                position: 'top-right',
+                autoClose: 3000,
+            });
+        } catch {
+            toast.error('Failed to remove from wishlist', {
+                position: 'top-right',
+                autoClose: 3000,
+            });
         }
     };
 
@@ -86,29 +81,22 @@ const DestinationCard = ({
             });
         }
     };
-
-    const handleConfirmRemoveWishlist = async () => {
-        try {
-            await axios.delete(`/api/user/wishlist/${id}`);
-            setWishlist(false);
-            toast.success('Removed from wishlist', {
-                position: 'top-right',
-                autoClose: 3000,
-            });
-        } catch {
-            toast.error('Failed to remove from wishlist', {
-                position: 'top-right',
-                autoClose: 3000,
-            });
+    const handleWishlist = async () => {
+        if (!userId) {
+            setLoginModalVisible();
+            return;
         }
-    };    
 
-    useEffect(() => {
-        if (onConfirmRemoveWishlist) {
-            onConfirmRemoveWishlist(id, handleConfirmRemoveWishlist);
+        if (wishlist) {
+            handleRemoveWishlist();
+        } else {
+            addWishlist();
         }
-    }, [onConfirmRemoveWishlist]);
+    };
 
+    const seeDetail = async () => {
+        await navigate(`/destination/${id}`);
+    };
     return (
         <div className="relative bg-[#252527] font-quicksand rounded-lg mx-auto sm:max-w-90  w-full h-95 shadow-lg overflow-hidden flex flex-col duration-75 scale-100 hover:scale-[103%] ease-in">
             {/* Image Section */}
@@ -216,7 +204,16 @@ const DestinationCard = ({
                                 </button>
                                 <button
                                     className="block w-full text-left px-4 py-2 hover:bg-gray-600 cursor-pointer rounded-b-md"
-                                    onClick={() => onRequestDelete({ type: 'destination', data: { id, name, isWishlisted: isWishlisted } })                                }
+                                    onClick={() =>
+                                        onRequestDelete({
+                                            type: 'destination',
+                                            data: {
+                                                id,
+                                                name,
+                                                isWishlisted: isWishlisted,
+                                            },
+                                        })
+                                    }
                                 >
                                     Delete
                                 </button>
@@ -225,7 +222,7 @@ const DestinationCard = ({
                     </div>
                 )}
                 <button
-                    onMouseUp={() => onclick(id)}
+                    onMouseUp={() => seeDetail()}
                     className="text-white text-xs md:text-base font-semibold px-4 py-1 border border-[#ffffff88] rounded-md bg-[#252527] hover:bg-[#fff] hover:text-black transition-all cursor-pointer"
                 >
                     See Details
