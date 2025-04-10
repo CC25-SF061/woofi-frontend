@@ -18,15 +18,15 @@ const ContactUs = () => {
         name: '',
         reason: searchParams.get('reason') || '',
         message: '',
-        type: searchParams.get('type') || '',
-        reply_id: parseInt(searchParams.get('reply_id')) || '',
+        type: searchParams.get('type') || null,
+        reply_id: parseInt(searchParams.get('reply_id')) || null,
     });
     useEffect(() => {
         setFormData((state) => ({
             ...state,
             reason: searchParams.get('reason') || '',
-            type: searchParams.get('type') || '',
-            reply_id: parseInt(searchParams.get('reply_id')) || '',
+            type: searchParams.get('type') || null,
+            reply_id: parseInt(searchParams.get('reply_id')) || null,
         }));
     }, [searchParams]);
     const [errState, setErrState] = useState({
@@ -74,14 +74,12 @@ const ContactUs = () => {
         }
 
         try {
-            console.log(formState);
             setErrState({
                 email: null,
                 name: null,
                 reason: null,
                 message: null,
             });
-
             await axios.post('/api/contact/add', formState);
 
             toast.success('Your message has been sent successfully!', {
@@ -91,18 +89,16 @@ const ContactUs = () => {
             setFormData({
                 email: '',
                 name: '',
-                reason: '',
                 message: '',
                 reason: searchParams.get('reason') || '',
-                type: searchParams.get('type') || '',
-                reply_id: parseInt(searchParams.get('reply_id')) || '',
+                type: searchParams.get('type') || null,
+                reply_id: parseInt(searchParams.get('reply_id')) || null,
             });
         } catch (e) {
             if (!(e instanceof AxiosError)) {
                 return;
             }
             const response = e.response?.data?.payload;
-            console.log(e);
             if (response?.errCode === ErrorConstant.ERR_INVALID_FIELD) {
                 invalidFieldErr(response.fields);
                 toast.error('Please check the form fields for errors.', {
@@ -127,16 +123,6 @@ const ContactUs = () => {
                         onSubmit={handleSubmit}
                         className="w-full md:w-1/2 flex flex-col justify-center items-center px-6 py-10 md:px-8 flex-grow"
                     >
-                        <input
-                            type="hidden"
-                            name="type"
-                            value={searchParams.get('type') || ''}
-                        />
-                        <input
-                            type="hidden"
-                            name="reply_id"
-                            value={searchParams.get('reply_Id') || ''}
-                        />
                         <img
                             src={Logo}
                             alt="Logo Woofi"
