@@ -74,27 +74,56 @@ const DestinationGroup = ({
             </div>
 
             {/* The Filters */}
-            <div className="flex flex-row gap-3 lg:mx-auto md:mx-0 mt-5 md:mt-18 self-start caret-transparent w-full">
+            <div className="flex flex-row gap-3 lg:mx-auto md:mx-0 self-start caret-transparent w-full overflow-x-auto py-5 px-1">
                 <DestinationFilter
-                    name="Highest Rating"
+                    name="Peak"
                     stateChangeHandler={tagsChangeHandler}
-                    type={DestinationFilterConstant.HIGHEST_RATING}
-                ></DestinationFilter>
-
-                <DestinationFilter
-                    name="Newest"
-                    stateChangeHandler={tagsChangeHandler}
-                    type={DestinationFilterConstant.NEWEST}
+                    type={DestinationFilterConstant.PEAK}
                 ></DestinationFilter>
                 <DestinationFilter
-                    name="Oldest"
+                    name="Mountain"
                     stateChangeHandler={tagsChangeHandler}
-                    type={DestinationFilterConstant.OLDEST}
+                    type={DestinationFilterConstant.MOUNTAIN}
                 ></DestinationFilter>
                 <DestinationFilter
+                    name="Forest"
                     stateChangeHandler={tagsChangeHandler}
-                    type={DestinationFilterConstant.WRITTEN_BY_YOU}
-                    name="Written by you"
+                    type={DestinationFilterConstant.FOREST}
+                ></DestinationFilter>
+                <DestinationFilter
+                    name="Beach"
+                    stateChangeHandler={tagsChangeHandler}
+                    type={DestinationFilterConstant.BEACH}
+                ></DestinationFilter>
+                <DestinationFilter
+                    name="Waterfall"
+                    stateChangeHandler={tagsChangeHandler}
+                    type={DestinationFilterConstant.WATERFALL}
+                ></DestinationFilter>
+                <DestinationFilter
+                    name="Lake"
+                    stateChangeHandler={tagsChangeHandler}
+                    type={DestinationFilterConstant.LAKE}
+                ></DestinationFilter>
+                <DestinationFilter
+                    name="Museum"
+                    stateChangeHandler={tagsChangeHandler}
+                    type={DestinationFilterConstant.MUSEUM}
+                ></DestinationFilter>
+                <DestinationFilter
+                    name="Recreational Park"
+                    stateChangeHandler={tagsChangeHandler}
+                    type={DestinationFilterConstant.RECREATIONAL_PARK}
+                ></DestinationFilter>
+                <DestinationFilter
+                    name="Tourist Village"
+                    stateChangeHandler={tagsChangeHandler}
+                    type={DestinationFilterConstant.TOURIST_VILLAGE}
+                ></DestinationFilter>
+                <DestinationFilter
+                    name="Others"
+                    stateChangeHandler={tagsChangeHandler}
+                    type={DestinationFilterConstant.OTHERS}
                 ></DestinationFilter>
             </div>
 
