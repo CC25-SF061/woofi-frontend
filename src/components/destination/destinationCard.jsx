@@ -20,71 +20,94 @@ const DestinationCard = ({
     rating,
     onclick,
     onRequestDelete,
+    onConfirmRemoveWishlist,
     setSelectedItemToEdit,
     optionsIcon = null,
     setLoginModalVisible,
+    onRequestWishlistDelete
 }) => {
     const MotionDiv = motion.div;
     const { whole_rating, has_half_rating, empty_rating } = countStars(rating);
-    const [dropdownOpen, setDropdownOpen] = useState(false);
-    const [wishlist, setWishlist] = useState(isWishlisted);
+    const [dropdownOpen, setDropdownOpen] = useState(false);        
     const userId = useSelector((state) => state.user.data.id);
+    const [wishlist, setWishlist] = useState(isWishlisted);
     const button = useRef(null);
     // Format detail description
     const formattedDetail = detail.replaceAll(/([\n]+[\w.,/ ]+)/g, '...');
     useEffect(() => {
-        const eventListener = () => {};
-        if (dropdownOpen) {
-            document.addEventListener('click', (e) => {
-                if (button.current === e.target) return;
+        setWishlist(isWishlisted);
+    }, [isWishlisted]);    
+    useEffect(() => {
+        const handleOutsideClick = (e) => {
+            if (button.current && !button.current.contains(e.target)) {
                 setDropdownOpen(false);
-            });
+            }
+        };
+        if (dropdownOpen) {
+            document.addEventListener('click', handleOutsideClick);
         }
-
         return () => {
-            document.removeEventListener('click', eventListener);
+            document.removeEventListener('click', handleOutsideClick);
         };
     }, [dropdownOpen]);
-    async function handleWishlist() {
+
+    const handleWishlist = async () => {
         if (!userId) {
             setLoginModalVisible();
             return;
         }
+    
         if (wishlist) {
-            // Tampilkan popup deleteConfirm
-            onRequestDelete('wishlist');  // gunakan callback dari parent
+            if (onRequestWishlistDelete) {
+                onRequestWishlistDelete({
+                    id,
+                    name,
+                    isWishlisted: wishlist,
+                    onConfirm: handleConfirmRemoveWishlist,
+                });
+            }
         } else {
-            await addWishlist(); // tetap jalankan seperti biasa
+            await addWishlist();
         }
-    }
+    };
 
-    async function addWishlist() {
+    const addWishlist = async () => {
         try {
-            setWishlist(true);
             await axios.post(`/api/user/wishlist/${id}`);
+            setWishlist(true);
             toast.success('Added to wishlist', {
                 position: 'top-right',
                 autoClose: 3000,
             });
-        } catch (e) {
-            if (!(e instanceof AxiosError)) {
-                return toast.error(
-                    'Something went wrong while adding to wishlist',
-                    {
-                        position: 'top-right',
-                        autoClose: 3000,
-                    },
-                );
-            }
-            const response = e.response.data.payload;
-            if (response.errCode !== ErrorConstant.ERR_WISHLIST_ALREADY_EXIST) {
-                return toast.error('Already added to wishlist', {
-                    position: 'top-right',
-                    autoClose: 3000,
-                });
-            }
+        } catch {
+            toast.error('Failed to add to wishlist', {
+                position: 'top-right',
+                autoClose: 3000,
+            });
         }
-    }
+    };
+
+    const handleConfirmRemoveWishlist = async () => {
+        try {
+            await axios.delete(`/api/user/wishlist/${id}`);
+            setWishlist(false);
+            toast.success('Removed from wishlist', {
+                position: 'top-right',
+                autoClose: 3000,
+            });
+        } catch {
+            toast.error('Failed to remove from wishlist', {
+                position: 'top-right',
+                autoClose: 3000,
+            });
+        }
+    };    
+
+    useEffect(() => {
+        if (onConfirmRemoveWishlist) {
+            onConfirmRemoveWishlist(id, handleConfirmRemoveWishlist);
+        }
+    }, [onConfirmRemoveWishlist]);
 
     return (
         <div className="relative bg-[#252527] font-quicksand rounded-lg mx-auto sm:max-w-90  w-full h-95 shadow-lg overflow-hidden flex flex-col duration-75 scale-100 hover:scale-[103%] ease-in">
@@ -146,7 +169,7 @@ const DestinationCard = ({
                         whileHover={{ scale: 1.25 }}
                         whileTap={{ scale: 0.95 }}
                         className="cursor-pointer caret-transparent flex-none"
-                        onMouseUp={handleWishlist}
+                        onClick={handleWishlist}
                     >
                         <img
                             className="ml-auto cursor-pointer"
@@ -193,7 +216,7 @@ const DestinationCard = ({
                                 </button>
                                 <button
                                     className="block w-full text-left px-4 py-2 hover:bg-gray-600 cursor-pointer rounded-b-md"
-                                    onClick={() => onRequestDelete('dropdown')}
+                                    onClick={() => onRequestDelete({ type: 'destination', data: { id, name, isWishlisted: isWishlisted } })                                }
                                 >
                                     Delete
                                 </button>

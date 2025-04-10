@@ -24,6 +24,7 @@ const DataDestination = () => {
     const dispatch = useDispatch();
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [filteredProvinces, setFilteredProvinces] = useState([]);
+    const [deleteType, setDeleteType] = useState(null);
     const [errors, setErrors] = useState({
         name: '',
         detail: '',
@@ -50,42 +51,80 @@ const DataDestination = () => {
         setErrors((state) => ({ ...state, ...newObjErr }));
     };
     const handleDelete = async () => {
+        if (!selectedItemToDelete || !deleteType) return;
+
         try {
-            await axios.delete(`/api/destination/${selectedItemToDelete.id}`);
-            toast.success('Success deleting destination', {
+            if (deleteType === 'wishlist') {
+                await axios.delete(
+                    `/api/user/wishlist/${selectedItemToDelete.id}`,
+                );
+                setDestinations((prev) =>
+                    prev.map((item) =>
+                        item.id === selectedItemToDelete.id
+                            ? { ...item, isWishlisted: false }
+                            : item,
+                    ),
+                );
+                toast.success('Removed from wishlist', {
+                    autoClose: 3000,
+                    position: 'top-right',
+                });
+            } else if (deleteType === 'destination') {
+                await axios.delete(
+                    `/api/destination/${selectedItemToDelete.id}`,
+                );
+                toast.success('Destination deleted', {
+                    autoClose: 3000,
+                    position: 'top-right',
+                });
+
+                setDestinations((prev) =>
+                    prev.filter((d) => d.id !== selectedItemToDelete.id),
+                );
+            }
+
+            setSelectedItemToDelete(null);
+            setDeleteType(null);
+        } catch (e) {
+            console.log(e);
+            toast.error('Failed to delete', {
                 autoClose: 3000,
                 position: 'top-right',
             });
-            setDestinations(
-                destinations.filter(
-                    (destination) => destination.id !== selectedItemToDelete.id,
-                ),
-            );
-            setSelectedItemToDelete(null);
-        } catch (e) {
-            console.log(e);
         }
     };
 
+    useEffect(() => {
+        const fetchDestinations = async () => {
+            try {
+                const response = await axios.get('/api/destinations');
+                setDestinations(response.data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        fetchDestinations();
+    }, []);
+
     const handleEdit = async () => {
         const formData = new FormData();
-    
+
         formData.append('name', selectedItemToEdit.name || '');
         formData.append('location', selectedItemToEdit.location || '');
         formData.append('detail', selectedItemToEdit.detail || '');
         formData.append('province', selectedItemToEdit.province || '');
-        if (selectedItemToEdit.image) {
-            formData.append('image', selectedItemToEdit.image || '');
+        if (selectedItemToEdit.imageFile) {
+            formData.append('image', selectedItemToEdit.imageFile);
         }
         try {
             const response = await axios.put(
                 `/api/destination/${selectedItemToEdit.id}`,
                 formData,
             );
-    
+
             // Dapatkan URL gambar baru dari respons
             const newImageUrl = response.data.image;
-    
+
             // Perbarui state destinations hanya jika ada URL gambar baru
             setDestinations((prevDestinations) =>
                 prevDestinations.map((destination) => {
@@ -93,18 +132,20 @@ const DataDestination = () => {
                         return {
                             ...destination,
                             ...selectedItemToEdit,
-                            image: newImageUrl ? newImageUrl : destination.image, // Gunakan URL gambar baru jika ada, jika tidak, gunakan yang lama
+                            image: newImageUrl
+                                ? newImageUrl
+                                : destination.image, // Gunakan URL gambar baru jika ada, jika tidak, gunakan yang lama
                         };
                     }
                     return destination;
                 }),
             );
-    
+
             toast.success('Success editing destination', {
                 autoClose: 3000,
                 position: 'top-right',
             });
-    
+
             setSelectedItemToEdit(null);
         } catch (e) {
             if (!(e instanceof AxiosError)) {
@@ -113,20 +154,19 @@ const DataDestination = () => {
                     position: 'top-right',
                 });
             }
-    
+
             const response = e.response.data.payload;
-    
+
             if (response?.errCode === ErrorConstant.ERR_INVALID_FIELD) {
                 return invalidFieldErr(response.fields);
             }
-    
+
             toast.error('something went wrong when updating data', {
                 autoClose: 3000,
                 position: 'top-right',
             });
         }
     };
-    
 
     useEffect(() => {
         (async () => {
@@ -264,7 +304,7 @@ const DataDestination = () => {
                         <div className="grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 gap-5 w-full px-3 pb-5">
                             {destinations.map((element, order) => (
                                 <DestinationCard
-                                    key={order}
+                                    key={element.id}
                                     id={element.id}
                                     order={order}
                                     picture={
@@ -276,10 +316,18 @@ const DataDestination = () => {
                                     name={element.name}
                                     detail={element.detail}
                                     rating={element.rating}
-                                    onclick={onCardClick}
-                                    onRequestDelete={() =>
-                                        setSelectedItemToDelete(element)
-                                    }
+                                    onClick={() => onCardClick(element.id)}
+                                    onRequestDelete={() => {
+                                        setSelectedItemToDelete(element);
+                                        setDeleteType('destination');
+                                    }}
+                                    onRequestWishlistDelete={() => {
+                                        setSelectedItemToDelete({
+                                            id: element.id,
+                                            name: element.name,
+                                        });
+                                        setDeleteType('wishlist');
+                                    }}
                                     setSelectedItemToEdit={() =>
                                         setSelectedItemToEdit({
                                             ...element,
@@ -293,6 +341,12 @@ const DataDestination = () => {
                                             className="cursor-pointer text-white"
                                         />
                                     }
+                                    onEdit={() =>
+                                        setSelectedItemToEdit({
+                                            ...element,
+                                            image: null,
+                                        })
+                                    }
                                 />
                             ))}
                         </div>
@@ -303,20 +357,33 @@ const DataDestination = () => {
             <DeleteConfirmationModal
                 isOpen={!!selectedItemToDelete}
                 item={selectedItemToDelete}
-                title="Remove Destination"
+                title={
+                    deleteType === 'wishlist'
+                        ? 'Remove from Wishlist'
+                        : 'Remove Destination'
+                }
                 message={
                     <>
                         Do you really want to remove{' '}
                         <span className="text-red-600 font-bold">
                             {selectedItemToDelete?.name}
+                        </span>{' '}
+                        from your{' '}
+                        <span className="underline">
+                            {deleteType === 'wishlist'
+                                ? 'wishlist'
+                                : 'destinations'}
                         </span>
                         ? This action cannot be undone.
                     </>
                 }
-                onCancel={() => setSelectedItemToDelete(null)}
+                onCancel={() => {
+                    setSelectedItemToDelete(null);
+                    setDeleteType(null);
+                }}
                 onConfirm={handleDelete}
-                cancelText="No, Keep"
-                confirmText="Delete Forever"
+                cancelText="Cancel"
+                confirmText="Yes, Remove"
                 confirmBg="bg-red-600"
                 confirmHover="hover:bg-red-800"
                 cancelBg="bg-gray-200"
