@@ -176,7 +176,9 @@ const DataDestination = () => {
                 const response = (
                     await axios.get('/api/user/profile/destinations')
                 ).data;
-                setDestinations(response.data);
+                setDestinations(
+                    Array.isArray(response.data) ? response.data : [],
+                );
             } catch {
                 toast.error('Something went wrong', {
                     position: 'top-right',
@@ -302,53 +304,54 @@ const DataDestination = () => {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 gap-5 w-full px-3 pb-5">
-                            {destinations.map((element, order) => (
-                                <DestinationCard
-                                    key={element.id}
-                                    id={element.id}
-                                    order={order}
-                                    picture={
-                                        new URL(
-                                            element.image,
-                                            import.meta.env.VITE_STATIC_ASSET_BASE_URL,
-                                        ).href
-                                    }
-                                    name={element.name}
-                                    detail={element.detail}
-                                    rating={element.rating}
-                                    onClick={() => onCardClick(element.id)}
-                                    onRequestDelete={() => {
-                                        setSelectedItemToDelete(element);
-                                        setDeleteType('destination');
-                                    }}
-                                    onRequestWishlistDelete={() => {
-                                        setSelectedItemToDelete({
-                                            id: element.id,
-                                            name: element.name,
-                                        });
-                                        setDeleteType('wishlist');
-                                    }}
-                                    setSelectedItemToEdit={() =>
-                                        setSelectedItemToEdit({
-                                            ...element,
-                                            image: null,
-                                        })
-                                    }
-                                    isWishlisted={element.isWishlisted}
-                                    optionsIcon={
-                                        <HiDotsHorizontal
-                                            size={24}
-                                            className="cursor-pointer text-white"
-                                        />
-                                    }
-                                    onEdit={() =>
-                                        setSelectedItemToEdit({
-                                            ...element,
-                                            image: null,
-                                        })
-                                    }
-                                />
-                            ))}
+                            {Array.isArray(destinations) &&
+                                destinations.map((element, order) => (
+                                    <DestinationCard
+                                        key={element.id}
+                                        id={element.id}
+                                        order={order}
+                                        picture={
+                                            new URL(
+                                                element.image,
+                                                import.meta.env.VITE_STATIC_ASSET_BASE_URL,
+                                            ).href
+                                        }
+                                        name={element.name}
+                                        detail={element.detail}
+                                        rating={element.rating}
+                                        onClick={() => onCardClick(element.id)}
+                                        onRequestDelete={() => {
+                                            setSelectedItemToDelete(element);
+                                            setDeleteType('destination');
+                                        }}
+                                        onRequestWishlistDelete={() => {
+                                            setSelectedItemToDelete({
+                                                id: element.id,
+                                                name: element.name,
+                                            });
+                                            setDeleteType('wishlist');
+                                        }}
+                                        setSelectedItemToEdit={() =>
+                                            setSelectedItemToEdit({
+                                                ...element,
+                                                image: null,
+                                            })
+                                        }
+                                        isWishlisted={element.isWishlisted}
+                                        optionsIcon={
+                                            <HiDotsHorizontal
+                                                size={24}
+                                                className="cursor-pointer text-white"
+                                            />
+                                        }
+                                        onEdit={() =>
+                                            setSelectedItemToEdit({
+                                                ...element,
+                                                image: null,
+                                            })
+                                        }
+                                    />
+                                ))}
                         </div>
                     </div>
                 </div>

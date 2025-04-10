@@ -53,14 +53,14 @@ const PostData = ({
     const handleProvinceChange = (e) => {
         const input = e.target.value;
         const filtered = allProvinces.filter((province) =>
-            province.name.toLowerCase().includes(input.toLowerCase())
+            province.name.toLowerCase().includes(input.toLowerCase()),
         );
-    
+
         setSelectedItemToEdit((prev) => ({
             ...prev,
             province: input,
         }));
-    
+
         setFilteredProvinces(filtered);
     };
 
@@ -108,13 +108,17 @@ const PostData = ({
     const handleEdit = (closeModal) => {
         const newErrors = {};
         if (!selectedItemToEdit.name) newErrors.name = 'Name is required';
-        if (!selectedItemToEdit.location) newErrors.location = 'Location is required';
-        if (!selectedItemToEdit.province) newErrors.province = 'Province is required';
-        if (!selectedItemToEdit.detail) newErrors.detail = 'Description is required';
-        if (!selectedItemToEdit.imageFile) newErrors.image = 'Image is required';
-    
+        if (!selectedItemToEdit.location)
+            newErrors.location = 'Location is required';
+        if (!selectedItemToEdit.province)
+            newErrors.province = 'Province is required';
+        if (!selectedItemToEdit.detail)
+            newErrors.detail = 'Description is required';
+        if (!selectedItemToEdit.imageFile)
+            newErrors.image = 'Image is required';
+
         setErrors(newErrors);
-    
+
         if (Object.keys(newErrors).length === 0) {
             console.log('Updated Data:', selectedItemToEdit);
             closeModal(null); // close the modal
@@ -125,12 +129,12 @@ const PostData = ({
         setSelectedItemToEdit({
             name: destination_name,
             location: 'Some Location', // Ganti dengan data asli jika tersedia
-            province: 'Jakarta',       // Ganti dengan data asli
+            province: 'Jakarta', // Ganti dengan data asli
             detail: 'Some details here...', // Ganti dengan detail asli
             imageFile: null,
         });
         setDropdownOpen(false);
-    };    
+    };
 
     return (
         <div
@@ -270,6 +274,11 @@ const PostDataTable = () => {
     });
     console.log(filteredPost);
 
+    const handleSearch = () => {
+        console.log('Mencari:', searchTerm);
+        // Lanjutkan logika pencarian, misalnya panggil API atau filter data
+    };
+
     return (
         <div className="flex flex-col items-stretch justify-center p-6 pt-28 h-fit gap-8 font-quicksand ">
             <div className="py-6 flex flex-col items-center bg-[#252527] rounded-md shadow-lg shadow-[#00000055]">
@@ -280,17 +289,26 @@ const PostDataTable = () => {
             </div>
 
             <div className="flex gap-4 mb-2 w-full items-center">
-                <div className="relative w-1/2">
+                <div className="relative w-full md:w-1/2">
                     <input
                         type="text"
-                        className="w-full p-2 rounded-md bg-[#1E1E20] text-white border border-[#444] focus:outline-none focus:ring-2 focus:ring-[#FFA666]"
+                        className="w-full p-2 pr-10 rounded-md bg-[#1E1E20] text-white border border-[#444] focus:outline-none focus:ring-2 focus:ring-[#FFA666]"
                         placeholder="Search by destination name..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                handleSearch();
+                            }
+                        }}
                     />
-                    <div className="absolute inset-y-0 right-0 flex items-center p-2 pr-3">
-                        <FaSearch className="text-xl text-[#FFA666aa]" />
-                    </div>
+                    <button
+                        onClick={handleSearch}
+                        className="absolute inset-y-0 right-0 flex items-center justify-center px-3 rounded-md hover:bg-[#FFA66622] transition duration-200 cursor-pointer"
+                        title="Search"
+                    >
+                        <FaSearch className="text-xl text-[#FFA666]" />
+                    </button>
                 </div>
 
                 <div className="w-40">

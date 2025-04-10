@@ -102,20 +102,23 @@ const ContactData = ({
                             Change to{' '}
                             {contactStatus === 0 ? 'review' : 'succes'}
                         </button>
-                        <div className='w-sm'>
-                        <ModalConfirm
-                            isOpen={showConfirmModal}
-                            item={{
-                                name: contactStatus === 0 ? 'review' : 'succes',
-                            }}
-                            title="Change Contact Status"
-                            message={`Are you sure you want to change this contact's status to ${contactStatus === 0 ? 'On review' : 'Succes'}?`}
-                            onCancel={handleCloseChangeStatus}
-                            onConfirm={changeStatus}
-                            confirmText="Yes, Change"
-                            confirmBg="bg-blue-600"
-                            confirmHover="hover:bg-blue-800"
-                        />
+                        <div className="w-sm">
+                            <ModalConfirm
+                                isOpen={showConfirmModal}
+                                item={{
+                                    name:
+                                        contactStatus === 0
+                                            ? 'review'
+                                            : 'succes',
+                                }}
+                                title="Change Contact Status"
+                                message={`Are you sure you want to change this contact's status to ${contactStatus === 0 ? 'On review' : 'Succes'}?`}
+                                onCancel={handleCloseChangeStatus}
+                                onConfirm={changeStatus}
+                                confirmText="Yes, Change"
+                                confirmBg="bg-blue-600"
+                                confirmHover="hover:bg-blue-800"
+                            />
                         </div>
                         <button
                             onClick={openReplyModal}
@@ -280,6 +283,11 @@ const ContactDataTable = () => {
         return matchesSearch && matchesContact;
     });
 
+    const handleSearch = () => {
+        console.log('Mencari:', searchTerm);
+        // Lanjutkan logika pencarian, misalnya panggil API atau filter data
+    };
+
     return (
         <div className="flex flex-col items-stretch justify-center p-6 pt-28 gap-8 font-quicksand">
             {/* Title Section */}
@@ -299,12 +307,20 @@ const ContactDataTable = () => {
                         placeholder="Search by name or email..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                handleSearch();
+                            }
+                        }}
                     />
-                    <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-                        <FaSearch className="text-xl text-[#FFA666aa]" />
-                    </div>
+                    <button
+                        onClick={handleSearch}
+                        className="absolute inset-y-0 right-0 flex items-center justify-center px-3 rounded-md hover:bg-[#FFA66622] transition duration-200 cursor-pointer"
+                        title="Search"
+                    >
+                        <FaSearch className="text-xl text-[#FFA666]" />
+                    </button>
                 </div>
-
                 <div className="w-40">
                     <select
                         value={stateFilter}
