@@ -17,6 +17,13 @@ const EditConfirm = ({
     handleDrop,
     errors,
     handleEdit,
+    category,
+    setCategory,
+    categoryDropdownOpen,
+    toggleCategoryDropdown,
+    handleCategoryChange,
+    handleSelectCategory,
+    filteredCategories,
 }) => {
     const MotionDiv = motion.div;
 
@@ -189,6 +196,66 @@ const EditConfirm = ({
                                 {errors.detail && (
                                     <div className="text-red-500 text-sm">
                                         {errors.detail}
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Category Dropdown */}
+                            <div className="flex flex-col gap-2">
+                                <label className="block text-white">
+                                    Category:
+                                </label>
+                                <div className="relative w-full">
+                                    <div className="flex items-center">
+                                        <input
+                                            id="category"
+                                            type="text"
+                                            name="category"
+                                            value={category.name}
+                                            onChange={handleCategoryChange}
+                                            placeholder="Search Category"
+                                            className={`flex-3 p-3 font-quicksand rounded text-white border ${
+                                                errors.category
+                                                    ? 'border-red-500'
+                                                    : 'border-white'
+                                            } bg-transparent w-full pr-10 focus:outline-none focus:ring focus:ring-[#FFA666]`}
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={toggleCategoryDropdown}
+                                            className="absolute inset-y-0 right-0 flex items-center justify-center p-2 pl-4 rounded-l-2xl bg-[#FFA666] cursor-pointer hover:bg-white group"
+                                        >
+                                            <FaChevronDown
+                                                className={`text-lg text-black group-hover:text-[#FFA666] transition-transform duration-300 ${
+                                                    categoryDropdownOpen
+                                                        ? 'rotate-180'
+                                                        : 'rotate-0'
+                                                }`}
+                                            />
+                                        </button>
+                                    </div>
+                                    {categoryDropdownOpen &&
+                                        filteredCategories.length > 0 && (
+                                            <ul className="absolute z-10 w-full mt-1 bg-[#252527] text-white border border-[#FFA666] rounded shadow-md max-h-60 overflow-y-auto">
+                                                {filteredCategories.map((c) => (
+                                                    <li
+                                                        key={c.name}
+                                                        className="px-4 py-2 cursor-pointer hover:bg-[#FFA666] hover:text-black transition-all duration-200"
+                                                        onClick={() =>
+                                                            handleSelectCategory(
+                                                                c,
+                                                            )
+                                                        }
+                                                    >
+                                                        {c.name}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                </div>
+                                {errors.category && (
+                                    <div className="text-red-500 text-sm">
+                                        {errors.category}
                                     </div>
                                 )}
                             </div>

@@ -16,6 +16,7 @@ import ModalEdit from '../../components/profile/modalEdit.jsx';
 import ModalMessage from '../../components/profile/modalMessage.jsx';
 import Sidebar from '../../components/profile/sidebar';
 import ProfileIcon from '../../assets/navbar/Icon.webp';
+import { ValidateFields } from '../../util/validation.js';
 
 // Redux
 import { useDispatch, useSelector } from 'react-redux';
@@ -656,23 +657,14 @@ const Profile = () => {
                                     }
                                     readOnly
                                     placeholder="Your Username"
-                                    className={`
-                                            ${
-                                                err.username
-                                                    ? 'border-red-500'
-                                                    : 'border-white'
-                                            }
-                                        flex-3 p-3 font-quicksand rounded text-white border  w-full focus:outline-none`}
+                                    className="flex-3 p-3 font-quicksand rounded text-white border  w-full focus:outline-none"
                                 />
-                                <div className="error text-red-500 text-sm">
-                                    {err.username}
-                                </div>
                             </div>
                             <div>
                                 <button
                                     className="flex-1 lg:px-10 py-3 w-full bg-[#FFA666] text-white font-quicksand rounded hover:bg-orange-500 transition cursor-pointer font-semibold"
                                     onClick={() => {
-                                        setNewUsername(username); // Isi awal field dari data sekarang
+                                        setNewUsername(username);
                                         setIsModalUsernameOpen(true);
                                     }}
                                 >
@@ -687,12 +679,21 @@ const Profile = () => {
                             title="Edit Username"
                             onSubmit={async (e) => {
                                 e.preventDefault();
+
+                                const isValid = ValidateFields(
+                                    { username: newUsername },
+                                    { username: { minLength: 4 } },
+                                    setErr,
+                                );
+
+                                if (!isValid) return;
+
                                 await handlerEditUsername(newUsername);
                                 setUsername(newUsername);
                                 setIsModalUsernameOpen(false);
                             }}
                         >
-                            <div className="flex flex-col gap-2">
+                            <div className="flex flex-col">
                                 <label
                                     htmlFor="username"
                                     className="text-white font-medium"
@@ -703,12 +704,27 @@ const Profile = () => {
                                     id="username"
                                     type="text"
                                     value={newUsername}
-                                    onChange={(e) =>
-                                        setNewUsername(e.target.value)
-                                    }
-                                    className="w-full p-3 font-quicksand rounded text-white bg-transparent border border-white focus:outline-none"
+                                    onChange={(e) => {
+                                        setNewUsername(e.target.value);
+                                        setErr((prev) => ({
+                                            ...prev,
+                                            username: null,
+                                        }));
+                                    }}
+                                    className={`w-full p-3 font-quicksand rounded text-white bg-transparent border mt-2 ${
+                                        err.username
+                                            ? 'border-red-500'
+                                            : 'border-white'
+                                    } focus:outline-none`}
                                     placeholder="Enter new username"
                                 />
+                                <div className="min-h-[20px]">
+                                    {err.username && (
+                                        <p className="text-sm text-red-500">
+                                            {err.username}
+                                        </p>
+                                    )}
+                                </div>
                             </div>
                         </ModalEdit>
                     </div>
@@ -723,20 +739,11 @@ const Profile = () => {
                                 <input
                                     type="text"
                                     placeholder="Your Display Name"
-                                    className={`
-                                            ${
-                                                err.name
-                                                    ? 'border-red-500'
-                                                    : 'border-white'
-                                            }
-                                            flex-3 w-full p-3 font-quicksand rounded text-white border  focus:outline-none`}
+                                    className="flex-3 p-3 font-quicksand rounded text-white border  w-full focus:outline-none"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
                                     readOnly
                                 />
-                                <div className="error text-red-500 text-sm">
-                                    {err.name}
-                                </div>
                             </div>
                             <div>
                                 <button
@@ -755,9 +762,19 @@ const Profile = () => {
                             isOpen={isModalEditNameOpen}
                             onClose={() => setIsModalEditNameOpen(false)}
                             title="Edit Display Name"
-                            onSubmit={(e) => {
+                            onSubmit={async (e) => {
                                 e.preventDefault();
-                                handleEditName(newName);
+
+                                const isValid = ValidateFields(
+                                    { name: newName },
+                                    { name: { minLength: 4 } },
+                                    setErr,
+                                );
+
+                                if (!isValid) return;
+
+                                await handleEditName(newName);
+                                setUsername(newName);
                                 setIsModalEditNameOpen(false);
                             }}
                         >
@@ -772,10 +789,27 @@ const Profile = () => {
                                     id="display-name"
                                     type="text"
                                     value={newName}
-                                    onChange={(e) => setNewName(e.target.value)}
-                                    className="w-full p-3 font-quicksand rounded text-white bg-transparent border border-white focus:outline-none"
+                                    onChange={(e) => {
+                                        setNewName(e.target.value);
+                                        setErr((prev) => ({
+                                            ...prev,
+                                            name: null,
+                                        }));
+                                    }}
+                                    className={`w-full p-3 font-quicksand rounded text-white bg-transparent border ${
+                                        err.name
+                                            ? 'border-red-500'
+                                            : 'border-white'
+                                    } focus:outline-none`}
                                     placeholder="Enter new display name"
                                 />
+                                <div className="min-h-[20px]">
+                                    {err.name && (
+                                        <p className="text-sm text-red-500">
+                                            {err.name}
+                                        </p>
+                                    )}
+                                </div>
                             </div>
                         </ModalEdit>
                     </div>
@@ -788,20 +822,11 @@ const Profile = () => {
                                 <input
                                     type="email"
                                     placeholder="Your Email"
-                                    className={`
-                                        ${
-                                            err.email
-                                                ? 'border-red-500'
-                                                : 'border-white'
-                                        }
-                                        flex-3 p-3 font-quicksand rounded text-white border w-full border-white focus:outline-none`}
+                                    className="flex-3 p-3 font-quicksand rounded text-white border w-full border-white focus:outline-none"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     readOnly
                                 />
-                                <div className="error text-red-500 text-sm">
-                                    {err.email}
-                                </div>
                             </div>
                             <div>
                                 <button
@@ -822,6 +847,15 @@ const Profile = () => {
                             title="Edit Email"
                             onSubmit={(e) => {
                                 e.preventDefault();
+
+                                const isValid = ValidateFields(
+                                    { email: newEmail },
+                                    { email: { isEmail: true } },
+                                    setErr,
+                                );
+
+                                if (!isValid) return;
+
                                 handleEditEmail(newEmail);
                                 setIsModalEditEmailOpen(false);
                             }}
@@ -835,14 +869,29 @@ const Profile = () => {
                                 </label>
                                 <input
                                     id="email"
-                                    // type="email"
+                                    type="email"
                                     value={newEmail}
-                                    onChange={(e) =>
-                                        setNewEmail(e.target.value)
-                                    }
-                                    className="w-full p-3 font-quicksand rounded text-white bg-transparent border border-white focus:outline-none"
+                                    onChange={(e) => {
+                                        setNewEmail(e.target.value);
+                                        setErr((prev) => ({
+                                            ...prev,
+                                            email: null,
+                                        }));
+                                    }}
+                                    className={`w-full p-3 font-quicksand rounded text-white bg-transparent border ${
+                                        err.email
+                                            ? 'border-red-500'
+                                            : 'border-white'
+                                    } focus:outline-none`}
                                     placeholder="Enter new email"
                                 />
+                                <div className="min-h-[20px]">
+                                    {err.email && (
+                                        <p className="text-sm text-red-500">
+                                            {err.email}
+                                        </p>
+                                    )}
+                                </div>
                             </div>
                         </ModalEdit>
                     </div>
@@ -907,7 +956,36 @@ const Profile = () => {
                             isOpen={isPasswordModalOpen}
                             title="Change Password"
                             onClose={closePopUpPassword}
-                            onSubmit={handleEditPassword}
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                setPasswordError({}); 
+
+                                const isValid = ValidateFields(
+                                    {
+                                        oldPassword: passwords.oldPassword,
+                                        newPassword: passwords.newPassword,
+                                        confirmationPassword:
+                                            passwords.confirmationPassword,
+                                    },
+                                    {
+                                        oldPassword: { required: true },
+                                        newPassword: {
+                                            required: true,
+                                            minLength: 6,
+                                        },
+                                        confirmationPassword: {
+                                            required: true,
+                                            match: passwords.newPassword,
+                                        },
+                                    },
+                                    setPasswordError,
+                                );
+
+                                if (!isValid) return;
+
+                                handleEditPassword();
+                                closePopUpPassword();
+                            }}
                         >
                             <div className="space-y-4">
                                 <div className="flex flex-col">
@@ -954,8 +1032,8 @@ const Profile = () => {
                                             )}
                                         </button>
                                     </div>
-                                    <div className="text-red-500 text-sm">
-                                        {passwordError.oldPassword}
+                                    <div className="min-h-[20px]">
+                                        <p className='text-red-500 text-sm'>{passwordError.oldPassword}</p>
                                     </div>
                                 </div>
                                 <div className="flex flex-col">
@@ -1001,8 +1079,8 @@ const Profile = () => {
                                             )}
                                         </button>
                                     </div>
-                                    <div className="error text-red-500 text-sm">
-                                        {passwordError.newPassword}
+                                    <div className="min-h-[20px]">
+                                        <p className='text-red-500 text-sm'>{passwordError.newPassword}</p>
                                     </div>
                                 </div>
 
@@ -1052,8 +1130,8 @@ const Profile = () => {
                                             )}
                                         </button>
                                     </div>
-                                    <div className="error text-red-500 text-sm">
-                                        {passwordError.confirmationPassword}
+                                    <div className="min-h-[20px]">
+                                        <p className='text-red-500 text-sm'>{passwordError.confirmationPassword}</p>
                                     </div>
                                 </div>
                             </div>

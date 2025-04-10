@@ -37,6 +37,9 @@ const PostData = ({
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [filteredProvinces, setFilteredProvinces] = useState([]);
     const [isDragging, setIsDragging] = useState(false);
+    const [category, setCategory] = useState({ name: '' });
+        const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
+        const [filteredCategories, setFilteredCategories] = useState([]);
     const [errorsEdit, setErrorsEdit] = useState({
         name: '',
         detail: '',
@@ -44,7 +47,18 @@ const PostData = ({
         location: '',
         province: '',
     });
-
+    const allCategories = [
+        { name: 'Peak' },
+        { name: 'Mountain' },
+        { name: 'Forest' },
+        { name: 'Beach' },
+        { name: 'Waterfall' },
+        { name: 'Lake' },
+        { name: 'Museum' },
+        { name: 'Recreational Park' },
+        { name: 'Tourist Village' },
+        { name: 'Others' },
+    ];
     const states = {
         deleted: (
             <div className="w-fit px-4 py-1 bg-red-500 text-white text-sm tracking-wider rounded-md">
@@ -260,6 +274,29 @@ const PostData = ({
         setDropdownOpen(false);
     };
 
+    const handleCategoryChange = (e) => {
+        const value = e.target.value;
+        setCategory({ name: value });
+
+        const filtered = allCategories.filter((c) =>
+            c.name.toLowerCase().includes(value.toLowerCase()),
+        );
+        setFilteredCategories(filtered);
+        setCategoryDropdownOpen(true);
+    };
+
+    const toggleCategoryDropdown = () => {
+        setCategoryDropdownOpen((prev) => !prev);
+        if (!categoryDropdownOpen && category.name === '') {
+            setFilteredCategories(allCategories); // tampilkan semua saat kosong
+        }
+    };
+
+    const handleSelectCategory = (selectedCategory) => {
+        setCategory(selectedCategory);
+        setCategoryDropdownOpen(false);
+    };
+
     return (
         <div
             className="grid w-full items-center bg-[#252527] py-3 px-5 text-white relative"
@@ -373,6 +410,13 @@ const PostData = ({
                 handleDrop={handleDrop}
                 errors={errorsEdit}
                 handleEdit={handleEdit}
+                category={category}
+                setCategory={setCategory}
+                categoryDropdownOpen={categoryDropdownOpen}
+                toggleCategoryDropdown={toggleCategoryDropdown}
+                handleCategoryChange={handleCategoryChange}
+                handleSelectCategory={handleSelectCategory}
+                filteredCategories={filteredCategories}
             />
             {/* Modal Ban */}
             <ModalEdit
