@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Logo from '../../assets/navbar/logo.webp';
 import LogoProfile from '../../assets/icons/profile_outline.svg';
 import LogoNotif from '../../assets/icons/notification_outline.svg';
 import { Link, useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchNotificationAdmin } from '../../stores/notificationAdminReducer.js';
 
 const Header = ({ onNotifClick, hasNewMessage }) => {
     const location = useLocation();
@@ -12,10 +14,16 @@ const Header = ({ onNotifClick, hasNewMessage }) => {
         '/admin/posts': 'Posts',
         '/admin/contact': 'Contact',
     };
-
+    const dispatch = useDispatch();
+    const hasNotRead = useSelector(
+        (state) => state.notificationAdmin.hasNotRead,
+    );
     const currentPath = location.pathname.endsWith('/')
         ? location.pathname.slice(0, -1)
         : location.pathname;
+    useEffect(() => {
+        dispatch(fetchNotificationAdmin());
+    }, []);
 
     const title = pathMap[currentPath] || 'Dashboard';
 
@@ -48,7 +56,7 @@ const Header = ({ onNotifClick, hasNewMessage }) => {
                                 className="w-7 h-7"
                             />
                         </button>
-                        {hasNewMessage && (
+                        {hasNotRead && (
                             <span className="absolute top-1 right-1 w-3 h-3 bg-red-500 rounded-full animate-ping" />
                         )}
                     </div>

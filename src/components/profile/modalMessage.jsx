@@ -1,10 +1,30 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { IoClose } from 'react-icons/io5';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useDispatch, useSelector } from 'react-redux';
+import { markNotificationAdmin } from '../../stores/notificationAdminReducer';
 
-const ModalMessage = ({ isOpen, onClose, children, title = 'Message Notification', maxWidth = 'max-w-5xl' }) => {
+const ModalMessage = ({
+    isOpen,
+    onClose,
+    title = 'Message Notification',
+    maxWidth = 'max-w-5xl',
+}) => {
     const MotionDiv = motion.div;
+    const notifications = useSelector((state) => state.notificationAdmin.data);
+    const prevOpen = useRef(false);
+    const dispatch = useDispatch();
 
+    useEffect(() => {
+        if (!isOpen && prevOpen.current) {
+            console.log('test');
+            dispatch(markNotificationAdmin());
+        }
+        prevOpen.current = isOpen;
+    }, [isOpen]);
+    useEffect(() => {
+        console.log(notifications);
+    }, [notifications]);
     return (
         <AnimatePresence>
             {isOpen && (
@@ -36,8 +56,28 @@ const ModalMessage = ({ isOpen, onClose, children, title = 'Message Notification
                             </div>
                         </div>
 
-                        {/* 👇 INI WAJIB AGAR KONTEN TAMPIL */}
-                        <div className="p-4 space-y-4">{children}</div>
+                        <div className="p-4 space-y-4">
+                            {notifications.map((notification) => {
+                                return (
+                                    <div
+                                        key={notification.id}
+                                        className={`${notification.is_read ? '' : 'bg-[#333339]'} border border-gray-600 rounded-lg px-4 py-3 text-white`}
+                                    >
+                                        <div className="flex justify-between items-center mb-1">
+                                            <span className="font-semibold">
+                                                {notification.from}
+                                            </span>
+                                            <span className="text-sm text-gray-400">
+                                                {notification.created_at}
+                                            </span>
+                                        </div>
+                                        <p className="text-sm text-gray-300">
+                                            {notification.detail}
+                                        </p>
+                                    </div>
+                                );
+                            })}
+                        </div>
 
                         {/* Footer */}
                         <div className="sticky bottom-0 bg-[#252527] z-10 p-4 pb-6 border-t border-gray-600 rounded-b flex justify-end">

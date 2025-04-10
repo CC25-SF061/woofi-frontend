@@ -21,9 +21,7 @@ const deleteConfirm = ({
     const handleCloseModal = () => {
         onCancel(null);
     };
-    useEffect(() => {
-        console.log(isOpen);
-    }, [isOpen]);
+
     return (
         <div>
             <AnimatePresence>

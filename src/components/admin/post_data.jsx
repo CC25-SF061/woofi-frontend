@@ -295,7 +295,7 @@ const PostData = ({
                 </button>
 
                 {isOpen && (
-                    <div className="absolute right-0 mt-2  w-44 bg-[#1E1E20] text-white border border-[#444] rounded-md shadow-xl overflow-hidden z-100">
+                    <div className="absolute right-0 mt-2  w-44 bg-[#1E1E20] text-white border border-[#444] rounded-md shadow-xl overflow-hidden z-20">
                         {status === 'posted' ? (
                             <>
                                 <button
@@ -398,7 +398,6 @@ const PostData = ({
 
                 <div className="error text-sm text-error">{err.reason}</div>
             </ModalEdit>
-            <ToastContainer />
         </div>
     );
 };
@@ -406,6 +405,7 @@ const PostData = ({
 const PostDataTable = () => {
     const tableRowTemplate = { gridTemplateColumns: '20fr 15fr 1fr' };
     const [searchTerm, setSearchTerm] = useState('');
+    const [searchResult, setSearchResult] = useState();
     const [stateFilter, setStateFilter] = useState();
     const [activeDropdownIndex, setActiveDropdownIndex] = useState(null);
     const [posts, setPosts] = useState([]);
@@ -421,6 +421,7 @@ const PostDataTable = () => {
                 params: {
                     page: page,
                     status: stateFilter || undefined,
+                    name: searchResult || undefined,
                 },
             });
             if (response.data.data.length === 0) {
@@ -460,7 +461,7 @@ const PostDataTable = () => {
             await searchDestination();
             dispatch(hideLoading(keyLoading));
         })();
-    }, [stateFilter]);
+    }, [stateFilter, searchResult]);
     const handleDelete = (id) => {
         const tempPosts = [...posts];
         const updatedPostsIndex = tempPosts.findIndex((post) => post.id === id);
@@ -482,8 +483,7 @@ const PostDataTable = () => {
     };
 
     const handleSearch = () => {
-        // console.log('Mencari:', searchTerm);
-        // Lanjutkan logika pencarian, misalnya panggil API atau filter data
+        setSearchResult(searchTerm);
     };
     const renderDestination = (index) => {
         const v = posts[index];

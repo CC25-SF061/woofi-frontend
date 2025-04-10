@@ -368,6 +368,7 @@ const UserData = ({
 const UserDataTable = () => {
     const tableRowTemplate = { gridTemplateColumns: '20fr 15fr 1fr' };
     const [searchTerm, setSearchTerm] = useState('');
+    const [searchResult, setSearchResult] = useState();
     const [roleFilter, setRoleFilter] = useState();
     const [activeDropdownIndex, setActiveDropdownIndex] = useState(null);
     const [users, setUsers] = useState([]);
@@ -379,12 +380,14 @@ const UserDataTable = () => {
             const users = await axios.get('/api/admin/users', {
                 params: {
                     role: roleFilter,
+                    q: searchResult || undefined,
                 },
             });
             prevPage.current = page;
 
             setUsers(users.data.data);
         } catch (e) {
+            console.log(e);
             return toast.error('Something went wrong', {
                 position: 'top-right',
                 autoClose: 3000,
@@ -435,11 +438,10 @@ const UserDataTable = () => {
             await searchUser();
             dispatch(hideLoading(keyLoading));
         })();
-    }, [roleFilter]);
+    }, [roleFilter, searchResult]);
 
-    const handleSearch = () => {
-        console.log('Mencari:', searchTerm);
-        // Lanjutkan logika pencarian, misalnya panggil API atau filter data
+    const handleSearch = async () => {
+        setSearchResult(searchTerm);
     };
 
     return (
@@ -538,7 +540,6 @@ const UserDataTable = () => {
                     </div>
                 )}
             </div>
-            <ToastContainer />
         </div>
     );
 };

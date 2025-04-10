@@ -57,7 +57,7 @@ const Dashboard = () => {
                 title="Message Notification"
                 maxWidth="max-w-7xl"
             >
-                {notifications.map((notif) => (
+                {/* {notifications.map((notif) => (
                     <div
                         key={notif.id}
                         className="bg-[#333339] border border-gray-600 rounded-lg px-4 py-3 text-white"
@@ -72,7 +72,7 @@ const Dashboard = () => {
                         </div>
                         <p className="text-sm text-gray-300">{notif.message}</p>
                     </div>
-                ))}
+                ))} */}
             </ModalMessage>
         </div>
     );
