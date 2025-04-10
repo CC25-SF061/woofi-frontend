@@ -36,11 +36,16 @@ const DataDestination = () => {
         province: '',
     });
     const allCategories = [
-        { name: 'Beach' },
+        { name: 'Peak' },
         { name: 'Mountain' },
-        { name: 'Cultural' },
-        { name: 'Urban' },
-        { name: 'Adventure' },
+        { name: 'Forest' },
+        { name: 'Beach' },
+        { name: 'Waterfall' },
+        { name: 'Lake' },
+        { name: 'Museum' },
+        { name: 'Recreational Park' },
+        { name: 'Tourist Village' },
+        { name: 'Others' },
     ];
     const [provinces, setProvinces] = useState([]);
     const invalidFieldErr = (arr) => {
