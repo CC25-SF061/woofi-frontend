@@ -21,6 +21,9 @@ const AddData = () => {
     const [isDragging, setIsDragging] = useState(false);
     const dispatch = useDispatch();
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [category, setCategory] = useState({ name: '' });
+    const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
+    const [filteredCategories, setFilteredCategories] = useState([]);
     const [formData, setFormData] = useState({
         name: '',
         detail: '',
@@ -35,6 +38,18 @@ const AddData = () => {
         location: '',
         province: '',
     });
+    const allCategories = [
+        { name: 'Peak' },
+        { name: 'Mountain' },
+        { name: 'Forest' },
+        { name: 'Beach' },
+        { name: 'Waterfall' },
+        { name: 'Lake' },
+        { name: 'Museum' },
+        { name: 'Recreational Park' },
+        { name: 'Tourist Village' },
+        { name: 'Others' },
+    ];
     const [province, setProvince] = useState({ name: '' });
     const [filteredProvinces, setFilteredProvinces] = useState([]);
     const [provinces, setProvinces] = useState([]);
@@ -190,6 +205,29 @@ const AddData = () => {
             handleImageChange({ target: { files: [file] } });
         }
     };
+
+    const handleCategoryChange = (e) => {
+        const value = e.target.value;
+        setCategory({ name: value });
+    
+        const filtered = allCategories.filter((c) =>
+            c.name.toLowerCase().includes(value.toLowerCase())
+        );
+        setFilteredCategories(filtered);
+        setCategoryDropdownOpen(true);
+    };
+    
+    const toggleCategoryDropdown = () => {
+        setCategoryDropdownOpen((prev) => !prev);
+        if (!categoryDropdownOpen && category.name === '') {
+            setFilteredCategories(allCategories);
+        }
+    };
+    
+    const handleSelectCategory = (selectedCategory) => {
+        setCategory(selectedCategory);
+        setCategoryDropdownOpen(false);
+    };    
 
     return (
         <div>
@@ -453,30 +491,93 @@ const AddData = () => {
                                         )}
                                     </div>
                                 </div>
-                                <div className="flex flex-col mb-2 lg:mb-0">
+
+                                <div className="flex flex-col mb-2 lg:mb-0 mt-auto">
                                     <p className="font-quicksand text-white pb-2">
-                                        Location
+                                        Category
                                     </p>
-                                    <input
-                                        type="text"
-                                        name="location"
-                                        value={formData.location}
-                                        onChange={handleChange}
-                                        placeholder="Input Location"
-                                        className={`flex-3 p-3 font-quicksand rounded text-white border ${
-                                            errors.location
-                                                ? 'border-red-500'
-                                                : 'border-white'
-                                        } bg-transparent focus:outline-none focus:ring focus:ring-[#FFA666]`}
-                                    />
+                                    <div className="relative w-full">
+                                        <div className="flex items-center">
+                                            <input
+                                                id="category"
+                                                type="text"
+                                                name="category"
+                                                value={category.name}
+                                                onChange={handleCategoryChange}
+                                                placeholder="Search Category"
+                                                className={`flex-3 p-3 font-quicksand rounded text-white border ${
+                                                    errors.category
+                                                        ? 'border-red-500'
+                                                        : 'border-white'
+                                                } bg-transparent w-full pr-10 focus:outline-none focus:ring focus:ring-[#FFA666]`}
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={toggleCategoryDropdown}
+                                                className="absolute inset-y-0 right-0 flex items-center justify-center p-2 pl-4 rounded rounded-l-2xl bg-[#FFA666] cursor-pointer transition-all duration-200 hover:bg-white group"
+                                            >
+                                                <FaChevronDown
+                                                    className={`text-lg text-black group-hover:text-[#FFA666] transition-transform duration-300 ${
+                                                        categoryDropdownOpen
+                                                            ? 'rotate-180'
+                                                            : 'rotate-0'
+                                                    }`}
+                                                />
+                                            </button>
+                                        </div>
+                                        {categoryDropdownOpen &&
+                                            filteredCategories.length > 0 && (
+                                                <ul className="absolute z-10 w-full mt-1 bg-[#252527] text-white border border-[#FFA666] rounded shadow-md max-h-60 overflow-y-auto">
+                                                    {filteredCategories.map(
+                                                        (c) => (
+                                                            <li
+                                                                key={c.name}
+                                                                className="px-4 py-2 cursor-pointer hover:bg-[#FFA666] hover:text-black transition-all duration-200"
+                                                                onClick={() =>
+                                                                    handleSelectCategory(
+                                                                        c,
+                                                                    )
+                                                                }
+                                                            >
+                                                                {c.name}
+                                                            </li>
+                                                        ),
+                                                    )}
+                                                </ul>
+                                            )}
+                                    </div>
                                     <div className="min-h-[20px]">
-                                        {errors.location && (
+                                        {errors.category && (
                                             <div className="text-red-500 text-sm">
-                                                {errors.location}
+                                                {errors.category}
                                             </div>
                                         )}
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div className="flex flex-col mb-2 lg:mb-0">
+                            <p className="font-quicksand text-white pb-2">
+                                Location
+                            </p>
+                            <input
+                                type="text"
+                                name="location"
+                                value={formData.location}
+                                onChange={handleChange}
+                                placeholder="Input Location"
+                                className={`flex-3 p-3 font-quicksand rounded text-white border ${
+                                    errors.location
+                                        ? 'border-red-500'
+                                        : 'border-white'
+                                } bg-transparent focus:outline-none focus:ring focus:ring-[#FFA666]`}
+                            />
+                            <div className="min-h-[20px]">
+                                {errors.location && (
+                                    <div className="text-red-500 text-sm">
+                                        {errors.location}
+                                    </div>
+                                )}
                             </div>
                         </div>
                         <button

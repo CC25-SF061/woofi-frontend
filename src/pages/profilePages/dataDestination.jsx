@@ -25,6 +25,9 @@ const DataDestination = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [filteredProvinces, setFilteredProvinces] = useState([]);
     const [deleteType, setDeleteType] = useState(null);
+    const [category, setCategory] = useState({ name: '' });
+    const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
+    const [filteredCategories, setFilteredCategories] = useState([]);
     const [errors, setErrors] = useState({
         name: '',
         detail: '',
@@ -32,6 +35,13 @@ const DataDestination = () => {
         location: '',
         province: '',
     });
+    const allCategories = [
+        { name: 'Beach' },
+        { name: 'Mountain' },
+        { name: 'Cultural' },
+        { name: 'Urban' },
+        { name: 'Adventure' },
+    ];
     const [provinces, setProvinces] = useState([]);
     const invalidFieldErr = (arr) => {
         const newObjErr = {
@@ -223,6 +233,29 @@ const DataDestination = () => {
         }
     };
 
+    const handleCategoryChange = (e) => {
+        const value = e.target.value;
+        setCategory({ name: value });
+
+        const filtered = allCategories.filter((c) =>
+            c.name.toLowerCase().includes(value.toLowerCase()),
+        );
+        setFilteredCategories(filtered);
+        setCategoryDropdownOpen(true);
+    };
+
+    const toggleCategoryDropdown = () => {
+        setCategoryDropdownOpen((prev) => !prev);
+        if (!categoryDropdownOpen && category.name === '') {
+            setFilteredCategories(allCategories); // tampilkan semua saat kosong
+        }
+    };
+
+    const handleSelectCategory = (selectedCategory) => {
+        setCategory(selectedCategory);
+        setCategoryDropdownOpen(false);
+    };
+
     return (
         <div className="min-h-screen bg-[#221122] flex flex-col items-center lg:justify-center">
             <ToastContainer />
@@ -373,6 +406,13 @@ const DataDestination = () => {
                 handleDrop={handleDrop}
                 errors={errors}
                 handleEdit={handleEdit}
+                category={category}
+                setCategory={setCategory}
+                categoryDropdownOpen={categoryDropdownOpen}
+                toggleCategoryDropdown={toggleCategoryDropdown}
+                handleCategoryChange={handleCategoryChange}
+                handleSelectCategory={handleSelectCategory}
+                filteredCategories={filteredCategories}
             />
         </div>
     );
