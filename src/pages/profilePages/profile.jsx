@@ -29,7 +29,6 @@ import {
 import imgURL from '../../util/imgURL.js';
 import { nanoid } from 'nanoid';
 import { hideLoading } from '../../stores/loadingReducer.js';
-import { setData } from '@/redux/slices/userSlice';
 
 const Profile = () => {
     // Import and initial state
@@ -117,7 +116,7 @@ const Profile = () => {
                 },
             );
             localStorage.removeItem('token');
-            dispatch(setData());
+            // dispatch(setData());
             await navigate('/sign-in');
         } catch (e) {
             console.log(e);
