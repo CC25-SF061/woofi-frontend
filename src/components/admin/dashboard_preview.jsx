@@ -8,15 +8,15 @@ const Dashboard = () => {
     const destinations_count = '554';
 
     return (
-        <div className="flex flex-row items-stretch  p-6 pt-28 h-fit gap-8 w-full font-quicksand">
-            <div className="flex flex-col items-center p-7 px-24 gap-1 rounded-md shadow-lg bg-[#252527] text-[#aaa] text-lg">
+        <div className="flex flex-row items-stretch p-6 pt-28 h-fit lg:gap-8 justify-between lg:justify-normal w-full font-quicksand whitespace-nowrap">
+            <div className="flex flex-col items-center p-7 lg:px-24 gap-1 rounded-md shadow-lg bg-[#252527] text-[#aaa] text-lg"> 
                 <img src={LogoUsers} alt="Users Icon" className="w-8 mb-3" />
-                <p>Active Users</p>
+                <p >Active Users</p>
                 <p className="font-semibold text-4xl tracking-wider">
                     {users_count}
                 </p>
             </div>
-            <div className="flex flex-col items-center p-7 px-24 gap-1 rounded-md shadow-lg bg-[#252527] text-[#aaa] text-lg">
+            <div className="flex flex-col items-center p-7 lg:px-24 gap-1 rounded-md shadow-lg bg-[#252527] text-[#aaa] text-lg">
                 <img
                     src={LogoDatabase}
                     alt="Database Icon"

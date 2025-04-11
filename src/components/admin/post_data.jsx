@@ -310,18 +310,18 @@ const PostData = ({
         >
             <div className="flex items-center gap-3">
                 <img
-                    className="h-9 aspect-square rounded-md object-cover"
+                    className="h-9 aspect-square rounded-3xl hidden lg:flex"
                     src={pic}
                     alt="Profile"
                 />
-                <div className="flex flex-col">
-                    <p className="tracking-wide font-semibold">
+                <div className="flex flex-col w-[175px] lg:w-auto">
+                    <p className="truncate tracking-wide font-semibold">
                         {destination_name}
                     </p>
-                    <p className="tracking-tight text-gray-400 text-sm">
+                    <p className="truncate tracking-tight text-gray-400 text-sm">
                         {username}
                     </p>
-                    <p className="tracking-tight text-gray-500 text-xs">
+                    <p className="truncate tracking-tight text-gray-500 text-xs">
                         {email}
                     </p>
                 </div>
@@ -610,7 +610,7 @@ const PostDataTable = () => {
             </div>
 
             <div
-                className="flex flex-col divide-white divide-y"
+                className="flex flex-col divide-white divide-y w-full"
                 ref={listInnerRef}
             >
                 <div
@@ -628,13 +628,15 @@ const PostDataTable = () => {
                     </div>
                 </div>
                 <ToastContainer />
-                {posts.length > 0 ? (
-                    posts.map((_, index) => renderDestination(index))
-                ) : (
-                    <div className="text-center text-white py-6 bg-[#1E1E20]">
-                        No destinations found.
-                    </div>
-                )}
+                <div className='overflow-y-auto max-h-[65vh]'>
+                    {posts.length > 0 ? (
+                        posts.map((_, index) => renderDestination(index))
+                    ) : (
+                        <div className="text-center text-white py-6 bg-[#1E1E20]">
+                            No destinations found.
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );

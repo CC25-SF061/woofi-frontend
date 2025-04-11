@@ -283,10 +283,12 @@ const Navbar = () => {
                                     >
                                         <img
                                             src={
-                                                new URL(
-                                                    user.profileImage,
-                                                    import.meta.env.VITE_STATIC_ASSET_BASE_URL,
-                                                ).href || defaultProfile
+                                                user.profileImage
+                                                    ? new URL(
+                                                          user.profileImage,
+                                                          import.meta.env.VITE_STATIC_ASSET_BASE_URL,
+                                                      ).href
+                                                    : defaultProfile
                                             }
                                             alt="Profile"
                                             className="size-8 rounded-full border border-gray-300"

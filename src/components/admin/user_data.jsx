@@ -139,7 +139,7 @@ const UserData = ({
             await axios.post(`api/admin/user/${id}/unban`);
             onUnban(id);
             closeUnbanConfirmation();
-        } catch (e) {
+        } catch {
             return toast.error('Something went wrong', {
                 position: 'top-right',
                 autoClose: 3000,
@@ -209,7 +209,7 @@ const UserData = ({
         >
             <div className="flex items-center gap-3">
                 <img
-                    className="h-9 aspect-square rounded-3xl"
+                    className="h-9 aspect-square rounded-3xl hidden lg:flex"
                     src={
                         image
                             ? new URL(
@@ -219,9 +219,9 @@ const UserData = ({
                             : defaultProfile
                     }
                 />
-                <div className="flex flex-col">
-                    <p className="tracking-wide font-semibold">{name}</p>
-                    <p className="tracking-tight text-gray-500 text-sm">
+                <div className="flex flex-col w-[175px] lg:w-auto">
+                    <p className="truncate tracking-wide font-semibold">{name}</p>
+                    <p className="truncate tracking-tight text-gray-500 text-sm">
                         {email}
                     </p>
                 </div>
@@ -493,7 +493,7 @@ const UserDataTable = () => {
                 </div>
             </div>
 
-            <div className="flex flex-col divide-white divide-y">
+            <div className="flex flex-col divide-white divide-y w-full">
                 {/* Table Header */}
                 <div
                     className="grid w-full items-center bg-[#FFA666] py-3 px-5 rounded-tl-lg rounded-tr-lg text-black font-semibold tracking-wide"
@@ -510,8 +510,8 @@ const UserDataTable = () => {
                     </div>
                 </div>
 
-                <div className="overflow-y-auto">
-                    {/* Table Contents */}
+                {/* Table Contents */}
+                <div className="overflow-y-auto max-h-[65vh]">
                     {users.length > 0 ? (
                         users.map((v, index) => (
                             <UserData
@@ -536,7 +536,7 @@ const UserDataTable = () => {
                             />
                         ))
                     ) : (
-                        <div className="text-center text-white py-6 bg-[#1E1E20]">
+                        <div className="text-center text-white py-6 bg-[#1E1E20] text-sm sm:text-base">
                             No users found.
                         </div>
                     )}
