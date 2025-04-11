@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 
 const DashboardUser = () => {
+    const availableYears = [2025];
     const nullBlock = { month: 1, color: '#000000', count: 0 };
 
     const dispatch = useDispatch();
@@ -138,7 +139,7 @@ const DashboardUser = () => {
                                 setStartMonthIndex(0);
                             }}
                         >
-                            {Object.keys(userDataPerYear).map((year) => (
+                            {availableYears.map((year) => (
                                 <option key={year} value={year}>
                                     {year}
                                 </option>
@@ -253,14 +254,15 @@ const DashboardUser = () => {
                                 <div
                                     className="rounded-full w-2 aspect-square"
                                     style={{
-                                        backgroundColor: v.color,
+                                        backgroundColor: getNamedMonth(v.month)
+                                            .color,
                                     }}
                                 ></div>
                                 <p className="font-semibold">
-                                    {v.month}&nbsp;
+                                    {getNamedMonth(v.month).name}&nbsp;
                                     <span
                                         style={{
-                                            color: v.color,
+                                            color: getNamedMonth(v.month).color,
                                         }}
                                     >
                                         ({v.count})
