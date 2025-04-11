@@ -218,10 +218,10 @@ const ContactData = ({
     };
     return (
         <div
-            className="grid w-full items-center bg-[#1E1E20] py-3 px-5 text-white"
+            className="grid grid-cols-4 w-full items-center bg-[#1E1E20] p-5 text-white"
             style={tableRowTemplate}
         >
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 truncate">
                 <img
                     className="h-9 w-9 rounded-full object-cover"
                     src={
@@ -239,7 +239,9 @@ const ContactData = ({
                     <p className="text-sm text-gray-400">{email}</p>
                 </div>
             </div>
-            <p className="text-sm text-gray-300">{reason}</p>
+            <p className="text-sm text-gray-300">
+                {reason}
+            </p>
             <div>{states[replied]}</div>
             <div className="relative ">
                 <button
@@ -250,7 +252,7 @@ const ContactData = ({
                 </button>
 
                 {isOpen && (
-                    <div className="absolute right-0 mt-2 z-30 w-44 bg-[#1E1E20] text-gray-400 border border-[#444] rounded-md shadow-xl overflow-hidden">
+                    <div className="absolute left-10 -top-7 mt-2 z-30 w-38 bg-[#1E1E20] text-gray-400 border border-[#444] rounded-md shadow-xl overflow-hidden">
                         <button
                             onClick={openReplyModal}
                             className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left"
@@ -354,7 +356,9 @@ const ContactData = ({
 };
 
 const ContactDataTable = () => {
-    const tableRowTemplate = { gridTemplateColumns: ' 4fr 4fr 3fr 1fr' };
+    const tableRowTemplate = {
+        gridTemplateColumns: '2fr 1.5fr 1fr 1.4fr',
+    };
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResult, setSearchResult] = useState();
     const [activeDropdownIndex, setActiveDropdownIndex] = useState(null);
@@ -452,48 +456,54 @@ const ContactDataTable = () => {
             </div>
 
             {/* Table */}
-            <div className="flex flex-col divide-white divide-y overflow-x-auto rounded-lg">
-                {/* Header */}
-                <div
-                    className="grid w-full items-center bg-[#FFA666] py-3 px-5 text-black font-semibold tracking-wide"
-                    style={tableRowTemplate}
-                >
-                    <p>User Info</p>
-                    <p>Reason</p>
-                    <p>Status</p>
-                    <p>Actions</p>
-                </div>
+            <div className="flex flex-col divide-white divide-y w-full">
+                <div className='w-full overflow-x-auto'>
+                    <div className="min-w-[800px]">
+                        {/* Header */}
+                        <div
+                            className="grid w-full items-center bg-[#FFA666] py-3 px-5 rounded-tl-lg rounded-tr-lg text-black font-semibold tracking-wide"
+                            style={tableRowTemplate}
+                        >
+                            <p>User Info</p>
+                            <p>Reason</p>
+                            <p>Status</p>
+                            <p>Actions</p>
+                        </div>
 
-                {/* Data Rows */}
-                {contacts.length > 0 ? (
-                    contacts.map((v, index) => (
-                        <ContactData
-                            key={index}
-                            id={v.id}
-                            profile_image={v.profile_image}
-                            name={v.name}
-                            email={v.email}
-                            reason={v.reason}
-                            replied={v.replied}
-                            message={v.message}
-                            state={v.state}
-                            tableRowTemplate={tableRowTemplate}
-                            index={index}
-                            reply_id={v.reply_id}
-                            isOpen={activeDropdownIndex === index}
-                            onToggle={() =>
-                                setActiveDropdownIndex((prev) =>
-                                    prev === index ? null : index,
-                                )
-                            }
-                            onReply={handleReply}
-                        />
-                    ))
-                ) : (
-                    <div className="text-center text-white py-6 bg-[#1E1E20] rounded-b-lg">
-                        No contacts found.
+                        {/* Data Rows */}
+                        <div className="overflow-y-auto max-h-[65vh]">
+                            {contacts.length > 0 ? (
+                                contacts.map((v, index) => (
+                                    <ContactData
+                                        key={index}
+                                        id={v.id}
+                                        profile_image={v.profile_image}
+                                        name={v.name}
+                                        email={v.email}
+                                        reason={v.reason}
+                                        replied={v.replied}
+                                        message={v.message}
+                                        state={v.state}
+                                        tableRowTemplate={tableRowTemplate}
+                                        index={index}
+                                        reply_id={v.reply_id}
+                                        isOpen={activeDropdownIndex === index}
+                                        onToggle={() =>
+                                            setActiveDropdownIndex((prev) =>
+                                                prev === index ? null : index,
+                                            )
+                                        }
+                                        onReply={handleReply}
+                                    />
+                                ))
+                            ) : (
+                                <div className="text-center text-white py-6 bg-[#1E1E20] rounded-b-lg">
+                                    No contacts found.
+                                </div>
+                            )}
+                        </div>
                     </div>
-                )}
+                </div>
             </div>
         </div>
     );

@@ -204,12 +204,13 @@ const UserData = ({
     };
     return (
         <div
-            className="grid w-full items-center bg-[#252527] py-3 px-5 text-white relative"
+            className="grid grid-cols-3 w-full items-center bg-[#252527] py-8 px-5 text-white relative"
             style={tableRowTemplate}
         >
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 truncate">
                 <img
-                    className="h-9 aspect-square rounded-3xl hidden lg:flex"
+                    className="h-9 aspect-square rounded-3xl object-cover"
+                    alt="profile"
                     src={
                         image
                             ? new URL(
@@ -219,9 +220,9 @@ const UserData = ({
                             : defaultProfile
                     }
                 />
-                <div className="flex flex-col w-[175px] lg:w-auto">
-                    <p className="truncate tracking-wide font-semibold">{name}</p>
-                    <p className="truncate tracking-tight text-gray-500 text-sm">
+                <div className="flex flex-col">
+                    <p className="tracking-wide font-semibold">{name}</p>
+                    <p className="tracking-tight text-gray-500 text-sm">
                         {email}
                     </p>
                 </div>
@@ -238,7 +239,7 @@ const UserData = ({
                 </button>
 
                 {isOpen && (
-                    <div className="absolute right-0 mt-2 z-20 w-44 bg-[#1E1E20] text-gray-400 border border-[#444] rounded-md shadow-xl overflow-hidden">
+                    <div className="absolute left-10 -top-12 mt-2 z-30 w-38 bg-[#1E1E20] text-gray-400 border border-[#444] rounded-md shadow-xl overflow-hidden">
                         {role === 'banned' ? (
                             <>
                                 <button
@@ -366,7 +367,7 @@ const UserData = ({
 };
 
 const UserDataTable = () => {
-    const tableRowTemplate = { gridTemplateColumns: '20fr 15fr 1fr' };
+    const tableRowTemplate = { gridTemplateColumns: '2fr 1fr 1fr' };
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResult, setSearchResult] = useState();
     const [roleFilter, setRoleFilter] = useState();
@@ -494,52 +495,56 @@ const UserDataTable = () => {
             </div>
 
             <div className="flex flex-col divide-white divide-y w-full">
-                {/* Table Header */}
-                <div
-                    className="grid w-full items-center bg-[#FFA666] py-3 px-5 rounded-tl-lg rounded-tr-lg text-black font-semibold tracking-wide"
-                    style={tableRowTemplate}
-                >
-                    <div>
-                        <p>User Data</p>
-                    </div>
-                    <div className="px-3">
-                        <p>Role</p>
-                    </div>
-                    <div>
-                        <p>Actions</p>
-                    </div>
-                </div>
-
-                {/* Table Contents */}
-                <div className="overflow-y-auto max-h-[65vh]">
-                    {users.length > 0 ? (
-                        users.map((v, index) => (
-                            <UserData
-                                key={v.id}
-                                id={v.id}
-                                image={v.profile_image}
-                                name={v.username}
-                                email={v.email}
-                                role={v.role}
-                                tableRowTemplate={tableRowTemplate}
-                                index={index}
-                                isOpen={activeDropdownIndex === index}
-                                onToggle={() =>
-                                    setActiveDropdownIndex((prev) =>
-                                        prev === index ? null : index,
-                                    )
-                                }
-                                onBan={handleBan}
-                                onUnban={handleUnban}
-                                onDemote={handleDemote}
-                                onPromote={handlePromote}
-                            />
-                        ))
-                    ) : (
-                        <div className="text-center text-white py-6 bg-[#1E1E20] text-sm sm:text-base">
-                            No users found.
+                <div className='w-full overflow-x-auto'>
+                    <div className='min-w-[800px]'>
+                        {/* Table Header */}
+                        <div
+                            className="grid w-full items-center bg-[#FFA666] py-3 px-5 rounded-tl-lg rounded-tr-lg text-black font-semibold tracking-wide"
+                            style={tableRowTemplate}
+                        >
+                            <div>
+                                <p>User Data</p>
+                            </div>
+                            <div className="px-3">
+                                <p>Role</p>
+                            </div>
+                            <div>
+                                <p>Actions</p>
+                            </div>
                         </div>
-                    )}
+
+                        {/* Table Contents */}
+                        <div className="overflow-y-auto max-h-[65vh]">
+                            {users.length > 0 ? (
+                                users.map((v, index) => (
+                                    <UserData
+                                        key={v.id}
+                                        id={v.id}
+                                        image={v.profile_image}
+                                        name={v.username}
+                                        email={v.email}
+                                        role={v.role}
+                                        tableRowTemplate={tableRowTemplate}
+                                        index={index}
+                                        isOpen={activeDropdownIndex === index}
+                                        onToggle={() =>
+                                            setActiveDropdownIndex((prev) =>
+                                                prev === index ? null : index,
+                                            )
+                                        }
+                                        onBan={handleBan}
+                                        onUnban={handleUnban}
+                                        onDemote={handleDemote}
+                                        onPromote={handlePromote}
+                                    />
+                                ))
+                            ) : (
+                                <div className="text-center text-white py-6 bg-[#1E1E20] text-sm sm:text-base">
+                                    No users found.
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

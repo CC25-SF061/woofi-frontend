@@ -305,23 +305,23 @@ const PostData = ({
 
     return (
         <div
-            className="grid w-full items-center bg-[#252527] py-3 px-5 text-white relative"
+            className="grid grid-cols-3 w-full items-center bg-[#252527] py-8 px-5 text-white relative"
             style={tableRowTemplate}
         >
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 truncate">
                 <img
-                    className="h-9 aspect-square rounded-3xl hidden lg:flex"
+                    className="h-9 aspect-square rounded-md object-cover"
                     src={pic}
-                    alt="Profile"
+                    alt="Content"
                 />
-                <div className="flex flex-col w-[175px] lg:w-auto">
-                    <p className="truncate tracking-wide font-semibold">
+                <div className="flex flex-col">
+                    <p className="tracking-wide font-semibold">
                         {destination_name}
                     </p>
-                    <p className="truncate tracking-tight text-gray-400 text-sm">
+                    <p className="tracking-tight text-gray-400 text-sm">
                         {username}
                     </p>
-                    <p className="truncate tracking-tight text-gray-500 text-xs">
+                    <p className="tracking-tight text-gray-500 text-xs">
                         {email}
                     </p>
                 </div>
@@ -338,7 +338,7 @@ const PostData = ({
                 </button>
 
                 {isOpen && (
-                    <div className="absolute right-0 mt-2  w-44 bg-[#1E1E20] text-white border border-[#444] rounded-md shadow-xl overflow-hidden z-20">
+                    <div className="absolute left-10 -top-12 mt-2 z-30 w-38 bg-[#1E1E20] text-gray-400 border border-[#444] rounded-md shadow-xl overflow-hidden">
                         {status === 'posted' ? (
                             <>
                                 <button
@@ -451,7 +451,7 @@ const PostData = ({
 };
 
 const PostDataTable = () => {
-    const tableRowTemplate = { gridTemplateColumns: '20fr 15fr 1fr' };
+    const tableRowTemplate = { gridTemplateColumns: '2fr 1fr 1fr' };
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResult, setSearchResult] = useState();
     const [stateFilter, setStateFilter] = useState();
@@ -613,29 +613,35 @@ const PostDataTable = () => {
                 className="flex flex-col divide-white divide-y w-full"
                 ref={listInnerRef}
             >
-                <div
-                    className="grid w-full items-center bg-[#FFA666] py-3 px-5 rounded-tl-lg rounded-tr-lg text-black font-semibold tracking-wide"
-                    style={tableRowTemplate}
-                >
-                    <div>
-                        <p>Destination Information</p>
-                    </div>
-                    <div>
-                        <p>Status</p>
-                    </div>
-                    <div>
-                        <p>Actions</p>
-                    </div>
-                </div>
-                <ToastContainer />
-                <div className='overflow-y-auto max-h-[65vh]'>
-                    {posts.length > 0 ? (
-                        posts.map((_, index) => renderDestination(index))
-                    ) : (
-                        <div className="text-center text-white py-6 bg-[#1E1E20]">
-                            No destinations found.
+                <div className='w-full overflow-x-auto'>
+                    <div className='min-w-[800px]'>
+                        <div
+                            className="grid w-full items-center bg-[#FFA666] py-3 px-5 rounded-tl-lg rounded-tr-lg text-black font-semibold tracking-wide"
+                            style={tableRowTemplate}
+                        >
+                            <div>
+                                <p>Destination Information</p>
+                            </div>
+                            <div>
+                                <p>Status</p>
+                            </div>
+                            <div>
+                                <p>Actions</p>
+                            </div>
                         </div>
-                    )}
+                        <ToastContainer />
+                        <div className="overflow-y-auto max-h-[65vh]">
+                            {posts.length > 0 ? (
+                                posts.map((_, index) =>
+                                    renderDestination(index),
+                                )
+                            ) : (
+                                <div className="text-center text-white py-6 bg-[#1E1E20]">
+                                    No destinations found.
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
