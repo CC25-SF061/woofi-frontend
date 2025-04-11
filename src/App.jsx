@@ -27,6 +27,7 @@ import Dashboard from './pages/adminPages/dashboard.jsx';
 import UsersDashboard from './pages/adminPages/user_dashboard.jsx';
 import PostsDashboard from './pages/adminPages/post_dashboard.jsx';
 import ContactDashboard from './pages/adminPages/contact_dashboard.jsx';
+import DetailUser from './pages/adminPages/detailUser.jsx';
 import ScrollToTop from './scrollToTop';
 import PageWrapper from './components/loading/pageWrapper';
 import AuthGuard from './components/authGuard.jsx';
@@ -203,6 +204,10 @@ const App = () => {
                     <Route
                         path="/admin/contact"
                         element={<ContactDashboard />}
+                    ></Route>
+                    <Route
+                        path="/detailUser/:userId"
+                        element={<DetailUser />}
                     ></Route>
                     <Route path="*" element={<NotFound />}></Route>
                 </Routes>

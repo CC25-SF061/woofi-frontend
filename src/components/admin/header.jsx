@@ -56,7 +56,7 @@ const Header = () => {
                     <div className="relative">
                         <button
                             onClick={onNotifClick}
-                            className="hover:bg-white/10 p-2 rounded-full transition"
+                            className="hover:bg-white/10 p-2 rounded-full transition cursor-pointer"
                             title="Notifications"
                         >
                             <img
