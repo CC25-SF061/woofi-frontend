@@ -3,6 +3,14 @@ import { IoClose } from 'react-icons/io5';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
 import { markNotificationAdmin } from '../../stores/notificationAdminReducer';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+import 'dayjs/locale/en';
+
+dayjs.extend(relativeTime);
+dayjs.extend(localizedFormat);
+dayjs.locale('en');
 
 const ModalNotification = ({
     isOpen,
@@ -22,6 +30,18 @@ const ModalNotification = ({
         }
         prevOpen.current = isOpen;
     }, [isOpen]);
+
+    const formatDate = (dateString) => {
+        const date = dayjs(dateString);
+        const now = dayjs();
+        const diffInDays = now.diff(date, 'day');
+
+        if (diffInDays === 0) {
+            return date.fromNow();
+        } else {
+            return date.format('dddd, MMMM DD, YYYY');
+        }
+    };
 
     return (
         <AnimatePresence>
@@ -66,7 +86,9 @@ const ModalNotification = ({
                                                 {notification.from}
                                             </span>
                                             <span className="text-sm text-gray-400">
-                                                {notification.created_at}
+                                                {formatDate(
+                                                    notification.created_at,
+                                                )}
                                             </span>
                                         </div>
                                         <p className="text-sm text-gray-300">

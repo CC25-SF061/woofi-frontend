@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const AdminSidebar = () => {
   const location = useLocation();
+  const MotionDiv = motion.div;
 
   const menuItems = [
     { name: "Dashboard", path: "/admin", icon: <LayoutDashboard size={20} /> },
@@ -18,7 +19,7 @@ const AdminSidebar = () => {
   ];
 
   return (
-    <div className="fixed top-0 left-0 h-full w-56 bg-[#252527] shadow-xl z-30 flex flex-col justify-between py-6 px-4 font-quicksand">
+    <div className="fixed top-0 left-0 h-full w-56 bg-[#252527] shadow-xl z-10 flex flex-col justify-between py-6 px-4 pt-25 font-quicksand">
       <div className="relative space-y-2">
         {menuItems.map((item) => {
           const isActive = location.pathname === item.path;
@@ -27,7 +28,7 @@ const AdminSidebar = () => {
               {/* Animate background for active item */}
               <AnimatePresence>
                 {isActive && (
-                  <motion.div
+                  <MotionDiv
                     layoutId="sidebar-active"
                     className="absolute inset-0 rounded-lg bg-[#FFA666]/20 z-0"
                     initial={{ opacity: 0 }}
