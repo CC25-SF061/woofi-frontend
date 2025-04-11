@@ -4,6 +4,7 @@ import DestinationFilter from './destinationTag';
 import DestinationCard from './destinationCard';
 import DestinationFilterConstant from '../../util/DestinationFilter.js';
 import { useVirtualizer, useWindowVirtualizer } from '@tanstack/react-virtual';
+import DestinationCategory from './destinationCategory.jsx';
 
 const DestinationGroup = ({
     containerRef,
@@ -19,6 +20,9 @@ const DestinationGroup = ({
         navigate(`/destination/${id}`);
     };
     const listRef = useRef(null);
+    const [category, setCategory] = useState({ name: '' });
+    const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
+    const [filteredCategories, setFilteredCategories] = useState([]);
     const [lane, setLane] = useState(
         (window.innerWidth >= 1536 && 5) ||
             (window.innerWidth >= 1280 && 4) ||
@@ -64,8 +68,39 @@ const DestinationGroup = ({
             handleEndScroll?.();
         }
     }, [virtualizer.getVirtualIndexes(), destinations.length]);
+
+    const allCategories = [
+        { name: 'Peak' },
+        { name: 'Mountain' },
+        { name: 'Forest' },
+        { name: 'Beach' },
+        { name: 'Waterfall' },
+        { name: 'Lake' },
+        { name: 'Museum' },
+        { name: 'Recreational Park' },
+        { name: 'Tourist Village' },
+        { name: 'Others' },
+    ];
+
+    const handleSelectCategory = (selectedCategory) => {
+        setCategory(selectedCategory);
+        setCategoryDropdownOpen(false);
+    };
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (!event.target.closest('#category-dropdown-wrapper')) {
+                setCategoryDropdownOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
     return (
-        <div ref={containerRef} className="mt-15 flex flex-col w-full">
+        <div id="category-dropdown-wrapper" ref={containerRef} className="mt-15 flex flex-col w-full">
             <div className="relative w-full caret-transparent">
                 <div className="absolute right-0 left-0 h-[2px] top-[50%] bg-[#FFA66677]"></div>
                 <h1 className="relative mx-auto px-3 font-inknut-antiqua text-2xl md:text-4xl w-fit text-center text-[#FFA666] font-bold bg-[#221122]">
@@ -73,29 +108,53 @@ const DestinationGroup = ({
                 </h1>
             </div>
 
+            <div className="block lg:hidden mt-5">
+                <DestinationCategory
+                    category={category}
+                    setCategory={setCategory}
+                    allCategories={allCategories}
+                    categoryDropdownOpen={categoryDropdownOpen}
+                    setCategoryDropdownOpen={setCategoryDropdownOpen}
+                    filteredCategories={filteredCategories}
+                    setFilteredCategories={setFilteredCategories}
+                    handleSelectCategory={handleSelectCategory}
+                />
+            </div>
             {/* The Filters */}
-            <div className="flex flex-row gap-3 lg:mx-auto md:mx-0 mt-5 md:mt-18 self-start caret-transparent w-full">
+            <div className="flex flex-row gap-3 lg:mx-auto md:mx-0 self-start caret-transparent w-full overflow-x-auto lg:overflow-x-visible py-5 px-1">
+                <div className="hidden lg:flex">
+                    <DestinationCategory
+                        category={category}
+                        setCategory={setCategory}
+                        allCategories={allCategories}
+                        categoryDropdownOpen={categoryDropdownOpen}
+                        setCategoryDropdownOpen={setCategoryDropdownOpen}
+                        filteredCategories={filteredCategories}
+                        setFilteredCategories={setFilteredCategories}
+                        handleSelectCategory={handleSelectCategory}
+                    />
+                </div>
+                {/* Filters */}
                 <DestinationFilter
                     name="Highest Rating"
                     stateChangeHandler={tagsChangeHandler}
                     type={DestinationFilterConstant.HIGHEST_RATING}
-                ></DestinationFilter>
-
+                />
                 <DestinationFilter
                     name="Newest"
                     stateChangeHandler={tagsChangeHandler}
                     type={DestinationFilterConstant.NEWEST}
-                ></DestinationFilter>
+                />
                 <DestinationFilter
                     name="Oldest"
                     stateChangeHandler={tagsChangeHandler}
                     type={DestinationFilterConstant.OLDEST}
-                ></DestinationFilter>
+                />
                 <DestinationFilter
                     stateChangeHandler={tagsChangeHandler}
                     type={DestinationFilterConstant.WRITTEN_BY_YOU}
                     name="Written by you"
-                ></DestinationFilter>
+                />
             </div>
 
             {/* The Cards */}
