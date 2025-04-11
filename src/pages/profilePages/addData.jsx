@@ -12,6 +12,8 @@ import { nanoid } from 'nanoid';
 import { useDispatch } from 'react-redux';
 import { hideLoading, showLoading } from '../../stores/loadingReducer.js';
 import ModalMessage from '../../components/profile/modalMessage.jsx';
+import { getProvince } from '../../util/province.js';
+import { MobileNotification } from '../mobileNotification.jsx';
 
 const AddData = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -93,14 +95,12 @@ const AddData = () => {
         }
         form.append('location', formData.location.trim() || '');
         form.append('category', formData.category.trim() || '');
-        // console.log(formData.category);
         dispatch(showLoading(keyLoading));
         try {
             await axios
                 .post('/api/destination/add', new FormData())
                 .catch(() => {});
             const result = await axios.post('/api/destination/add', form);
-            console.log(result.data.data);
             setPostId(result.data.data.postId);
             URL.revokeObjectURL(formData.imageLink || '');
             setErrors(() => ({
@@ -164,10 +164,9 @@ const AddData = () => {
     useEffect(() => {
         const fetchProvinces = async () => {
             try {
-                const res = await axios.get('/api/geolocation/provinces');
-                console.log(res);
-                setProvinces(res.data.data);
-                setFilteredProvinces(res.data.data);
+                // const res = await axios.get('/api/geolocation/provinces');
+                setProvinces(getProvince());
+                setFilteredProvinces(getProvince());
             } catch (err) {
                 toast.error('Failed to fetch provinces!');
                 console.error(err);
@@ -274,9 +273,7 @@ const AddData = () => {
                         )}
                     </button>
 
-                    <button className="bg-[#FFA666] text-black font-quicksand p-2 rounded-lg cursor-pointer">
-                        <IoIosNotifications size={24} />
-                    </button>
+                    <MobileNotification />
                 </div>
 
                 {/* Sidebar */}
@@ -471,7 +468,7 @@ const AddData = () => {
                                                     </p>
                                                     <p className="text-xs text-gray-400">
                                                         PNG, JPG or WEBP (MAX.
-                                                        800x400px)
+                                                        10MB)
                                                     </p>
                                                 </div>
                                             )}

@@ -9,24 +9,35 @@ export const fetchUserProfile = createAsyncThunk(
     async (arg, { getState, dispatch }) => {
         const state = getState();
         const keyLoading = nanoid();
-        if (!state.user.data.id && localStorage.getItem('token')) {
-            // console.log('test', localStorage.getItem('token'));
+        if (state.user.isFetching) {
+            return { data: state.user.data, isFetched: false };
+        }
+        dispatch(setIsFetching(true));
+        if (!state.user.id && localStorage.getItem('token')) {
             try {
                 dispatch(showLoading(keyLoading));
                 const response = (await axios.get('/api/user/profile')).data;
-                return response.data;
+
+                return { data: response.data, isFetched: true };
             } catch (e) {
-                return state.user.data;
+                return { data: state.user.data, isFetched: true };
             } finally {
+                // dispatch(setIsFetched(true));
+
                 dispatch(hideLoading(keyLoading));
+                dispatch(setIsFetching(false));
             }
         }
-        return state.user.data;
+        dispatch(setIsFetched(true));
+
+        return { data: state.user.data, isFetched: true };
     },
 );
 export const userSlice = createSlice({
     name: 'user',
     initialState: {
+        isFetched: false,
+        isFetching: false,
         data: {
             profileImage: null,
             username: null,
@@ -34,9 +45,17 @@ export const userSlice = createSlice({
             email: null,
             id: null,
             isVerified: null,
+            isAdmin: null,
+            isNewUser: null,
         },
     },
     reducers: {
+        setIsFetching: (state, action) => {
+            state.isFetching = action.payload;
+        },
+        setIsFetched: (state, action) => {
+            state.isFetched = action.payload;
+        },
         setData: (state, action) => {
             state.data = {
                 username: action?.payload?.username,
@@ -45,6 +64,8 @@ export const userSlice = createSlice({
                 profileImage: action?.payload?.profileImage,
                 isVerified: action?.payload?.isVerified,
                 id: action?.payload?.id,
+                isAdmin: action?.payload?.isAdmin,
+                isNewUser: action?.payload?.isNewUser,
             };
         },
         setName: (state, action) => {
@@ -59,20 +80,27 @@ export const userSlice = createSlice({
         setImage: (state, action) => {
             state.data.profileImage = action.payload;
         },
+        setIsNewUser: (state, action) => {
+            state.data.isNewUser = action.payload;
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(fetchUserProfile.fulfilled, (state, action) => {
-            state.data = action.payload;
+            state.data = action.payload.data;
+            state.isFetched = action.payload.isFetched;
         });
     },
 });
 
 export const {
     setData,
+    setIsFetched,
     setPartialData,
     setName,
     setUsername,
+    setIsFetching,
     setEmail,
     setImage,
+    setIsNewUser,
 } = userSlice.actions;
 export default userSlice.reducer;

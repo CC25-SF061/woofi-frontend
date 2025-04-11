@@ -13,6 +13,8 @@ import { useNavigate } from 'react-router-dom';
 import ErrorConstant from '../../util/ErrorConstant';
 import DeleteConfirmationModal from '../../components/dataDestination/deleteConfirm';
 import EditConfirm from '../../components/dataDestination/editConfirm';
+import { getProvince } from '../../util/province';
+import { MobileNotification } from '../mobileNotification';
 
 const DataDestination = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -114,7 +116,6 @@ const DataDestination = () => {
             setDestinations((prevDestinations) =>
                 prevDestinations.map((destination) => {
                     if (destination.id === selectedItemToEdit.id) {
-                        console.log(destination);
                         return {
                             ...destination,
                             ...selectedItemToEdit,
@@ -165,7 +166,6 @@ const DataDestination = () => {
                 const response = (
                     await axios.get('/api/user/profile/destinations')
                 ).data;
-                console.log(response);
                 setDestinations(
                     Array.isArray(response.data) ? response.data : [],
                 );
@@ -183,9 +183,9 @@ const DataDestination = () => {
     useEffect(() => {
         const fetchProvinces = async () => {
             try {
-                const res = await axios.get('/api/geolocation/provinces');
-                setProvinces(res.data.data);
-                setFilteredProvinces(res.data.data);
+                // const res = await axios.get('/api/geolocation/provinces');
+                setProvinces(getProvince());
+                setFilteredProvinces(getProvince());
             } catch {
                 toast.error('Failed to fetch provinces!');
             }
@@ -290,9 +290,7 @@ const DataDestination = () => {
                             <RiMenu2Line size={24} />
                         )}
                     </button>
-                    <button className="bg-[#FFA666] text-black font-quicksand p-2 rounded-lg cursor-pointer">
-                        <IoIosNotifications size={24} />
-                    </button>
+                    <MobileNotification />
                 </div>
 
                 <div

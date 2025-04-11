@@ -12,6 +12,7 @@ import EditConfirm from '../dataDestination/editConfirm';
 import { useWindowVirtualizer } from '@tanstack/react-virtual';
 import { useDispatch } from 'react-redux';
 import { hideLoading, showLoading } from '../../stores/loadingReducer';
+import { getProvince } from '../../util/province';
 
 const PostData = ({
     id,
@@ -207,13 +208,7 @@ const PostData = ({
         setIsDragging(false);
     };
 
-    const allProvinces = [
-        { name: 'Jakarta' },
-        { name: 'Bali' },
-        { name: 'Yogyakarta' },
-        { name: 'Bandung' },
-        { name: 'Surabaya' },
-    ];
+    const allProvinces = getProvince();
 
     const handleEdit = async (closeModal) => {
         const formData = new FormData();

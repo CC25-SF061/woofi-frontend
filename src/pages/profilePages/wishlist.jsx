@@ -11,7 +11,7 @@ import { hideLoading, showLoading } from '../../stores/loadingReducer';
 import { nanoid } from 'nanoid';
 import DeleteConfirm from '../../components/dataDestination/deleteConfirm';
 import { toast, ToastContainer } from 'react-toastify';
-
+import { MobileNotification } from '../mobileNotification';
 const Wishlist = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const navigate = useNavigate();
@@ -59,10 +59,10 @@ const Wishlist = () => {
                 autoClose: 3000,
             });
 
-            setWishlistDestinations(prev =>
-                prev.filter(item => item.id !== selectedToDelete)
+            setWishlistDestinations((prev) =>
+                prev.filter((item) => item.id !== selectedToDelete),
             );
-    
+
             setSelectedToDelete(null);
         } catch {
             toast.error('Failed to remove from wishlist', {
@@ -73,8 +73,8 @@ const Wishlist = () => {
     };
 
     const selectedItem = wishlistDestinations.find(
-        (item) => item.id === selectedToDelete
-    );    
+        (item) => item.id === selectedToDelete,
+    );
 
     return (
         <div className="min-h-screen bg-[#221122] flex flex-col items-center lg:justify-center">
@@ -92,9 +92,7 @@ const Wishlist = () => {
                             <RiMenu2Line size={24} />
                         )}
                     </button>
-                    <button className="bg-[#FFA666] text-black font-quicksand p-2 rounded-lg cursor-pointer">
-                        <IoIosNotifications size={24} />
-                    </button>
+                    <MobileNotification />
                 </div>
 
                 <div
@@ -141,7 +139,9 @@ const Wishlist = () => {
                                     detail={element.detail}
                                     rating={element.rating}
                                     onclick={onCardClick}
-                                    onRequestDelete={(source) => handleRequestDelete(source, element.id)}
+                                    onRequestDelete={(source) =>
+                                        handleRequestDelete(source, element.id)
+                                    }
                                 />
                             ))}
 

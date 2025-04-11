@@ -1,11 +1,27 @@
-import React, { useState } from 'react';
+import axios, { AxiosError } from 'axios';
+import React, { useEffect, useState } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
+import invalidFieldErr from '../util/invalidField';
+import ErrorConstant from '../util/ErrorConstant';
+import { fetchUserProfile, setIsNewUser } from '../stores/userReducer';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 const InterestPage = () => {
+    const navigate = useNavigate();
+    const user = useSelector((state) => state.user.data);
+    const dispatch = useDispatch();
     const [formData, setFormData] = useState({
         name: '',
         gender: '',
         birth_date: '',
-        interest: [],
+        interests: [],
+    });
+    const [err, setErr] = useState({
+        name: '',
+        gender: '',
+        birth_date: '',
+        interests: '',
     });
 
     const interestsList = [
@@ -20,7 +36,26 @@ const InterestPage = () => {
         'Tourist Village',
         'Others',
     ];
-
+    useEffect(() => {
+        (async () => {
+            dispatch(fetchUserProfile());
+        })();
+    }, []);
+    useEffect(() => {
+        (async () => {
+            if (user.isNewUser === false) {
+                await navigate('/profile');
+            }
+        })();
+    }, [user]);
+    useEffect(() => {
+        if (err.interests) {
+            toast.error(err.interests, {
+                autoClose: 3000,
+                position: 'top-right',
+            });
+        }
+    }, [err]);
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({
@@ -33,28 +68,58 @@ const InterestPage = () => {
         const { value, checked } = e.target;
         setFormData((prev) => {
             const newInterests = checked
-                ? [...prev.interest, value]
-                : prev.interest.filter((item) => item !== value);
+                ? [...prev.interests, value]
+                : prev.interests.filter((item) => item !== value);
             return {
                 ...prev,
-                interest: newInterests,
+                interests: newInterests,
             };
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Data terkirim:', formData);
-        // TODO: Kirim ke backend atau API ML
+
+        try {
+            await axios.post('/api/user/interest', formData);
+            dispatch(setIsNewUser(false));
+            await navigate('/profile');
+        } catch (e) {
+            if (!(e instanceof AxiosError)) {
+                return toast.error('Something went wrong', {
+                    autoClose: 3000,
+                    position: 'top-right',
+                });
+            }
+            const response = e?.response?.data?.payload;
+            if (response.errCode === ErrorConstant.ERR_INVALID_FIELD) {
+                return invalidFieldErr(
+                    response.fields,
+                    {
+                        name: '',
+                        gender: '',
+                        birth_date: '',
+                        interests: '',
+                    },
+                    setErr,
+                );
+            }
+
+            return toast.error('Something went wrong', {
+                autoClose: 3000,
+                position: 'top-right',
+            });
+        }
     };
 
     return (
         <div className=" fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50 font-quicksand top-20 lg:top-0">
+            <ToastContainer />
             <div className="relative p-6 w-full max-w-lg rounded-lg shadow-2xl bg-[#1f1f1f] lg:max-h-[90vh] max-h-[75vh] overflow-y-auto border border-gray-700">
-                
                 <div className="flex flex-col bg-[#252527] p-4 py-4 border-b rounded-t border-gray-600 mb-8">
                     <h3 className="text-xl font-semibold text-white">
-                        Complete your <span className='text-[#FFA666]'>Setup</span> Now
+                        Complete your{' '}
+                        <span className="text-[#FFA666]">Setup</span> Now
                     </h3>
                     <p className="text-gray-300 text-sm lg:text-base max-w-xl mx-auto leading-relaxed">
                         This form is used to collect users' travel interests to
@@ -63,7 +128,6 @@ const InterestPage = () => {
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6 text-white">
-
                     {/* Gender */}
                     <div>
                         <label className="block mb-2 font-medium text-gray-300">
@@ -73,13 +137,14 @@ const InterestPage = () => {
                             name="gender"
                             value={formData.gender}
                             onChange={handleChange}
-                            required
+                            // required
                             className="w-full p-3 font-quicksand rounded text-white border bg-[#1f1f1f] focus:outline-none focus:ring focus:ring-[#FFA666]"
                         >
                             <option value="">Choose Gender</option>
                             <option value="male">Man</option>
                             <option value="female">Woman</option>
                         </select>
+                        <div className="text-red-500 text-sm">{err.gender}</div>
                     </div>
 
                     {/* Birth Date */}
@@ -92,9 +157,12 @@ const InterestPage = () => {
                             name="birth_date"
                             value={formData.birth_date}
                             onChange={handleChange}
-                            required
+                            // required
                             className="w-full p-3 font-quicksand rounded text-white border bg-transparent focus:outline-none focus:ring focus:ring-[#FFA666]"
                         />
+                        <div className="text-red-500 text-sm">
+                            {err.birth_date}
+                        </div>
                     </div>
 
                     {/* Interests */}
@@ -111,7 +179,7 @@ const InterestPage = () => {
                                     <input
                                         type="checkbox"
                                         value={item}
-                                        checked={formData.interest.includes(
+                                        checked={formData.interests.includes(
                                             item,
                                         )}
                                         onChange={handleCheckboxChange}

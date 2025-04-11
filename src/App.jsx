@@ -33,6 +33,7 @@ import AuthGuard from './components/authGuard.jsx';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setData } from './stores/userReducer.js';
+import NewUserGuard from './components/newUserGuard.jsx';
 // import { ToastContainer } from 'react-toastify';
 
 const App = () => {
@@ -97,22 +98,55 @@ const App = () => {
                 <ScrollToTop />
                 <PageWrapper />
                 <Routes>
-                    <Route path="/" element={<Home />}></Route>
-                    <Route path="/culture" element={<CultureHistory />}></Route>
+                    <Route
+                        path="/"
+                        element={
+                            <NewUserGuard>
+                                <Home />
+                            </NewUserGuard>
+                        }
+                    ></Route>
+                    <Route
+                        path="/culture"
+                        element={
+                            <NewUserGuard>
+                                <CultureHistory />
+                            </NewUserGuard>
+                        }
+                    ></Route>
                     <Route
                         path="/destination"
-                        element={<DestinationPage />}
+                        element={
+                            <NewUserGuard>
+                                <DestinationPage />
+                            </NewUserGuard>
+                        }
                     ></Route>
                     <Route
                         path="/destination/:destinationId"
-                        element={<DestinationViewPage />}
+                        element={
+                            <NewUserGuard>
+                                <DestinationViewPage />
+                            </NewUserGuard>
+                        }
                     ></Route>
-                    <Route path="/gallery" element={<GalleryPage />}></Route>
-                    <Route path="/contact-us" element={<ContactUs />}></Route>
                     <Route
-                        path="/user-interest"
-                        element={<InterestPage />}
+                        path="/gallery"
+                        element={
+                            <NewUserGuard>
+                                <GalleryPage />
+                            </NewUserGuard>
+                        }
                     ></Route>
+                    <Route
+                        path="/contact-us"
+                        element={
+                            <NewUserGuard>
+                                <ContactUs />
+                            </NewUserGuard>
+                        }
+                    ></Route>
+                    <Route path="/interest" element={<InterestPage />}></Route>
 
                     <Route path="/sign-in" element={<Signin />}></Route>
                     <Route path="/register" element={<Register />}></Route>

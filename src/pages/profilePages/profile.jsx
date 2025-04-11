@@ -17,7 +17,6 @@ import ModalMessage from '../../components/profile/modalMessage.jsx';
 import Sidebar from '../../components/profile/sidebar';
 import ProfileIcon from '../../assets/navbar/Icon.webp';
 import { ValidateFields } from '../../util/validation.js';
-
 // Redux
 import { useDispatch, useSelector } from 'react-redux';
 import ErrorConstant from '../../util/ErrorConstant';
@@ -30,7 +29,8 @@ import {
 import imgURL from '../../util/imgURL.js';
 import { nanoid } from 'nanoid';
 import { hideLoading } from '../../stores/loadingReducer.js';
-
+import { MobileNotification } from '../mobileNotification.jsx';
+import { DekstopNotification } from '../dekstopNotification.jsx';
 const Profile = () => {
     // Import and initial state
     const navigate = useNavigate();
@@ -155,7 +155,7 @@ const Profile = () => {
                 })
             ).data;
 
-            dispatch(setImage(result.data.image));
+            dispatch(setImage(selectedImage));
 
             toast.success('Success edit profile image', {
                 position: 'top-right',
@@ -164,10 +164,10 @@ const Profile = () => {
 
             setIsModalProfile(false);
             setFileImage(null);
-            if (selectedImage) {
-                URL.revokeObjectURL(selectedImage);
-                setSelectedImage(null);
-            }
+            // if (selectedImage) {
+            //     URL.revokeObjectURL(selectedImage);
+            setSelectedImage(null);
+            // }
         } catch (e) {
             if (!(e instanceof AxiosError)) {
                 toast.error('Something went wrong', {
@@ -431,48 +431,6 @@ const Profile = () => {
         <div className="w-full bg-[#221122] flex lg:h-screen items-center justify-center p-5 lg:p-10 text-white">
             <ToastContainer />
 
-            <ModalMessage
-                isOpen={isModalMessage}
-                onClose={() => setIsModalMessage(false)}
-            >
-                {/* Konten notifikasi */}
-                {[
-                    {
-                        id: 1,
-                        sender: 'Admin',
-                        message: 'Your profile has been updated successfully.',
-                        time: '2 minutes ago',
-                    },
-                    {
-                        id: 2,
-                        sender: 'Support',
-                        message: "Don't forget to verify your email address.",
-                        time: '10 minutes ago',
-                    },
-                    {
-                        id: 3,
-                        sender: 'System',
-                        message: 'New update available for your dashboard.',
-                        time: '1 hour ago',
-                    },
-                ].map((notif) => (
-                    <div
-                        key={notif.id}
-                        className="bg-[#333339] border border-gray-600 rounded-lg px-4 py-3 text-white"
-                    >
-                        <div className="flex justify-between items-center mb-1">
-                            <span className="font-semibold">
-                                {notif.sender}
-                            </span>
-                            <span className="text-sm text-gray-400">
-                                {notif.time}
-                            </span>
-                        </div>
-                        <p className="text-sm text-gray-300">{notif.message}</p>
-                    </div>
-                ))}
-            </ModalMessage>
-
             {/* Header Mobile */}
             <div className="lg:hidden p-5 fixed z-30 top-0 w-full bg-[#252527] flex justify-between items-center shadow-xl">
                 <button
@@ -486,17 +444,7 @@ const Profile = () => {
                     )}
                 </button>
                 <div className="flex relative lg:hidden">
-                    <button
-                        onClick={handleOpenModal}
-                        className={`p-2 rounded-lg cursor-pointer transition duration-300 bg-[#FFA666] text-black ${
-                            hasNewMessage ? 'animate-shake' : ''
-                        }`}
-                    >
-                        <IoIosNotifications size={24} />
-                    </button>
-                    {hasNewMessage && (
-                        <span className="absolute top-0 right-0 size-5 bg-red-600 rounded-full translate-x-1/4 -translate-y-1/4" />
-                    )}
+                    <MobileNotification />
                 </div>
             </div>
 
@@ -622,19 +570,7 @@ const Profile = () => {
                     </div>
 
                     {/* Message */}
-                    <div className="hidden lg:flex relative">
-                        <button
-                            onClick={handleOpenModal}
-                            className={`border-white border-2 p-2 rounded-lg cursor-pointer hover:bg-[#FFA666] transition duration-300 ${
-                                hasNewMessage ? 'animate-shake' : ''
-                            }`}
-                        >
-                            <IoIosNotifications size={24} />
-                        </button>
-                        {hasNewMessage && (
-                            <span className="absolute top-0 right-0 size-5 bg-red-600 rounded-full translate-x-1/4 -translate-y-1/4" />
-                        )}
-                    </div>
+                    <DekstopNotification />
                 </div>
 
                 <h1 className="font-inknut-antiqua text-2xl text-center my-4">

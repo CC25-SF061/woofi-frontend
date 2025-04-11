@@ -1,15 +1,33 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { IoClose } from 'react-icons/io5';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    fetchNotificationUser,
+    markNotificationUser,
+} from '../stores/notificationUserReducer';
+// import { markNotificationUser } from '../../stores/notificationUserReducer.js';
 
-const ModalMessage = ({
+const ModalNotificationUser = ({
     isOpen,
     onClose,
     title = 'Message Notification',
     maxWidth = 'max-w-5xl',
-    children,
 }) => {
     const MotionDiv = motion.div;
+    const notifications = useSelector((state) => state.notificationUser.data);
+    const prevOpen = useRef(false);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(fetchNotificationUser());
+    }, []);
+    useEffect(() => {
+        if (!isOpen && prevOpen.current) {
+            dispatch(markNotificationUser());
+        }
+        prevOpen.current = isOpen;
+    }, [isOpen]);
 
     return (
         <AnimatePresence>
@@ -43,7 +61,7 @@ const ModalMessage = ({
                         </div>
 
                         <div className="p-4 space-y-4">
-                            {/* {notifications.map((notification) => {
+                            {notifications.map((notification) => {
                                 return (
                                     <div
                                         key={notification.id}
@@ -62,8 +80,7 @@ const ModalMessage = ({
                                         </p>
                                     </div>
                                 );
-                            })} */}
-                            {children}
+                            })}
                         </div>
 
                         {/* Footer */}
@@ -82,4 +99,4 @@ const ModalMessage = ({
     );
 };
 
-export default ModalMessage;
+export default ModalNotificationUser;
