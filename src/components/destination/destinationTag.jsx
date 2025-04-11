@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle, Circle } from 'lucide-react'; 
+import { CheckCircle, Circle } from 'lucide-react'; // ikon opsional
 
 const DestinationTag = ({ name, stateChangeHandler, type }) => {
     const [isActive, setActive] = useState(false);
@@ -25,7 +25,7 @@ const DestinationTag = ({ name, stateChangeHandler, type }) => {
                     : 'bg-transparent border border-white/60 hover:bg-white/10 text-white'}
             `}
         >
-
+            {/* Ikon opsional: bisa dihapus jika tak ingin pakai */}
             <motion.div
                 initial={false}
                 animate={{ rotate: isActive ? 360 : 0 }}

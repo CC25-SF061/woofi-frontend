@@ -510,35 +510,37 @@ const UserDataTable = () => {
                     </div>
                 </div>
 
-                {/* Table Contents */}
-                {users.length > 0 ? (
-                    users.map((v, index) => (
-                        <UserData
-                            key={v.id}
-                            id={v.id}
-                            image={v.profile_image}
-                            name={v.username}
-                            email={v.email}
-                            role={v.role}
-                            tableRowTemplate={tableRowTemplate}
-                            index={index}
-                            isOpen={activeDropdownIndex === index}
-                            onToggle={() =>
-                                setActiveDropdownIndex((prev) =>
-                                    prev === index ? null : index,
-                                )
-                            }
-                            onBan={handleBan}
-                            onUnban={handleUnban}
-                            onDemote={handleDemote}
-                            onPromote={handlePromote}
-                        />
-                    ))
-                ) : (
-                    <div className="text-center text-white py-6 bg-[#1E1E20]">
-                        No users found.
-                    </div>
-                )}
+                <div className="overflow-y-auto">
+                    {/* Table Contents */}
+                    {users.length > 0 ? (
+                        users.map((v, index) => (
+                            <UserData
+                                key={v.id}
+                                id={v.id}
+                                image={v.profile_image}
+                                name={v.username}
+                                email={v.email}
+                                role={v.role}
+                                tableRowTemplate={tableRowTemplate}
+                                index={index}
+                                isOpen={activeDropdownIndex === index}
+                                onToggle={() =>
+                                    setActiveDropdownIndex((prev) =>
+                                        prev === index ? null : index,
+                                    )
+                                }
+                                onBan={handleBan}
+                                onUnban={handleUnban}
+                                onDemote={handleDemote}
+                                onPromote={handlePromote}
+                            />
+                        ))
+                    ) : (
+                        <div className="text-center text-white py-6 bg-[#1E1E20]">
+                            No users found.
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );
