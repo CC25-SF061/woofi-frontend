@@ -6,7 +6,6 @@ import { fetchUserProfile } from '../stores/userReducer';
 const NewUserGuard = ({ children }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [canContinue, setCanContinue] = useState(false);
     const user = useSelector((state) => state.user.data);
     const userFetched = useSelector((state) => state.user.isFetched);
     useEffect(() => {
@@ -17,15 +16,13 @@ const NewUserGuard = ({ children }) => {
     useEffect(() => {
         async function fetchProfile() {
             if (userFetched && user.isNewUser) {
-                setCanContinue(false);
                 await navigate('/interest');
             }
-            setCanContinue(true);
         }
         fetchProfile();
     }, [user, userFetched]);
 
-    return <>{canContinue && children}</>;
+    return <>{children}</>;
 };
 
 export default NewUserGuard;

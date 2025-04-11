@@ -20,11 +20,9 @@ const DestinationCard = ({
     isWishlisted,
     rating,
     onRequestDelete,
-    onConfirmRemoveWishlist,
     setSelectedItemToEdit,
     optionsIcon = null,
     setLoginModalVisible,
-    onRequestWishlistDelete,
 }) => {
     const MotionDiv = motion.div;
     const { whole_rating, has_half_rating, empty_rating } = countStars(rating);

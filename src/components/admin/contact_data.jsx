@@ -3,11 +3,18 @@ import defaultProfile from '../../assets/icons/profile_outline.svg';
 
 import { FaSearch } from 'react-icons/fa';
 import LogoUsers from '../../assets/icons/admin/users.svg';
-import ModalConfirm from '../dataDestination/deleteConfirm';
 import ModalReply from '../profile/modalEdit';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import ModalMessage from '../profile/modalMessage';
+import invalidFieldErr from '../../util/invalidField';
+import ErrorConstant from '../../util/ErrorConstant';
+import { toast, ToastContainer } from 'react-toastify';
+import { nanoid } from 'nanoid';
+import { useDispatch } from 'react-redux';
+import { hideLoading, showLoading } from '../../stores/loadingReducer';
+
 const ContactData = ({
+    id,
     profile_image,
     name,
     email,
@@ -17,21 +24,35 @@ const ContactData = ({
     tableRowTemplate,
     isOpen,
     onToggle,
+    reply_id,
+    replied,
+    onReply = () => {},
 }) => {
+    replied = replied ? 1 : 0;
     const states = [
-        <div className="w-fit px-4 py-1 text-black font-semibold bg-[#63ffa1] text-sm tracking-wider rounded-md">
-            <p>Succes is replyed</p>
-        </div>,
         <div className="w-fit px-4 py-1 bg-red-500 text-white text-sm tracking-wider rounded-md">
-            <p>On review</p>
+            <p>Not replied</p>
+        </div>,
+        <div className="w-fit px-4 py-1 text-black font-semibold bg-[#63ffa1] text-sm tracking-wider rounded-md">
+            <p>Replied</p>
         </div>,
     ];
 
     const [contactStatus, setContactStatus] = useState(state);
+    const [contactHistories, setContactHistories] = useState([]);
     const [isReplyModalOpen, setIsReplyModalOpen] = useState(false);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [replyValue, setReplyValue] = useState('');
+    const [currentHistory, setCurrentHistory] = useState(
+        contactHistories[contactHistories.length - 1] || {
+            reply_id: reply_id,
+        },
+    );
+    const [isLoading, setIsLoading] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [err, setErr] = useState({
+        message: '',
+    });
     const changeStatus = () => {
         setContactStatus((prev) => (prev === 0 ? 1 : 0));
         onToggle();
@@ -53,21 +74,148 @@ const ContactData = ({
         setIsReplyModalOpen(false);
     };
 
-    const handleChangeStatusClick = () => {
-        setShowConfirmModal(true);
-    };
-
-    const handleCloseChangeStatus = () => {
-        setShowConfirmModal(false);
-    };
-
-    const handleReplySubmit = (e) => {
+    const handleReplySubmit = async (e) => {
         e.preventDefault();
-        console.log(`Reply message for ${name}:`, replyValue);
-        setReplyValue('');
-        closeReplyModal();
+        try {
+            await axios.post(`/api/admin/contact/${id}/reply`, {
+                message: replyValue,
+            });
+            setErr({
+                message: '',
+            });
+            setReplyValue('');
+            closeReplyModal();
+            onReply(id);
+            toast.success('Reply sent successfully', {
+                position: 'top-right',
+                autoClose: 3000,
+            });
+        } catch (e) {
+            if (!(e instanceof AxiosError)) {
+                return toast.error('Something went wrong', {
+                    position: 'top-right',
+                    autoClose: 3000,
+                });
+            }
+
+            const response = e?.response?.data?.payload;
+            if (response.errCode === ErrorConstant.ERR_INVALID_FIELD) {
+                return invalidFieldErr(
+                    response.fields,
+                    { message: '' },
+                    setErr,
+                );
+            }
+
+            return toast.error('Something went wrong', {
+                position: 'top-right',
+                autoClose: 3000,
+            });
+        }
     };
 
+    const loadContactHistory = async (id) => {
+        try {
+            const response = await axios.get(`/api/admin/contact/${id}`);
+            setContactHistories((state) => [...state, response.data.data]);
+            setCurrentHistory(response.data.data);
+        } catch (e) {
+            return toast.error('Something went wrong', {
+                position: 'top-right',
+                autoClose: 3000,
+            });
+        }
+    };
+    const loadReplyHistory = async (id) => {
+        try {
+            const response = await axios.get(`/api/admin/contact/${id}/reply`);
+            setContactHistories((state) => [...state, response.data.data]);
+            setCurrentHistory(response.data.data);
+        } catch (e) {
+            return toast.error('Something went wrong', {
+                position: 'top-right',
+                autoClose: 3000,
+            });
+        }
+    };
+
+    const loadHistory = async () => {
+        setIsLoading(true);
+        if (currentHistory.reply_id) {
+            await loadReplyHistory(currentHistory.reply_id);
+        }
+        if (currentHistory.contact_id) {
+            await loadContactHistory(currentHistory.contact_id);
+        }
+
+        setIsLoading(false);
+    };
+
+    const ContactRenderer = ({ name, email, message }) => {
+        return (
+            <div>
+                <div className="flex flex-col gap-2 mt-3">
+                    <label className="block text-white">Name</label>
+                    <input
+                        readOnly
+                        type="text"
+                        value={name}
+                        className="w-full p-3 font-quicksand rounded text-white border bg-transparent focus:outline-none focus:ring focus:ring-[#FFA666]"
+                    />
+                </div>
+
+                <div className="flex flex-col gap-2 mt-3">
+                    <label className="block text-white">Email</label>
+                    <input
+                        readOnly
+                        type="text"
+                        value={email}
+                        className="w-full p-3 font-quicksand rounded text-white border bg-transparent focus:outline-none focus:ring focus:ring-[#FFA666]"
+                    />
+                </div>
+
+                <div className="flex flex-col gap-2 mt-3">
+                    <label className="block text-white">Message</label>
+                    <textarea
+                        readOnly
+                        value={message}
+                        type="text"
+                        className="w-full p-3 font-quicksand rounded text-white border bg-transparent focus:outline-none focus:ring focus:ring-[#FFA666]"
+                    >
+                        {' '}
+                    </textarea>
+                </div>
+            </div>
+        );
+    };
+
+    const ReplyRenderer = ({ message }) => {
+        return (
+            <div>
+                <div className="flex flex-col gap-2 mt-3">
+                    <label className="block text-white">Name</label>
+                    <input
+                        readOnly
+                        type="text"
+                        value={'admin'}
+                        className="w-full p-3 font-quicksand rounded text-white border bg-transparent focus:outline-none focus:ring focus:ring-[#FFA666]"
+                    />
+                </div>
+
+                <div className="flex flex-col gap-2 mt-3">
+                    <label className="block text-white">Message</label>
+                    <textarea
+                        readOnly
+                        value={message}
+                        type="text"
+                        className="w-full p-3 font-quicksand rounded text-white border bg-transparent focus:outline-none focus:ring focus:ring-[#FFA666]"
+                    >
+                        {' '}
+                    </textarea>
+                </div>
+            </div>
+        );
+    };
     return (
         <div
             className="grid w-full items-center bg-[#1E1E20] py-3 px-5 text-white"
@@ -92,8 +240,8 @@ const ContactData = ({
                 </div>
             </div>
             <p className="text-sm text-gray-300">{reason}</p>
-            <div>{states[contactStatus]}</div>
-            <div className="relative">
+            <div>{states[replied]}</div>
+            <div className="relative ">
                 <button
                     className="font-bold tracking-wider cursor-pointer px-2 py-1 rounded hover:bg-[#333]"
                     onClick={onToggle}
@@ -103,31 +251,6 @@ const ContactData = ({
 
                 {isOpen && (
                     <div className="absolute right-0 mt-2 z-30 w-44 bg-[#1E1E20] text-gray-400 border border-[#444] rounded-md shadow-xl overflow-hidden">
-                        <button
-                            onClick={handleChangeStatusClick}
-                            className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left"
-                        >
-                            Change to{' '}
-                            {contactStatus === 0 ? 'review' : 'succes'}
-                        </button>
-                        <div className="w-sm">
-                            <ModalConfirm
-                                isOpen={showConfirmModal}
-                                item={{
-                                    name:
-                                        contactStatus === 0
-                                            ? 'review'
-                                            : 'succes',
-                                }}
-                                title="Change Contact Status"
-                                message={`Are you sure you want to change this contact's status to ${contactStatus === 0 ? 'On review' : 'Succes'}?`}
-                                onCancel={handleCloseChangeStatus}
-                                onConfirm={changeStatus}
-                                confirmText="Yes, Change"
-                                confirmBg="bg-blue-600"
-                                confirmHover="hover:bg-blue-800"
-                            />
-                        </div>
                         <button
                             onClick={openReplyModal}
                             className="flex items-center gap-2 px-4 py-2 w-full hover:bg-[#333] text-sm text-left"
@@ -146,47 +269,61 @@ const ContactData = ({
                             title="Detail Contact"
                             maxWidth="max-w-xl"
                         >
-                            <div
-                                className="p-4 space-y-4"
-                                onSubmit={(e) => e.preventDefault()}
-                            >
-                                <div className="flex flex-col gap-2">
-                                    <label className="block text-white">
-                                        Username:
-                                    </label>
-                                    <input
-                                        readOnly
-                                        type="text"
-                                        className="w-full p-3 font-quicksand rounded text-white border bg-transparent focus:outline-none focus:ring focus:ring-[#FFA666]"
-                                    />
-                                </div>
+                            <div className="px-4 pb-1">
+                                <ContactRenderer
+                                    name={name}
+                                    email={email}
+                                    message={message}
+                                />
+                                {contactHistories?.length > 0 &&
+                                    contactHistories.map((v, index) => {
+                                        return (
+                                            <div className="mt-5">
+                                                <h2 className="mb-3">
+                                                    Replied From
+                                                </h2>
+                                                {v.hasOwnProperty(
+                                                    'reply_id',
+                                                ) ? (
+                                                    <ContactRenderer
+                                                        key={index}
+                                                        name={v.name}
+                                                        email={v.email}
+                                                        message={v.message}
+                                                    />
+                                                ) : (
+                                                    <ReplyRenderer
+                                                        key={index}
+                                                        message={v.message}
+                                                    />
+                                                )}
+                                            </div>
+                                        );
+                                    })}
 
-                                <div className="flex flex-col gap-2">
-                                    <label className="block text-white">
-                                        Display Name:
-                                    </label>
-                                    <input
-                                        readOnly
-                                        type="text"
-                                        className="w-full p-3 font-quicksand rounded text-white border bg-transparent focus:outline-none focus:ring focus:ring-[#FFA666]"
-                                    />
-                                </div>
-
-                                <div className="flex flex-col gap-2">
-                                    <label className="block text-white">
-                                        Email:
-                                    </label>
-                                    <input
-                                        readOnly
-                                        type="text"
-                                        className="w-full p-3 font-quicksand rounded text-white border bg-transparent focus:outline-none focus:ring focus:ring-[#FFA666]"
-                                    />
-                                </div>
+                                {(currentHistory.reply_id ||
+                                    currentHistory.contact_id) &&
+                                    !isLoading && (
+                                        <div>
+                                            <button
+                                                onClick={loadHistory}
+                                                className="bg-transparent border-none text-sm underline  font-semibold px-1 py-1 rounded-md"
+                                            >
+                                                Load History
+                                            </button>
+                                        </div>
+                                    )}
+                                {isLoading && (
+                                    <div className="text-center mt-3">
+                                        <span className="loading loading spinner"></span>
+                                    </div>
+                                )}
                             </div>
                         </ModalMessage>
                     </div>
                 )}
             </div>
+
             <ModalReply
                 isOpen={isReplyModalOpen}
                 onClose={closeReplyModal}
@@ -201,13 +338,16 @@ const ContactData = ({
                 </p>
 
                 <textarea
-                    required
                     className="bg-[#1E1E20] border border-[#444] w-full p-3 rounded text-white resize-none focus:outline-none focus:ring-2 focus:ring-red-400"
                     rows={4}
+                    required
                     placeholder="Enter your reply here..."
                     value={replyValue}
                     onChange={(e) => setReplyValue(e.target.value)}
                 />
+                {err.message && (
+                    <p className="text-red-500 text-sm">{err.message}</p>
+                )}
             </ModalReply>
         </div>
     );
@@ -216,35 +356,57 @@ const ContactData = ({
 const ContactDataTable = () => {
     const tableRowTemplate = { gridTemplateColumns: ' 4fr 4fr 3fr 1fr' };
     const [searchTerm, setSearchTerm] = useState('');
+    const [searchResult, setSearchResult] = useState();
     const [activeDropdownIndex, setActiveDropdownIndex] = useState(null);
-    const [stateFilter, setStateFilter] = useState('all');
+    const [stateFilter, setStateFilter] = useState('');
     const [contacts, setContacts] = useState([]);
     const prevPage = useRef(0);
-    const handleSearch = () => {
-        console.log('Mencari:', searchTerm);
-        // Lanjutkan logika pencarian, misalnya panggil API atau filter data
+
+    const handleReply = (id) => {
+        const tempContacts = [...contacts];
+        const updatedContactsIndex = tempContacts.findIndex(
+            (contact) => contact.id === id,
+        );
+        const updatedContacts = { ...tempContacts[updatedContactsIndex] };
+
+        updatedContacts.replied = true;
+        tempContacts[updatedContactsIndex] = updatedContacts;
+        setContacts(tempContacts);
     };
     const searchContact = async (page = 0) => {
         try {
-            const response = await axios.get('/api/admin/contacts');
+            const response = await axios.get('/api/admin/contacts', {
+                params: {
+                    status: stateFilter || undefined,
+                    q: searchResult || undefined,
+                },
+            });
             setContacts(response.data.data);
 
             prevPage.current = page;
         } catch (e) {
-            console.log(e);
             return toast.error('Something went wrong', {
                 position: 'top-right',
                 autoClose: 3000,
             });
         }
     };
+
+    const handleSearch = () => {
+        setSearchResult(searchTerm);
+    };
+    const dispatch = useDispatch();
     useEffect(() => {
         (async () => {
+            const keyLoading = nanoid();
+            dispatch(showLoading(keyLoading));
             await searchContact();
+            dispatch(hideLoading(keyLoading));
         })();
-    }, []);
+    }, [stateFilter, searchResult]);
     return (
         <div className="flex flex-col items-stretch justify-center p-6 pt-28 gap-8 font-quicksand">
+            <ToastContainer />
             {/* Title Section */}
             <div className="py-6 flex flex-col items-center bg-[#252527] rounded-md shadow-lg shadow-[#00000055]">
                 <img src={LogoUsers} alt="contacts Icon" className="w-8 mb-1" />
@@ -283,8 +445,8 @@ const ContactDataTable = () => {
                         className="w-full p-2 rounded-md bg-[#1E1E20] text-white border border-[#444] focus:outline-none focus:ring-2 focus:ring-[#FFA666]"
                     >
                         <option value="all">All Status</option>
-                        <option value="succes">Replied</option>
-                        <option value="review">Not Replied</option>
+                        <option value="replied">Replied</option>
+                        <option value="unreplied">Not Replied</option>
                     </select>
                 </div>
             </div>
@@ -312,16 +474,19 @@ const ContactDataTable = () => {
                             name={v.name}
                             email={v.email}
                             reason={v.reason}
+                            replied={v.replied}
                             message={v.message}
                             state={v.state}
                             tableRowTemplate={tableRowTemplate}
                             index={index}
+                            reply_id={v.reply_id}
                             isOpen={activeDropdownIndex === index}
                             onToggle={() =>
                                 setActiveDropdownIndex((prev) =>
                                     prev === index ? null : index,
                                 )
                             }
+                            onReply={handleReply}
                         />
                     ))
                 ) : (

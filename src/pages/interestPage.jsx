@@ -85,6 +85,7 @@ const InterestPage = () => {
             dispatch(setIsNewUser(false));
             await navigate('/profile');
         } catch (e) {
+            console.log(e);
             if (!(e instanceof AxiosError)) {
                 return toast.error('Something went wrong', {
                     autoClose: 3000,
