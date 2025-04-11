@@ -18,7 +18,7 @@ const AuthGuard = ({ children }) => {
         fetchProfile();
     }, [userId]);
 
-    return <>{userId ? children : ''}</>;
+    return <>{userId && children}</>;
 };
 
 export default AuthGuard;

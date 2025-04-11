@@ -50,30 +50,6 @@ const Dashboard = () => {
                 <DashboardUser />
                 <DashboardDestinations />
             </div>
-
-            <ModalMessage
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                title="Message Notification"
-                maxWidth="max-w-7xl"
-            >
-                {/* {notifications.map((notif) => (
-                    <div
-                        key={notif.id}
-                        className="bg-[#333339] border border-gray-600 rounded-lg px-4 py-3 text-white"
-                    >
-                        <div className="flex justify-between items-center mb-1">
-                            <span className="font-semibold">
-                                {notif.sender}
-                            </span>
-                            <span className="text-sm text-gray-400">
-                                {notif.time}
-                            </span>
-                        </div>
-                        <p className="text-sm text-gray-300">{notif.message}</p>
-                    </div>
-                ))} */}
-            </ModalMessage>
         </div>
     );
 };

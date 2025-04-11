@@ -1,12 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Logo from '../../assets/navbar/logo.webp';
 import LogoProfile from '../../assets/icons/profile_outline.svg';
 import LogoNotif from '../../assets/icons/notification_outline.svg';
 import { Link, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchNotificationAdmin } from '../../stores/notificationAdminReducer.js';
+import ModalNotification from './modalNotification.jsx';
 
-const Header = ({ onNotifClick, hasNewMessage }) => {
+const Header = () => {
     const location = useLocation();
     const pathMap = {
         '/admin': 'Dashboard',
@@ -14,6 +15,9 @@ const Header = ({ onNotifClick, hasNewMessage }) => {
         '/admin/posts': 'Posts',
         '/admin/contact': 'Contact',
     };
+    const onNotifClick = () => setIsModalOpen(true);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const onClose = () => setIsModalOpen(false);
     const dispatch = useDispatch();
     const hasNotRead = useSelector(
         (state) => state.notificationAdmin.hasNotRead,
@@ -29,6 +33,11 @@ const Header = ({ onNotifClick, hasNewMessage }) => {
 
     return (
         <header className="fixed top-0 left-0 right-0 z-10 bg-[#252527] shadow-md px-6 py-4 font-quicksand pl-64">
+            <ModalNotification
+                isOpen={isModalOpen}
+                onClose={onClose}
+                title="Notification"
+            />
             <div className="flex items-center justify-between">
                 {/* Logo & Title */}
                 <div className="flex items-center gap-4">

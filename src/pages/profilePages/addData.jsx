@@ -30,6 +30,7 @@ const AddData = () => {
         imageLink: '',
         location: '',
         province: '',
+        category: '',
     });
     const [errors, setErrors] = useState({
         name: '',
@@ -37,6 +38,7 @@ const AddData = () => {
         image: '',
         location: '',
         province: '',
+        category: '',
     });
     const allCategories = [
         { name: 'Peak' },
@@ -67,6 +69,7 @@ const AddData = () => {
             image: '',
             location: '',
             province: '',
+            category: '',
         };
         for (const element of arr) {
             if (
@@ -89,12 +92,15 @@ const AddData = () => {
             form.append('image', fileImage);
         }
         form.append('location', formData.location.trim() || '');
+        form.append('category', formData.category.trim() || '');
+        // console.log(formData.category);
         dispatch(showLoading(keyLoading));
         try {
             await axios
                 .post('/api/destination/add', new FormData())
                 .catch(() => {});
             const result = await axios.post('/api/destination/add', form);
+            console.log(result.data.data);
             setPostId(result.data.data.postId);
             URL.revokeObjectURL(formData.imageLink || '');
             setErrors(() => ({
@@ -103,6 +109,7 @@ const AddData = () => {
                 image: '',
                 location: '',
                 province: '',
+                category: '',
             }));
             setFormData(() => ({
                 name: '',
@@ -110,6 +117,7 @@ const AddData = () => {
                 imageLink: '',
                 location: '',
                 province: '',
+                category: '',
             }));
             setProvince({ name: '' });
             setFileImage(null);
@@ -128,6 +136,7 @@ const AddData = () => {
             if (e.status == 413) {
                 setErrors((state) => ({ ...state, image: 'Image too large' }));
             }
+            console.log(e);
             const response = e?.response?.data?.payload;
             if (response.errCode === ErrorConstant.ERR_INVALID_FIELD) {
                 invalidFieldErr(response.fields);
@@ -209,25 +218,26 @@ const AddData = () => {
     const handleCategoryChange = (e) => {
         const value = e.target.value;
         setCategory({ name: value });
-    
+
         const filtered = allCategories.filter((c) =>
-            c.name.toLowerCase().includes(value.toLowerCase())
+            c.name.toLowerCase().includes(value.toLowerCase()),
         );
         setFilteredCategories(filtered);
         setCategoryDropdownOpen(true);
     };
-    
+
     const toggleCategoryDropdown = () => {
         setCategoryDropdownOpen((prev) => !prev);
         if (!categoryDropdownOpen && category.name === '') {
             setFilteredCategories(allCategories);
         }
     };
-    
+
     const handleSelectCategory = (selectedCategory) => {
         setCategory(selectedCategory);
         setCategoryDropdownOpen(false);
-    };    
+        setFormData((prev) => ({ ...prev, category: selectedCategory.name }));
+    };
 
     return (
         <div>

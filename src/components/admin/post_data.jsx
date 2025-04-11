@@ -37,15 +37,15 @@ const PostData = ({
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [filteredProvinces, setFilteredProvinces] = useState([]);
     const [isDragging, setIsDragging] = useState(false);
-    const [category, setCategory] = useState({ name: '' });
-        const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
-        const [filteredCategories, setFilteredCategories] = useState([]);
+    const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
+    const [filteredCategories, setFilteredCategories] = useState([]);
     const [errorsEdit, setErrorsEdit] = useState({
         name: '',
         detail: '',
         image: '',
         location: '',
         province: '',
+        category: '',
     });
     const allCategories = [
         { name: 'Peak' },
@@ -222,6 +222,7 @@ const PostData = ({
         formData.append('location', selectedItemToEdit.location || '');
         formData.append('detail', selectedItemToEdit.detail || '');
         formData.append('province', selectedItemToEdit.province || '');
+        formData.append('category', selectedItemToEdit.category || '');
         if (selectedItemToEdit.imageFile) {
             formData.append('image', selectedItemToEdit.imageFile || '');
         }
@@ -235,7 +236,10 @@ const PostData = ({
                 autoClose: 3000,
                 position: 'top-right',
             });
-            onEdit(response.data.data);
+            onEdit({
+                ...response.data.data,
+                imageFile: selectedItemToEdit.imageFile,
+            });
             closeModal();
 
             setSelectedItemToEdit(null);
@@ -258,6 +262,7 @@ const PostData = ({
                         image: '',
                         location: '',
                         province: '',
+                        category: '',
                     },
                     setErrorsEdit,
                 );
@@ -276,11 +281,14 @@ const PostData = ({
 
     const handleCategoryChange = (e) => {
         const value = e.target.value;
-        setCategory({ name: value });
 
         const filtered = allCategories.filter((c) =>
             c.name.toLowerCase().includes(value.toLowerCase()),
         );
+        setSelectedItemToEdit((prev) => ({
+            ...prev,
+            category: value,
+        }));
         setFilteredCategories(filtered);
         setCategoryDropdownOpen(true);
     };
@@ -293,7 +301,10 @@ const PostData = ({
     };
 
     const handleSelectCategory = (selectedCategory) => {
-        setCategory(selectedCategory);
+        setSelectedItemToEdit((prev) => ({
+            ...prev,
+            category: selectedCategory.name,
+        }));
         setCategoryDropdownOpen(false);
     };
 
@@ -410,8 +421,6 @@ const PostData = ({
                 handleDrop={handleDrop}
                 errors={errorsEdit}
                 handleEdit={handleEdit}
-                category={category}
-                setCategory={setCategory}
                 categoryDropdownOpen={categoryDropdownOpen}
                 toggleCategoryDropdown={toggleCategoryDropdown}
                 handleCategoryChange={handleCategoryChange}
@@ -489,6 +498,9 @@ const PostDataTable = () => {
         const tempPosts = [...posts];
         const updatedPostsIndex = tempPosts.findIndex((post) => post.id === id);
         const updatedPosts = { ...tempPosts[updatedPostsIndex], ...element };
+        if (element.imageFile) {
+            updatedPosts.image = URL.createObjectURL(element.imageFile);
+        }
         tempPosts[updatedPostsIndex] = updatedPosts;
         setPosts(tempPosts);
     };

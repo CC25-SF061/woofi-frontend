@@ -25,7 +25,7 @@ const DataDestination = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [filteredProvinces, setFilteredProvinces] = useState([]);
     const [deleteType, setDeleteType] = useState(null);
-    const [category, setCategory] = useState({ name: '' });
+    // const [category, setCategory] = useState({ name: '' });
     const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
     const [filteredCategories, setFilteredCategories] = useState([]);
     const [errors, setErrors] = useState({
@@ -34,6 +34,7 @@ const DataDestination = () => {
         image: '',
         location: '',
         province: '',
+        category: '',
     });
     const allCategories = [
         { name: 'Peak' },
@@ -55,6 +56,7 @@ const DataDestination = () => {
             image: '',
             location: '',
             province: '',
+            category: '',
         };
         for (const element of arr) {
             if (
@@ -80,7 +82,6 @@ const DataDestination = () => {
             setSelectedItemToDelete(null);
             setDeleteType(null);
         } catch (e) {
-            console.log(e);
             toast.error('Failed to delete', {
                 autoClose: 3000,
                 position: 'top-right',
@@ -95,28 +96,34 @@ const DataDestination = () => {
         formData.append('location', selectedItemToEdit.location || '');
         formData.append('detail', selectedItemToEdit.detail || '');
         formData.append('province', selectedItemToEdit.province || '');
+        formData.append('category', selectedItemToEdit.category || '');
+
         if (selectedItemToEdit.imageFile) {
             formData.append('image', selectedItemToEdit.imageFile);
         }
         try {
-            const response = await axios.put(
-                `/api/destination/${selectedItemToEdit.id}`,
-                formData,
-            );
-
+            const response = (
+                await axios.put(
+                    `/api/destination/${selectedItemToEdit.id}`,
+                    formData,
+                )
+            ).data.data;
             // Dapatkan URL gambar baru dari respons
-            const newImageUrl = response.data.image;
-
+            // const newImageUrl = response.data.image;
             // Perbarui state destinations hanya jika ada URL gambar baru
             setDestinations((prevDestinations) =>
                 prevDestinations.map((destination) => {
                     if (destination.id === selectedItemToEdit.id) {
+                        console.log(destination);
                         return {
                             ...destination,
                             ...selectedItemToEdit,
-                            image: newImageUrl
-                                ? newImageUrl
-                                : destination.image, // Gunakan URL gambar baru jika ada, jika tidak, gunakan yang lama
+                            ...response,
+                            image: selectedItemToEdit.imageFile
+                                ? URL.createObjectURL(
+                                      selectedItemToEdit.imageFile,
+                                  )
+                                : destination.image,
                         };
                     }
                     return destination;
@@ -158,6 +165,7 @@ const DataDestination = () => {
                 const response = (
                     await axios.get('/api/user/profile/destinations')
                 ).data;
+                console.log(response);
                 setDestinations(
                     Array.isArray(response.data) ? response.data : [],
                 );
@@ -240,8 +248,11 @@ const DataDestination = () => {
 
     const handleCategoryChange = (e) => {
         const value = e.target.value;
-        setCategory({ name: value });
 
+        setSelectedItemToEdit({
+            ...selectedItemToEdit,
+            category: e.target.value,
+        });
         const filtered = allCategories.filter((c) =>
             c.name.toLowerCase().includes(value.toLowerCase()),
         );
@@ -257,8 +268,11 @@ const DataDestination = () => {
     };
 
     const handleSelectCategory = (selectedCategory) => {
-        setCategory(selectedCategory);
         setCategoryDropdownOpen(false);
+        setSelectedItemToEdit({
+            ...selectedItemToEdit,
+            category: selectedCategory.name,
+        });
     };
 
     return (
@@ -411,8 +425,6 @@ const DataDestination = () => {
                 handleDrop={handleDrop}
                 errors={errors}
                 handleEdit={handleEdit}
-                category={category}
-                setCategory={setCategory}
                 categoryDropdownOpen={categoryDropdownOpen}
                 toggleCategoryDropdown={toggleCategoryDropdown}
                 handleCategoryChange={handleCategoryChange}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { IoClose } from 'react-icons/io5';
 import { FaChevronDown } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -17,8 +17,6 @@ const EditConfirm = ({
     handleDrop,
     errors,
     handleEdit,
-    category,
-    setCategory,
     categoryDropdownOpen,
     toggleCategoryDropdown,
     handleCategoryChange,
@@ -211,7 +209,7 @@ const EditConfirm = ({
                                             id="category"
                                             type="text"
                                             name="category"
-                                            value={category.name}
+                                            value={selectedItemToEdit.category}
                                             onChange={handleCategoryChange}
                                             placeholder="Search Category"
                                             className={`flex-3 p-3 font-quicksand rounded text-white border ${
@@ -298,8 +296,7 @@ const EditConfirm = ({
                                                             or drag and drop
                                                         </p>
                                                         <p className="text-xs text-gray-400">
-                                                            PNG, JPG, max
-                                                            800x400px
+                                                            PNG, JPG, max 10mb
                                                         </p>
                                                     </div>
                                                 </>

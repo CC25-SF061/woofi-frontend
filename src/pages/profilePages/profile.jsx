@@ -523,7 +523,7 @@ const Profile = () => {
                 {/* Header */}
                 <div className="flex justify-between items-center border-white border-b-2 pb-5">
                     {/* Profile */}
-                    <div className="flex flex-row gap-3 items-center">
+                    <div className="flex flex-row gap-3 items-center w-100">
                         <img
                             src={
                                 user.profileImage
@@ -958,7 +958,7 @@ const Profile = () => {
                             onClose={closePopUpPassword}
                             onSubmit={(e) => {
                                 e.preventDefault();
-                                setPasswordError({}); 
+                                setPasswordError({});
 
                                 const isValid = ValidateFields(
                                     {
@@ -1033,7 +1033,9 @@ const Profile = () => {
                                         </button>
                                     </div>
                                     <div className="min-h-[20px]">
-                                        <p className='text-red-500 text-sm'>{passwordError.oldPassword}</p>
+                                        <p className="text-red-500 text-sm">
+                                            {passwordError.oldPassword}
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="flex flex-col">
@@ -1080,7 +1082,9 @@ const Profile = () => {
                                         </button>
                                     </div>
                                     <div className="min-h-[20px]">
-                                        <p className='text-red-500 text-sm'>{passwordError.newPassword}</p>
+                                        <p className="text-red-500 text-sm">
+                                            {passwordError.newPassword}
+                                        </p>
                                     </div>
                                 </div>
 
@@ -1131,7 +1135,9 @@ const Profile = () => {
                                         </button>
                                     </div>
                                     <div className="min-h-[20px]">
-                                        <p className='text-red-500 text-sm'>{passwordError.confirmationPassword}</p>
+                                        <p className="text-red-500 text-sm">
+                                            {passwordError.confirmationPassword}
+                                        </p>
                                     </div>
                                 </div>
                             </div>

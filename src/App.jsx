@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 // Import Pages
@@ -33,10 +33,12 @@ import AuthGuard from './components/authGuard.jsx';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setData } from './stores/userReducer.js';
-import { ToastContainer } from 'react-toastify';
+// import { ToastContainer } from 'react-toastify';
 
 const App = () => {
     const dispatch = useDispatch();
+    const isRefreshing = useRef(false);
+    const refreshAndRetryQueue = useRef([]);
 
     axios.interceptors.response.use(
         (response) => response,
@@ -44,7 +46,17 @@ const App = () => {
             const originalRequest = error.config;
             if (!error.response) return Promise.reject(error);
             if (error.response.status === 401 && !originalRequest._retry) {
+                if (isRefreshing.current) {
+                    return new Promise((resolve, reject) => {
+                        refreshAndRetryQueue.current.push({
+                            resolve,
+                            reject,
+                            config: originalRequest,
+                        });
+                    }).then((config) => axios(config));
+                }
                 originalRequest._retry = true;
+                isRefreshing.current = true;
                 try {
                     const refreshToken = (
                         await axios({
@@ -54,15 +66,25 @@ const App = () => {
                         })
                     ).data;
                     localStorage.setItem('token', refreshToken.data.token);
+                    refreshAndRetryQueue.current.forEach(
+                        ({ resolve, config }) => resolve(config),
+                    );
+
                     return axios(originalRequest);
-                } catch (_) {
+                } catch (refreshError) {
+                    refreshAndRetryQueue.current.forEach(({ reject }) =>
+                        reject(refreshError),
+                    );
+
                     localStorage.removeItem('token');
 
                     dispatch(setData());
-                    return Promise.reject(error);
+
+                    throw refreshError;
+                } finally {
+                    isRefreshing.current = false;
                 }
             }
-
             return Promise.reject(error);
         },
     );
@@ -121,7 +143,11 @@ const App = () => {
                     ></Route>
                     <Route
                         path="/profile/add-data"
-                        element={<AddData />}
+                        element={
+                            <AuthGuard>
+                                <AddData />
+                            </AuthGuard>
+                        }
                     ></Route>
                     <Route
                         path="/profile/data-destination"
