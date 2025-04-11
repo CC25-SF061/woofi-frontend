@@ -1,66 +1,75 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import LogoUsers from '../../assets/icons/admin/users.svg';
+import axios from 'axios';
+import { showLoading, hideLoading } from '../../stores/loadingReducer';
+import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
 
 const DashboardUser = () => {
-    const userDataPerYear = {
-        2023: [
-            { month: 'January', color: '#8979FF', amount: 12 },
-            { month: 'February', color: '#FF928A', amount: 24 },
-            { month: 'March', color: '#3CC3DF', amount: 33 },
-            { month: 'April', color: '#FFAE4C', amount: 40 },
-            { month: 'May', color: '#537FF1', amount: 50 },
-            { month: 'June', color: '#6FD195', amount: 10 },
-            { month: 'July', color: '#8C63DA', amount: 20 },
-            { month: 'August', color: '#2BB7DC', amount: 30 },
-            { month: 'September', color: '#1F94FF', amount: 60 },
-            { month: 'October', color: '#F4CF3B', amount: 45 },
-            { month: 'November', color: '#55C4AE', amount: 20 },
-            { month: 'December', color: '#6186CC', amount: 81 },
-        ],
-        2024: [
-            { month: 'January', color: '#8979FF', amount: 5 },
-            { month: 'February', color: '#FF928A', amount: 15 },
-            { month: 'March', color: '#3CC3DF', amount: 30 },
-            { month: 'April', color: '#FFAE4C', amount: 40 },
-            { month: 'May', color: '#537FF1', amount: 50 },
-            { month: 'June', color: '#6FD195', amount: 10 },
-            { month: 'July', color: '#8C63DA', amount: 20 },
-            { month: 'August', color: '#2BB7DC', amount: 30 },
-            { month: 'September', color: '#1F94FF', amount: 60 },
-            { month: 'October', color: '#F4CF3B', amount: 45 },
-            { month: 'November', color: '#55C4AE', amount: 20 },
-            { month: 'December', color: '#6186CC', amount: 81 },
-        ],
-        2025: [
-            { month: 'January', color: '#8979FF', amount: 10 },
-            { month: 'February', color: '#FF928A', amount: 20 },
-            { month: 'March', color: '#3CC3DF', amount: 30 },
-            { month: 'April', color: '#FFAE4C', amount: 40 },
-            { month: 'May', color: '#537FF1', amount: 50 },
-            { month: 'June', color: '#6FD195', amount: 10 },
-            { month: 'July', color: '#8C63DA', amount: 20 },
-            { month: 'August', color: '#2BB7DC', amount: 30 },
-            { month: 'September', color: '#1F94FF', amount: 60 },
-            { month: 'October', color: '#F4CF3B', amount: 45 },
-            { month: 'November', color: '#55C4AE', amount: 20 },
-            { month: 'December', color: '#6186CC', amount: 81 },
-        ],
-    };
+    const nullBlock = { month: 1, color: '#000000', count: 0 };
+
+    const dispatch = useDispatch();
 
     const [selectedYear, setSelectedYear] = useState(2025);
     const [startMonthIndex, setStartMonthIndex] = useState(0);
     const [hoverData, setHoverData] = useState(null);
+    const [rawUserData, setRawUserData] = useState([nullBlock]);
+
+    useEffect(() => {
+        // User Analytics
+        (async () => {
+            try {
+                dispatch(showLoading('DashboardPreviewUser'));
+                const req = (
+                    await axios.get(
+                        `/api/admin/user-analytic?year=${selectedYear}`,
+                    )
+                ).data.data;
+                setRawUserData(req);
+            } catch (e) {
+                console.err(`Error getting user analytics : ${e}`);
+                toast.error('Something went wrong at getting user analytic', {
+                    autoClose: 3000,
+                    position: 'top-right',
+                });
+            } finally {
+                dispatch(hideLoading('DashboardPreviewUser'));
+            }
+        })();
+    }, [selectedYear]);
 
     const visibleMonths = 6;
-    const rawUserData = userDataPerYear[selectedYear] || [];
-    const visibleData = rawUserData.slice(
-        startMonthIndex,
-        startMonthIndex + visibleMonths,
-    );
+    const visibleData =
+        rawUserData.length === 0
+            ? [nullBlock]
+            : rawUserData.slice(
+                  startMonthIndex,
+                  startMonthIndex + visibleMonths,
+              );
 
     const getModeUser = () =>
-        [...rawUserData].sort((a, b) => b.amount - a.amount)[0];
+        rawUserData.length === 0
+            ? nullBlock
+            : [...rawUserData].sort((a, b) => b.count - a.count)[0];
     const totalBlockChartIndices = 7;
+
+    const getNamedMonth = (month) => {
+        const namedMonth = [
+            { name: 'January', color: '#8979FF' },
+            { name: 'February', color: '#FF928A' },
+            { name: 'March', color: '#3CC3DF' },
+            { name: 'April', color: '#FFAE4C' },
+            { name: 'May', color: '#537FF1' },
+            { name: 'June', color: '#6FD195' },
+            { name: 'July', color: '#8C63DA' },
+            { name: 'August', color: '#2BB7DC' },
+            { name: 'September', color: '#1F94FF' },
+            { name: 'October', color: '#F4CF3B' },
+            { name: 'November', color: '#55C4AE' },
+            { name: 'December', color: '#6186CC' },
+        ];
+        return namedMonth[Math.min(11, Math.max(0, Number(month) - 1))];
+    };
 
     const generateUserDataBlockChart = {
         monthBlock: (v, i, context) => (
@@ -70,10 +79,10 @@ const DashboardUser = () => {
                 style={{ width: `calc(${100.0 / context.length}% - 2px)` }}
                 onMouseEnter={(e) => {
                     setHoverData({
-                        month: v.month,
+                        month: getNamedMonth(v.month).name,
                         year: selectedYear,
-                        amount: v.amount,
-                        color: v.color,
+                        count: v.count,
+                        color: getNamedMonth(v.month).color,
                         x: e.clientX,
                         y: e.clientY,
                     });
@@ -88,18 +97,18 @@ const DashboardUser = () => {
             >
                 <div
                     style={{
-                        backgroundColor: v.color + '77',
-                        borderColor: v.color,
+                        backgroundColor: getNamedMonth(v.month).color + '77',
+                        borderColor: getNamedMonth(v.month).color,
                         borderTopWidth: '2px',
                         width: '100%',
-                        height: `${(v.amount / getModeUser().amount) * 100.0}%`,
+                        height: `${(v.count / getModeUser().count) * 100.0}%`,
                     }}
                     className="border-t-2 rounded-t-sm transition-all duration-300"
                 ></div>
             </div>
         ),
         countIndices: (index) => {
-            const modeUser = getModeUser().amount;
+            const modeUser = getModeUser().count;
             return Math.round(
                 (modeUser / (totalBlockChartIndices - 1)) *
                     Math.min(index - 1, totalBlockChartIndices),
@@ -196,7 +205,7 @@ const DashboardUser = () => {
                                     {hoverData.month} {hoverData.year}
                                 </div>
                                 <div className="text-xs">
-                                    Total Users: {hoverData.amount}
+                                    Total Users: {hoverData.count}
                                 </div>
                             </div>
                         )}
@@ -243,12 +252,18 @@ const DashboardUser = () => {
                             >
                                 <div
                                     className="rounded-full w-2 aspect-square"
-                                    style={{ backgroundColor: v.color }}
+                                    style={{
+                                        backgroundColor: v.color,
+                                    }}
                                 ></div>
                                 <p className="font-semibold">
-                                    {v.month}{' '}
-                                    <span style={{ color: v.color }}>
-                                        ({v.amount})
+                                    {v.month}&nbsp;
+                                    <span
+                                        style={{
+                                            color: v.color,
+                                        }}
+                                    >
+                                        ({v.count})
                                     </span>
                                 </p>
                             </div>
