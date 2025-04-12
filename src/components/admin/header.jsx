@@ -96,7 +96,7 @@ const Header = () => {
                 onClose={() => setIsSidebarLeftOpen(false)}
             />
 
-            <header className="fixed top-0 left-0 right-0 z-10 bg-[#252527] shadow-md px-6 py-4 font-quicksand lg:pl-64 shadow-xl">
+            <header className="fixed top-0 left-0 right-0 z-10 bg-[#252527] shadow-md px-6 py-4 font-quicksand lg:pl-5 shadow-xl">
                 <ModalNotification
                     isOpen={isModalOpen}
                     onClose={onClose}

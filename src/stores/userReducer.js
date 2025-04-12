@@ -9,28 +9,23 @@ export const fetchUserProfile = createAsyncThunk(
     async (arg, { getState, dispatch }) => {
         const state = getState();
         const keyLoading = nanoid();
-        if (state.user.isFetching) {
-            return { data: state.user.data, isFetched: false };
-        }
+
         dispatch(setIsFetching(true));
-        if (!state.user.id && localStorage.getItem('token')) {
+        if (!state.user.data.id && localStorage.getItem('token')) {
             try {
                 dispatch(showLoading(keyLoading));
                 const response = (await axios.get('/api/user/profile')).data;
-
-                return { data: response.data, isFetched: true };
+                console.log(response);
+                return response.data;
             } catch (e) {
-                return { data: state.user.data, isFetched: true };
+                return state.user.data;
             } finally {
                 // dispatch(setIsFetched(true));
-
                 dispatch(hideLoading(keyLoading));
                 dispatch(setIsFetching(false));
             }
         }
-        dispatch(setIsFetched(true));
-
-        return { data: state.user.data, isFetched: true };
+        return state.user.data;
     },
 );
 export const userSlice = createSlice({
@@ -86,8 +81,7 @@ export const userSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(fetchUserProfile.fulfilled, (state, action) => {
-            state.data = action.payload.data;
-            state.isFetched = action.payload.isFetched;
+            state.data = action.payload;
         });
     },
 });

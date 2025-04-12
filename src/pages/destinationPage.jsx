@@ -15,10 +15,11 @@ import { showLoading, hideLoading } from '../stores/loadingReducer';
 import axios, { AxiosError } from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
+// Geolocation
 import DestinationFilter from '../util/DestinationFilter';
 import LoginModal from '../components/loginModal';
 import { nanoid } from 'nanoid';
-
+import { getProvince } from '../util/province';
 const maxCardsToIndexable = 16;
 const DestinationPage = () => {
     const dispatch = useDispatch();
@@ -26,7 +27,7 @@ const DestinationPage = () => {
     const destinationListContainer = useRef(null);
     const [pageIndex, setPageIndex] = useState(0);
     const [destinations, setDestinations] = useState([]);
-    const [provinces, setProvinces] = useState([]);
+    const [provinces, setProvinces] = useState(getProvince() || []);
     const loginModal = useRef(null);
     const [isLoading, setLoading] = useState(false);
     const [mapDisplay, setMapDisplay] = useState({
@@ -39,11 +40,10 @@ const DestinationPage = () => {
     const [searchState, setSearchState] = useState();
     const [activeTags, setActiveTags] = useState([]);
 
-    const maxPages = useRef(0);
-
     const searchDestination = async (
         province,
         name,
+        category,
         filter = [],
         pageIdx = 0,
         append = false,
@@ -57,6 +57,7 @@ const DestinationPage = () => {
                 params: {
                     province: province || undefined,
                     name: name || undefined,
+                    category: category || undefined,
                     filter: filter,
                     page: pageIdx,
                 },
@@ -72,7 +73,6 @@ const DestinationPage = () => {
             }
             return setDestinations(response.data.data);
         } catch (e) {
-            console.log(e);
             toast.error(
                 'Something went wrong while getting destinations, Please try again later.',
                 {
@@ -87,10 +87,12 @@ const DestinationPage = () => {
         await searchDestination(
             searchState?.province?.name,
             searchState?.destination?.name,
+            searchState?.category?.name,
             searchState?.tags,
             pageIndex + 1,
             true,
         ).catch((e) => {});
+
         setLoading(() => false);
     };
     const tagsChangeHandler = async ({ type, active, setActive }) => {
@@ -118,6 +120,7 @@ const DestinationPage = () => {
             await searchDestination(
                 searchState?.province?.name,
                 searchState?.destination?.name,
+                searchState?.category?.name,
                 tags.map((tag) => tag.type),
             ).catch((e) => {});
             dispatch(hideLoading(keyLoading));
@@ -150,6 +153,7 @@ const DestinationPage = () => {
         await searchDestination(
             searchState?.province?.name,
             searchState?.destination?.name,
+            searchState?.category?.name,
             tags.map((tag) => tag.type),
         ).catch((e) => {});
         dispatch(hideLoading(keyLoading));
@@ -171,6 +175,7 @@ const DestinationPage = () => {
         await searchDestination(
             province.name,
             destination.name,
+            searchState?.category?.name,
             searchState?.tags,
         ).catch((e) => {});
         dispatch(hideLoading(keyLoading));
@@ -188,6 +193,7 @@ const DestinationPage = () => {
         await searchDestination(
             province.name,
             searchState?.destination?.name,
+            searchState?.category?.name,
             searchState?.tags,
         ).catch((e) => {});
         dispatch(hideLoading(keyLoading));
@@ -200,20 +206,28 @@ const DestinationPage = () => {
         }));
     };
 
+    const handleCategoryChange = async (selectedCategory) => {
+        setSearchState((state) => ({
+            ...state,
+            category: selectedCategory,
+        }));
+        await searchDestination(
+            searchState?.province?.name,
+            searchState?.destination?.name,
+            selectedCategory.name,
+        );
+    };
     useEffect(() => {
-        // Get available provinces
         (async () => {
             const keyLoading = nanoid();
             try {
                 dispatch(showLoading(keyLoading));
                 const destination = searchDestination();
-                const response = await axios.get('/api/geolocation/provinces');
-                setProvinces(response.data.data || []);
-                await destination.catch((e) => {});
+                await destination;
             } catch (e) {
                 if (!(e instanceof AxiosError)) {
                     return toast.error(
-                        'Something went wrong while getting provinces, Please try again later.',
+                        'Something went wrong , Please try again later.',
                         {
                             position: 'top-right',
                         },
@@ -221,7 +235,7 @@ const DestinationPage = () => {
                 }
                 if (e.code === 'ERR_NETWORK') {
                     return toast.error(
-                        'Connection offline while getting provinces, Please try again later.',
+                        'Connection offline , Please try again later.',
                         {
                             position: 'top-right',
                         },
@@ -264,6 +278,7 @@ const DestinationPage = () => {
                     setLoginModalVisible={setLoginModalVisible}
                     handleEndScroll={handleEndScroll}
                     hasMore={hasMore}
+                    handleCategoryChange={handleCategoryChange}
                 />
                 {isLoading && (
                     <div className="text-center mb-6">
@@ -274,7 +289,7 @@ const DestinationPage = () => {
 
             <JoinUs />
             <Footer />
-            <ToastContainer />
+            {/* <ToastContainer /> */}
             <LoginModal dialogRef={loginModal} />
         </div>
     );

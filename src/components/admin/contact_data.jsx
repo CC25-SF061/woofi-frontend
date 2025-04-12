@@ -239,9 +239,7 @@ const ContactData = ({
                     <p className="text-sm text-gray-400">{email}</p>
                 </div>
             </div>
-            <p className="text-sm text-gray-300">
-                {reason}
-            </p>
+            <p className="text-sm text-gray-300">{reason}</p>
             <div>{states[replied]}</div>
             <div className="relative ">
                 <button
@@ -457,7 +455,7 @@ const ContactDataTable = () => {
 
             {/* Table */}
             <div className="flex flex-col divide-white divide-y w-full">
-                <div className='w-full overflow-x-auto'>
+                <div className="w-full overflow-x-auto">
                     <div className="min-w-[800px]">
                         {/* Header */}
                         <div

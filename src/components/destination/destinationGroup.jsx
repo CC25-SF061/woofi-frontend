@@ -12,13 +12,13 @@ const DestinationGroup = ({
     destinations = [],
     setLoginModalVisible,
     handleEndScroll,
+    handleCategoryChange,
     hasMore,
 }) => {
-    const navigate = useNavigate();
-    const onCardClick = (id) => {
-        // TODO? : Add to user statistic
-        navigate(`/destination/${id}`);
-    };
+    // const onCardClick = (id) => {
+    //     // TODO? : Add to user statistic
+    //     navigate(`/destination/${id}`);
+    // };
     const listRef = useRef(null);
     const [category, setCategory] = useState({ name: '' });
     const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
@@ -35,8 +35,8 @@ const DestinationGroup = ({
             setLane(
                 (window.innerWidth >= 1536 && 5) ||
                     (window.innerWidth >= 1280 && 4) ||
-                    (window.innerWidth >= 1024 && 3) ||
-                    (window.innerWidth >= 768 && 2) ||
+                    (window.innerWidth >= 768 && 3) ||
+                    (window.innerWidth >= 640 && 2) ||
                     1,
             );
         };
@@ -85,6 +85,7 @@ const DestinationGroup = ({
     const handleSelectCategory = (selectedCategory) => {
         setCategory(selectedCategory);
         setCategoryDropdownOpen(false);
+        handleCategoryChange(selectedCategory);
     };
 
     useEffect(() => {
@@ -100,7 +101,11 @@ const DestinationGroup = ({
     }, []);
 
     return (
-        <div id="category-dropdown-wrapper" ref={containerRef} className="mt-15 flex flex-col w-full">
+        <div
+            id="category-dropdown-wrapper"
+            ref={containerRef}
+            className="mt-15 flex flex-col w-full"
+        >
             <div className="relative w-full caret-transparent">
                 <div className="absolute right-0 left-0 h-[2px] top-[50%] bg-[#FFA66677]"></div>
                 <h1 className="relative mx-auto px-3 font-inknut-antiqua text-2xl md:text-4xl w-fit text-center text-[#FFA666] font-bold bg-[#221122]">
@@ -199,7 +204,6 @@ const DestinationGroup = ({
                                     detail={element.detail}
                                     isWishlisted={element.isWishlisted}
                                     rating={element.rating}
-                                    onclick={onCardClick}
                                     setLoginModalVisible={setLoginModalVisible}
                                 ></DestinationCard>
                             </div>

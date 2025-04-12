@@ -60,9 +60,9 @@ const Profile = () => {
     const [isModalEditEmailOpen, setIsModalEditEmailOpen] = useState(false);
 
     // Profile Data State
-    const [username, setUsername] = useState(user.username);
-    const [name, setName] = useState(user.name);
-    const [email, setEmail] = useState(user.email);
+    const [username, setUsername] = useState(user.username || '');
+    const [name, setName] = useState(user.name || '');
+    const [email, setEmail] = useState(user.email || '');
 
     // Image Upload State
     const [isDragging, setIsDragging] = useState(false);

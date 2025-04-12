@@ -53,7 +53,7 @@ const ModalNotificationUser = ({
         <AnimatePresence>
             {isOpen && (
                 <MotionDiv
-                    className="fixed inset-0 flex items-center justify-center bg-black/50 bg-opacity-80 backdrop-blur-md z-50 font-quicksand top-20 lg:top-0"
+                    className="fixed inset-0 px-4 flex items-center justify-center bg-black/50 bg-opacity-80 backdrop-blur-md z-50 font-quicksand top-20 lg:top-0"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
