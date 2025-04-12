@@ -26,7 +26,7 @@ const DataDestination = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [filteredProvinces, setFilteredProvinces] = useState([]);
     const [deleteType, setDeleteType] = useState(null);
-    // const [category, setCategory] = useState({ name: '' });
+    const [category, setCategory] = useState({ name: '' });
     const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
     const [filteredCategories, setFilteredCategories] = useState([]);
     const [errors, setErrors] = useState({
@@ -183,8 +183,8 @@ const DataDestination = () => {
         const fetchProvinces = async () => {
             try {
                 // const res = await axios.get('/api/geolocation/provinces');
-                setProvinces(getProvince());
                 setFilteredProvinces(getProvince());
+                setProvinces(getProvince());
             } catch {
                 toast.error('Failed to fetch provinces!');
             }
@@ -193,32 +193,12 @@ const DataDestination = () => {
         fetchProvinces();
     }, []);
 
-    const toggleDropdown = () => {
-        setDropdownOpen(!dropdownOpen);
-    };
-
-    const handleProvinceChange = (e) => {
-        const input = e.target.value;
-        setSelectedItemToEdit({
-            ...selectedItemToEdit,
-            province: input,
-        });
-
-        const filtered = provinces.filter((p) =>
-            p.name.toLowerCase().includes(input.toLowerCase()),
-        );
-        setFilteredProvinces(filtered);
-        setDropdownOpen(true);
-    };
-
-    const handleSelectProvince = (selected) => {
-        setSelectedItemToEdit({
-            ...selectedItemToEdit,
-            province: selected.name,
-        });
-        setDropdownOpen(false);
-        setErrors((prev) => ({ ...prev, province: false }));
-    };
+    useEffect(() => {
+        if (selectedItemToEdit) {
+            setFilteredCategories(allCategories);
+            setFilteredProvinces(provinces);
+        }
+    }, [selectedItemToEdit, provinces]);
 
     const onCardClick = async (id) => {
         await navigate(`/destination/${id}`);
@@ -245,34 +225,9 @@ const DataDestination = () => {
         }
     };
 
-    const handleCategoryChange = (e) => {
-        const value = e.target.value;
-
-        setSelectedItemToEdit({
-            ...selectedItemToEdit,
-            category: e.target.value,
-        });
-        const filtered = allCategories.filter((c) =>
-            c.name.toLowerCase().includes(value.toLowerCase()),
-        );
-        setFilteredCategories(filtered);
-        setCategoryDropdownOpen(true);
-    };
-
-    const toggleCategoryDropdown = () => {
-        setCategoryDropdownOpen((prev) => !prev);
-        if (!categoryDropdownOpen && category.name === '') {
-            setFilteredCategories(allCategories); // tampilkan semua saat kosong
-        }
-    };
-
-    const handleSelectCategory = (selectedCategory) => {
-        setCategoryDropdownOpen(false);
-        setSelectedItemToEdit({
-            ...selectedItemToEdit,
-            category: selectedCategory.name,
-        });
-    };
+    const formattedProvinces = provinces.map((prov) => ({
+        name: prov,
+    }));
 
     return (
         <div className="min-h-screen bg-[#221122] flex flex-col items-center lg:justify-center">
@@ -359,12 +314,16 @@ const DataDestination = () => {
                                             className="cursor-pointer text-white"
                                         />
                                     }
-                                    onEdit={() =>
+                                    onEdit={() => {
                                         setSelectedItemToEdit({
                                             ...element,
                                             image: null,
-                                        })
-                                    }
+                                        });
+                                        setFilteredCategories(allCategories);
+                                        setFilteredProvinces(
+                                            formattedProvinces,
+                                        );
+                                    }}
                                 />
                             ))}
                         </div>
@@ -411,22 +370,14 @@ const DataDestination = () => {
             <EditConfirm
                 selectedItemToEdit={selectedItemToEdit}
                 setSelectedItemToEdit={setSelectedItemToEdit}
-                handleProvinceChange={handleProvinceChange}
-                toggleDropdown={toggleDropdown}
-                handleSelectProvince={handleSelectProvince}
-                dropdownOpen={dropdownOpen}
                 filteredProvinces={filteredProvinces}
+                filteredCategories={filteredCategories}
                 isDragging={isDragging}
                 handleDragOver={handleDragOver}
                 handleDragLeave={handleDragLeave}
                 handleDrop={handleDrop}
                 errors={errors}
                 handleEdit={handleEdit}
-                categoryDropdownOpen={categoryDropdownOpen}
-                toggleCategoryDropdown={toggleCategoryDropdown}
-                handleCategoryChange={handleCategoryChange}
-                handleSelectCategory={handleSelectCategory}
-                filteredCategories={filteredCategories}
             />
         </div>
     );

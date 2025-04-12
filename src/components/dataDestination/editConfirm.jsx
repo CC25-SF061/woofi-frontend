@@ -1,15 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { IoClose } from 'react-icons/io5';
-import { FaChevronDown } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
+import Dropdown from '../dropdown';
 
 const EditConfirm = ({
     selectedItemToEdit,
     setSelectedItemToEdit,
-    handleProvinceChange,
-    toggleDropdown,
-    handleSelectProvince,
-    dropdownOpen,
     filteredProvinces,
     isDragging,
     handleDragOver,
@@ -17,10 +13,6 @@ const EditConfirm = ({
     handleDrop,
     errors,
     handleEdit,
-    categoryDropdownOpen,
-    toggleCategoryDropdown,
-    handleCategoryChange,
-    handleSelectCategory,
     filteredCategories,
 }) => {
     const MotionDiv = motion.div;
@@ -33,6 +25,7 @@ const EditConfirm = ({
         <AnimatePresence>
             {selectedItemToEdit && (
                 <MotionDiv
+                    key={selectedItemToEdit.id || 'edit-modal'}
                     className="fixed inset-0 flex items-center justify-center bg-black/50 bg-opacity-80 backdrop-blur-md z-50 font-quicksand top-20 lg:top-0"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -120,59 +113,22 @@ const EditConfirm = ({
                                 <label className="block text-white">
                                     Province:
                                 </label>
-                                <div className="relative w-full">
-                                    <div className="flex items-center">
-                                        <input
-                                            id="province"
-                                            type="text"
-                                            name="province"
-                                            value={selectedItemToEdit.province}
-                                            onChange={handleProvinceChange}
-                                            placeholder="Search Province"
-                                            className={`flex-3 p-3 font-quicksand rounded text-white border ${
-                                                errors.province
-                                                    ? 'border-red-500'
-                                                    : 'border-white'
-                                            } bg-transparent w-full pr-10 focus:outline-none focus:ring focus:ring-[#FFA666]`}
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={toggleDropdown}
-                                            className="absolute inset-y-0 right-0 flex items-center justify-center p-2 pl-4 rounded-l-2xl bg-[#FFA666] cursor-pointer hover:bg-white group"
-                                        >
-                                            <FaChevronDown
-                                                className={`text-lg text-black group-hover:text-[#FFA666] transition-transform duration-300 ${
-                                                    dropdownOpen
-                                                        ? 'rotate-180'
-                                                        : 'rotate-0'
-                                                }`}
-                                            />
-                                        </button>
-                                    </div>
-                                    {dropdownOpen &&
-                                        filteredProvinces.length > 0 && (
-                                            <ul className="absolute z-10 w-full mt-1 bg-[#252527] text-white border border-[#FFA666] rounded shadow-md max-h-60 overflow-y-auto">
-                                                {filteredProvinces.map((p) => (
-                                                    <li
-                                                        key={p.name}
-                                                        className="px-4 py-2 cursor-pointer hover:bg-[#FFA666] hover:text-black"
-                                                        onClick={() =>
-                                                            handleSelectProvince(
-                                                                p,
-                                                            )
-                                                        }
-                                                    >
-                                                        {p.name}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        )}
-                                </div>
-                                {errors.province && (
-                                    <div className="text-red-500 text-sm">
-                                        {errors.province}
-                                    </div>
-                                )}
+                                <Dropdown
+                                    options={filteredProvinces}
+                                    selected={filteredProvinces.find(
+                                        (item) =>
+                                            item.name ===
+                                            selectedItemToEdit.province,
+                                    )}
+                                    setSelected={(item) =>
+                                        setSelectedItemToEdit({
+                                            ...selectedItemToEdit,
+                                            province: item.name,
+                                        })
+                                    }
+                                    placeholder="Search Province"
+                                    error={errors.province}
+                                />
                             </div>
 
                             {/* Description */}
@@ -203,59 +159,22 @@ const EditConfirm = ({
                                 <label className="block text-white">
                                     Category:
                                 </label>
-                                <div className="relative w-full">
-                                    <div className="flex items-center">
-                                        <input
-                                            id="category"
-                                            type="text"
-                                            name="category"
-                                            value={selectedItemToEdit.category}
-                                            onChange={handleCategoryChange}
-                                            placeholder="Search Category"
-                                            className={`flex-3 p-3 font-quicksand rounded text-white border ${
-                                                errors.category
-                                                    ? 'border-red-500'
-                                                    : 'border-white'
-                                            } bg-transparent w-full pr-10 focus:outline-none focus:ring focus:ring-[#FFA666]`}
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={toggleCategoryDropdown}
-                                            className="absolute inset-y-0 right-0 flex items-center justify-center p-2 pl-4 rounded-l-2xl bg-[#FFA666] cursor-pointer hover:bg-white group"
-                                        >
-                                            <FaChevronDown
-                                                className={`text-lg text-black group-hover:text-[#FFA666] transition-transform duration-300 ${
-                                                    categoryDropdownOpen
-                                                        ? 'rotate-180'
-                                                        : 'rotate-0'
-                                                }`}
-                                            />
-                                        </button>
-                                    </div>
-                                    {categoryDropdownOpen &&
-                                        filteredCategories.length > 0 && (
-                                            <ul className="absolute z-10 w-full mt-1 bg-[#252527] text-white border border-[#FFA666] rounded shadow-md max-h-60 overflow-y-auto">
-                                                {filteredCategories.map((c) => (
-                                                    <li
-                                                        key={c.name}
-                                                        className="px-4 py-2 cursor-pointer hover:bg-[#FFA666] hover:text-black transition-all duration-200"
-                                                        onClick={() =>
-                                                            handleSelectCategory(
-                                                                c,
-                                                            )
-                                                        }
-                                                    >
-                                                        {c.name}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        )}
-                                </div>
-                                {errors.category && (
-                                    <div className="text-red-500 text-sm">
-                                        {errors.category}
-                                    </div>
-                                )}
+                                <Dropdown
+                                    options={filteredCategories}
+                                    selected={filteredCategories.find(
+                                        (item) =>
+                                            item.name ===
+                                            selectedItemToEdit.category,
+                                    )}
+                                    setSelected={(item) =>
+                                        setSelectedItemToEdit({
+                                            ...selectedItemToEdit,
+                                            category: item.name,
+                                        })
+                                    }
+                                    placeholder="Search Category"
+                                    error={errors.category}
+                                />
                             </div>
 
                             {/* Image Upload */}
@@ -309,7 +228,6 @@ const EditConfirm = ({
                                                     className="object-cover w-full h-full rounded-lg"
                                                 />
                                             )}
-
                                             <input
                                                 id="dropzone-file"
                                                 type="file"

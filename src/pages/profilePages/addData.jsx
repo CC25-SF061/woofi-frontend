@@ -2,11 +2,9 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from '../../components/profile/sidebar';
 import { HiX } from 'react-icons/hi';
 import { RiMenu2Line } from 'react-icons/ri';
-import { IoIosNotifications } from 'react-icons/io';
 import ErrorConstant from '../../util/ErrorConstant.js';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { FaChevronDown } from 'react-icons/fa';
 import axios, { AxiosError } from 'axios';
 import { nanoid } from 'nanoid';
 import { useDispatch } from 'react-redux';
@@ -14,6 +12,7 @@ import { hideLoading, showLoading } from '../../stores/loadingReducer.js';
 import ModalMessage from '../../components/profile/modalMessage.jsx';
 import { getProvince } from '../../util/province.js';
 import { MobileNotification } from '../mobileNotification.jsx';
+import Dropdown from '../../components/dropdown.jsx';
 
 const AddData = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -24,8 +23,6 @@ const AddData = () => {
     const dispatch = useDispatch();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [category, setCategory] = useState({ name: '' });
-    const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
-    const [filteredCategories, setFilteredCategories] = useState([]);
     const [formData, setFormData] = useState({
         name: '',
         detail: '',
@@ -55,9 +52,7 @@ const AddData = () => {
         { name: 'Others' },
     ];
     const [province, setProvince] = useState({ name: '' });
-    const [filteredProvinces, setFilteredProvinces] = useState([]);
     const [provinces, setProvinces] = useState([]);
-    const [dropdownOpen, setDropdownOpen] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -162,11 +157,14 @@ const AddData = () => {
     }, [province]);
 
     useEffect(() => {
+        setFormData((prev) => ({ ...prev, category: category.name }));
+    }, [category]);
+
+    useEffect(() => {
         const fetchProvinces = async () => {
             try {
                 // const res = await axios.get('/api/geolocation/provinces');
                 setProvinces(getProvince());
-                setFilteredProvinces(getProvince());
             } catch (err) {
                 toast.error('Failed to fetch provinces!');
                 console.error(err);
@@ -175,26 +173,6 @@ const AddData = () => {
 
         fetchProvinces();
     }, []);
-
-    const handleProvinceChange = (e) => {
-        const value = e.target.value;
-        setProvince({ name: value });
-        setDropdownOpen(true);
-
-        const filtered = provinces.filter((p) =>
-            p.name.toLowerCase().includes(value.toLowerCase()),
-        );
-        setFilteredProvinces(filtered);
-    };
-
-    const handleSelectProvince = (selectedProvince) => {
-        setProvince(selectedProvince);
-        setDropdownOpen(false);
-    };
-
-    const toggleDropdown = () => {
-        setDropdownOpen((prev) => !prev);
-    };
 
     const handleDragOver = (e) => {
         e.preventDefault();
@@ -212,30 +190,6 @@ const AddData = () => {
         if (file && file.type.startsWith('image/')) {
             handleImageChange({ target: { files: [file] } });
         }
-    };
-
-    const handleCategoryChange = (e) => {
-        const value = e.target.value;
-        setCategory({ name: value });
-
-        const filtered = allCategories.filter((c) =>
-            c.name.toLowerCase().includes(value.toLowerCase()),
-        );
-        setFilteredCategories(filtered);
-        setCategoryDropdownOpen(true);
-    };
-
-    const toggleCategoryDropdown = () => {
-        setCategoryDropdownOpen((prev) => !prev);
-        if (!categoryDropdownOpen && category.name === '') {
-            setFilteredCategories(allCategories);
-        }
-    };
-
-    const handleSelectCategory = (selectedCategory) => {
-        setCategory(selectedCategory);
-        setCategoryDropdownOpen(false);
-        setFormData((prev) => ({ ...prev, category: selectedCategory.name }));
     };
 
     return (
@@ -360,56 +314,15 @@ const AddData = () => {
                                     <p className="font-quicksand text-white pb-2">
                                         Province
                                     </p>
-                                    <div className="relative w-full">
-                                        <div className="flex items-center">
-                                            <input
-                                                id="province"
-                                                type="text"
-                                                name="province"
-                                                value={province.name}
-                                                onChange={handleProvinceChange}
-                                                placeholder="Search Province"
-                                                className={`flex-3 p-3 font-quicksand rounded text-white border ${
-                                                    errors.province
-                                                        ? 'border-red-500'
-                                                        : 'border-white'
-                                                } bg-transparent w-full pr-10 focus:outline-none focus:ring focus:ring-[#FFA666]`}
-                                            />
-                                            <button
-                                                type="button"
-                                                onClick={toggleDropdown}
-                                                className="absolute inset-y-0 right-0 flex items-center justify-center p-2 pl-4 rounded rounded-l-2xl bg-[#FFA666] cursor-pointer transition-all duration-200 hover:bg-white group"
-                                            >
-                                                <FaChevronDown
-                                                    className={`text-lg text-black group-hover:text-[#FFA666] transition-transform duration-300 ${
-                                                        dropdownOpen
-                                                            ? 'rotate-180'
-                                                            : 'rotate-0'
-                                                    }`}
-                                                />
-                                            </button>
-                                        </div>
-                                        {dropdownOpen &&
-                                            filteredProvinces.length > 0 && (
-                                                <ul className="absolute z-10 w-full mt-1 bg-[#252527] text-white border border-[#FFA666] rounded shadow-md max-h-60 overflow-y-auto">
-                                                    {filteredProvinces.map(
-                                                        (p) => (
-                                                            <li
-                                                                key={p.name}
-                                                                className="px-4 py-2 cursor-pointer hover:bg-[#FFA666] hover:text-black transition-all duration-200"
-                                                                onClick={() =>
-                                                                    handleSelectProvince(
-                                                                        p,
-                                                                    )
-                                                                }
-                                                            >
-                                                                {p.name}
-                                                            </li>
-                                                        ),
-                                                    )}
-                                                </ul>
-                                            )}
-                                    </div>
+                                    <Dropdown
+                                        options={provinces}
+                                        selected={province}
+                                        setSelected={(value) => setProvince(value)}
+                                        error={errors.province}
+                                        getOptionLabel={(item) => item.name}
+                                        placeholder="Search Province"
+                                    />
+
                                     <div className="min-h-[20px]">
                                         {errors.province && (
                                             <div className="text-red-500 text-sm">
@@ -503,56 +416,20 @@ const AddData = () => {
                                     <p className="font-quicksand text-white pb-2">
                                         Category
                                     </p>
-                                    <div className="relative w-full">
-                                        <div className="flex items-center">
-                                            <input
-                                                id="category"
-                                                type="text"
-                                                name="category"
-                                                value={category.name}
-                                                onChange={handleCategoryChange}
-                                                placeholder="Search Category"
-                                                className={`flex-3 p-3 font-quicksand rounded text-white border ${
-                                                    errors.category
-                                                        ? 'border-red-500'
-                                                        : 'border-white'
-                                                } bg-transparent w-full pr-10 focus:outline-none focus:ring focus:ring-[#FFA666]`}
-                                            />
-                                            <button
-                                                type="button"
-                                                onClick={toggleCategoryDropdown}
-                                                className="absolute inset-y-0 right-0 flex items-center justify-center p-2 pl-4 rounded rounded-l-2xl bg-[#FFA666] cursor-pointer transition-all duration-200 hover:bg-white group"
-                                            >
-                                                <FaChevronDown
-                                                    className={`text-lg text-black group-hover:text-[#FFA666] transition-transform duration-300 ${
-                                                        categoryDropdownOpen
-                                                            ? 'rotate-180'
-                                                            : 'rotate-0'
-                                                    }`}
-                                                />
-                                            </button>
-                                        </div>
-                                        {categoryDropdownOpen &&
-                                            filteredCategories.length > 0 && (
-                                                <ul className="absolute z-10 w-full mt-1 bg-[#252527] text-white border border-[#FFA666] rounded shadow-md max-h-60 overflow-y-auto">
-                                                    {filteredCategories.map(
-                                                        (c) => (
-                                                            <li
-                                                                key={c.name}
-                                                                className="px-4 py-2 cursor-pointer hover:bg-[#FFA666] hover:text-black transition-all duration-200"
-                                                                onClick={() =>
-                                                                    handleSelectCategory(
-                                                                        c,
-                                                                    )
-                                                                }
-                                                            >
-                                                                {c.name}
-                                                            </li>
-                                                        ),
-                                                    )}
-                                                </ul>
-                                            )}
-                                    </div>
+                                    <Dropdown
+                                        options={allCategories}
+                                        selected={category}
+                                        setSelected={(value) => {
+                                            setCategory(value);
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                category: value.name,
+                                            }));
+                                        }}
+                                        error={errors.category}
+                                        getOptionLabel={(opt) => opt.name}
+                                        placeholder="Search Category"
+                                    />
                                     <div className="min-h-[20px]">
                                         {errors.category && (
                                             <div className="text-red-500 text-sm">

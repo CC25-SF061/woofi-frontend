@@ -1,10 +1,9 @@
-import { React, useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
 import DestinationFilter from './destinationTag';
 import DestinationCard from './destinationCard';
 import DestinationFilterConstant from '../../util/DestinationFilter.js';
-import { useVirtualizer, useWindowVirtualizer } from '@tanstack/react-virtual';
-import DestinationCategory from './destinationCategory.jsx';
+import { useWindowVirtualizer } from '@tanstack/react-virtual';
+import Dropdown from '../dropdown.jsx';
 
 const DestinationGroup = ({
     containerRef,
@@ -15,14 +14,9 @@ const DestinationGroup = ({
     handleCategoryChange,
     hasMore,
 }) => {
-    // const onCardClick = (id) => {
-    //     // TODO? : Add to user statistic
-    //     navigate(`/destination/${id}`);
-    // };
     const listRef = useRef(null);
     const [category, setCategory] = useState({ name: '' });
-    const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
-    const [filteredCategories, setFilteredCategories] = useState([]);
+
     const [lane, setLane] = useState(
         (window.innerWidth >= 1536 && 5) ||
             (window.innerWidth >= 1280 && 4) ||
@@ -30,6 +24,7 @@ const DestinationGroup = ({
             (window.innerWidth >= 768 && 2) ||
             1,
     );
+
     useEffect(() => {
         const handleResize = () => {
             setLane(
@@ -41,10 +36,8 @@ const DestinationGroup = ({
             );
         };
         window.addEventListener('resize', handleResize);
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    });
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const virtualizer = useWindowVirtualizer({
         count: destinations.length,
@@ -56,13 +49,11 @@ const DestinationGroup = ({
     });
 
     useEffect(() => {
-        if (!virtualizer.getVirtualItems().length) return;
-
+        const virtualIndexes = virtualizer.getVirtualIndexes();
         if (
+            virtualIndexes.length &&
             destinations.length - 1 ===
-                virtualizer.getVirtualIndexes()[
-                    virtualizer.getVirtualIndexes().length - 1
-                ] &&
+                virtualIndexes[virtualIndexes.length - 1] &&
             hasMore
         ) {
             handleEndScroll?.();
@@ -84,21 +75,8 @@ const DestinationGroup = ({
 
     const handleSelectCategory = (selectedCategory) => {
         setCategory(selectedCategory);
-        setCategoryDropdownOpen(false);
         handleCategoryChange(selectedCategory);
     };
-
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (!event.target.closest('#category-dropdown-wrapper')) {
-                setCategoryDropdownOpen(false);
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
 
     return (
         <div
@@ -106,6 +84,7 @@ const DestinationGroup = ({
             ref={containerRef}
             className="mt-15 flex flex-col w-full"
         >
+            {/* Title */}
             <div className="relative w-full caret-transparent">
                 <div className="absolute right-0 left-0 h-[2px] top-[50%] bg-[#FFA66677]"></div>
                 <h1 className="relative mx-auto px-3 font-inknut-antiqua text-2xl md:text-4xl w-fit text-center text-[#FFA666] font-bold bg-[#221122]">
@@ -113,33 +92,28 @@ const DestinationGroup = ({
                 </h1>
             </div>
 
+            {/* Dropdown Mobile */}
             <div className="block lg:hidden mt-5">
-                <DestinationCategory
-                    category={category}
-                    setCategory={setCategory}
-                    allCategories={allCategories}
-                    categoryDropdownOpen={categoryDropdownOpen}
-                    setCategoryDropdownOpen={setCategoryDropdownOpen}
-                    filteredCategories={filteredCategories}
-                    setFilteredCategories={setFilteredCategories}
-                    handleSelectCategory={handleSelectCategory}
+                <Dropdown
+                    options={allCategories}
+                    selected={category}
+                    setSelected={handleSelectCategory}
+                    placeholder="Select Category"
+                    getOptionLabel={(opt) => opt.name}
                 />
             </div>
-            {/* The Filters */}
+
+            {/* Filters and Dropdown (Desktop) */}
             <div className="flex flex-row gap-3 lg:mx-auto md:mx-0 self-start caret-transparent w-full overflow-x-auto lg:overflow-x-visible py-5 px-1">
                 <div className="hidden lg:flex">
-                    <DestinationCategory
-                        category={category}
-                        setCategory={setCategory}
-                        allCategories={allCategories}
-                        categoryDropdownOpen={categoryDropdownOpen}
-                        setCategoryDropdownOpen={setCategoryDropdownOpen}
-                        filteredCategories={filteredCategories}
-                        setFilteredCategories={setFilteredCategories}
-                        handleSelectCategory={handleSelectCategory}
+                    <Dropdown
+                        options={allCategories}
+                        selected={category}
+                        setSelected={handleSelectCategory}
+                        placeholder="Select Category"
+                        getOptionLabel={(opt) => opt.name}
                     />
                 </div>
-                {/* Filters */}
                 <DestinationFilter
                     name="Highest Rating"
                     stateChangeHandler={tagsChangeHandler}
@@ -156,13 +130,13 @@ const DestinationGroup = ({
                     type={DestinationFilterConstant.OLDEST}
                 />
                 <DestinationFilter
+                    name="Written by you"
                     stateChangeHandler={tagsChangeHandler}
                     type={DestinationFilterConstant.WRITTEN_BY_YOU}
-                    name="Written by you"
                 />
             </div>
 
-            {/* The Cards */}
+            {/* Cards */}
             <div ref={listRef} className="mt-5 mb-10">
                 <div
                     style={{
@@ -172,40 +146,34 @@ const DestinationGroup = ({
                     }}
                 >
                     {virtualizer.getVirtualItems().map((item) => {
-                        const row = item.index;
-                        const element = destinations[row];
+                        const destination = destinations[item.index];
                         return (
                             <div
                                 key={item.index}
                                 style={{
-                                    // padding: '0px 5px 30px',
                                     paddingInline: '10px',
                                     position: 'absolute',
                                     top: 0,
                                     left: `${item.lane * (100 / virtualizer.options.lanes)}%`,
                                     width: `calc(100% / ${virtualizer.options.lanes})`,
-                                    height: `${380}px`,
-                                    transform: `translateY(${
-                                        item.start -
-                                        virtualizer.options.scrollMargin
-                                    }px)`,
+                                    height: `380px`,
+                                    transform: `translateY(${item.start - virtualizer.options.scrollMargin}px)`,
                                 }}
                             >
                                 <DestinationCard
-                                    key={element.id}
-                                    id={element.id}
+                                    id={destination.id}
                                     picture={
                                         new URL(
-                                            element.image,
+                                            destination.image,
                                             import.meta.env.VITE_STATIC_ASSET_BASE_URL,
                                         ).href
                                     }
-                                    name={element.name}
-                                    detail={element.detail}
-                                    isWishlisted={element.isWishlisted}
-                                    rating={element.rating}
+                                    name={destination.name}
+                                    detail={destination.detail}
+                                    isWishlisted={destination.isWishlisted}
+                                    rating={destination.rating}
                                     setLoginModalVisible={setLoginModalVisible}
-                                ></DestinationCard>
+                                />
                             </div>
                         );
                     })}

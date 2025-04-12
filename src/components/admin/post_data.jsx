@@ -409,22 +409,14 @@ const PostData = ({
             <EditConfirm
                 selectedItemToEdit={selectedItemToEdit}
                 setSelectedItemToEdit={setSelectedItemToEdit}
-                handleProvinceChange={handleProvinceChange}
-                toggleDropdown={toggleDropdown}
-                handleSelectProvince={handleSelectProvince}
-                dropdownOpen={dropdownOpen}
                 filteredProvinces={filteredProvinces}
+                filteredCategories={filteredCategories}
                 isDragging={isDragging}
                 handleDragOver={handleDragOver}
                 handleDragLeave={handleDragLeave}
                 handleDrop={handleDrop}
                 errors={errorsEdit}
                 handleEdit={handleEdit}
-                categoryDropdownOpen={categoryDropdownOpen}
-                toggleCategoryDropdown={toggleCategoryDropdown}
-                handleCategoryChange={handleCategoryChange}
-                handleSelectCategory={handleSelectCategory}
-                filteredCategories={filteredCategories}
             />
             {/* Modal Ban */}
             <ModalEdit
