@@ -1,66 +1,75 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import LogoDatabase from '../../assets/icons/admin/database.svg';
+import { showLoading, hideLoading } from '../../stores/loadingReducer';
+import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import axios from 'axios';
 
 const DashboardDestination = () => {
-    const destinationDataPerYear = {
-        2023: [
-            { month: 'January', color: '#8979FF', amount: 12 },
-            { month: 'February', color: '#FF928A', amount: 24 },
-            { month: 'March', color: '#3CC3DF', amount: 33 },
-            { month: 'April', color: '#FFAE4C', amount: 40 },
-            { month: 'May', color: '#537FF1', amount: 50 },
-            { month: 'June', color: '#6FD195', amount: 10 },
-            { month: 'July', color: '#8C63DA', amount: 20 },
-            { month: 'August', color: '#2BB7DC', amount: 30 },
-            { month: 'September', color: '#1F94FF', amount: 60 },
-            { month: 'October', color: '#F4CF3B', amount: 45 },
-            { month: 'November', color: '#55C4AE', amount: 20 },
-            { month: 'December', color: '#6186CC', amount: 81 },
-        ],
-        2024: [
-            { month: 'January', color: '#8979FF', amount: 5 },
-            { month: 'February', color: '#FF928A', amount: 15 },
-            { month: 'March', color: '#3CC3DF', amount: 30 },
-            { month: 'April', color: '#FFAE4C', amount: 40 },
-            { month: 'May', color: '#537FF1', amount: 50 },
-            { month: 'June', color: '#6FD195', amount: 10 },
-            { month: 'July', color: '#8C63DA', amount: 20 },
-            { month: 'August', color: '#2BB7DC', amount: 30 },
-            { month: 'September', color: '#1F94FF', amount: 60 },
-            { month: 'October', color: '#F4CF3B', amount: 45 },
-            { month: 'November', color: '#55C4AE', amount: 20 },
-            { month: 'December', color: '#6186CC', amount: 81 },
-        ],
-        2025: [
-            { month: 'January', color: '#8979FF', amount: 10 },
-            { month: 'February', color: '#FF928A', amount: 20 },
-            { month: 'March', color: '#3CC3DF', amount: 30 },
-            { month: 'April', color: '#FFAE4C', amount: 40 },
-            { month: 'May', color: '#537FF1', amount: 50 },
-            { month: 'June', color: '#6FD195', amount: 10 },
-            { month: 'July', color: '#8C63DA', amount: 20 },
-            { month: 'August', color: '#2BB7DC', amount: 30 },
-            { month: 'September', color: '#1F94FF', amount: 60 },
-            { month: 'October', color: '#F4CF3B', amount: 45 },
-            { month: 'November', color: '#55C4AE', amount: 20 },
-            { month: 'December', color: '#6186CC', amount: 81 },
-        ],
-    };
+    const availableYears = [2025];
+    const nullBlock = { month: 1, color: '#000000', count: 0 };
 
-    const [selectedYear, setSelectedYear] = useState(2025);
+    const dispatch = useDispatch();
+
+    const [selectedYear, setSelectedYear] = useState(availableYears[0]);
     const [startMonthIndex, setStartMonthIndex] = useState(0);
     const [hoverData, setHoverData] = useState(null);
+    const [rawDestinationData, setRawDestinationData] = useState([nullBlock]);
 
     const visibleMonths = 6;
-    const rawDestinationData = destinationDataPerYear[selectedYear] || [];
     const visibleData = rawDestinationData.slice(
         startMonthIndex,
         startMonthIndex + visibleMonths,
     );
+    useEffect(() => {
+        // User Analytics
+        (async () => {
+            try {
+                dispatch(showLoading('DashboardPreviewDestination'));
+                const req = (
+                    await axios.get(
+                        `/api/admin/destination-analytic?year=${selectedYear}`,
+                    )
+                ).data.data;
+                setRawDestinationData(req);
+            } catch (e) {
+                console.err(`Error getting destination analytics : ${e}`);
+                toast.error(
+                    'Something went wrong at getting destination analytic',
+                    {
+                        autoClose: 3000,
+                        position: 'top-right',
+                    },
+                );
+            } finally {
+                dispatch(hideLoading('DashboardPreviewDestination'));
+            }
+        })();
+    }, [selectedYear]);
 
     const getModeDestination = () =>
-        [...rawDestinationData].sort((a, b) => b.amount - a.amount)[0];
+        rawDestinationData.length === 0
+            ? nullBlock
+            : [...rawDestinationData].sort((a, b) => b.count - a.count)[0];
     const totalBlockChartIndices = 7;
+
+    const getNamedMonth = (month) => {
+        const namedMonth = [
+            { name: 'January', color: '#8979FF' },
+            { name: 'February', color: '#FF928A' },
+            { name: 'March', color: '#3CC3DF' },
+            { name: 'April', color: '#FFAE4C' },
+            { name: 'May', color: '#537FF1' },
+            { name: 'June', color: '#6FD195' },
+            { name: 'July', color: '#8C63DA' },
+            { name: 'August', color: '#2BB7DC' },
+            { name: 'September', color: '#1F94FF' },
+            { name: 'October', color: '#F4CF3B' },
+            { name: 'November', color: '#55C4AE' },
+            { name: 'December', color: '#6186CC' },
+        ];
+        return namedMonth[Math.min(11, Math.max(0, Number(month) - 1))];
+    };
 
     const generateDestinationDataBlockChart = {
         monthBlock: (v, i, context) => (
@@ -70,10 +79,10 @@ const DashboardDestination = () => {
                 style={{ width: `calc(${100.0 / context.length}% - 2px)` }}
                 onMouseEnter={(e) => {
                     setHoverData({
-                        month: v.month,
+                        month: getNamedMonth(v.month).month,
                         year: selectedYear,
-                        amount: v.amount,
-                        color: v.color,
+                        count: v.count,
+                        color: getNamedMonth(v.month).color,
                         x: e.clientX,
                         y: e.clientY,
                     });
@@ -88,20 +97,20 @@ const DashboardDestination = () => {
             >
                 <div
                     style={{
-                        backgroundColor: v.color + '77',
-                        borderColor: v.color,
+                        backgroundColor: getNamedMonth(v.month).color + '77',
+                        borderColor: getNamedMonth(v.month).color,
                         borderTopWidth: '2px',
                         width: '100%',
-                        height: `${(v.amount / getModeDestination().amount) * 100.0}%`,
+                        height: `${(v.count / getModeDestination().count) * 100.0}%`,
                     }}
                     className="border-t-2 rounded-t-sm transition-all duration-300"
                 ></div>
             </div>
         ),
         countIndices: (index) => {
-            const totalUser = getModeDestination().amount;
+            const totalDestination = getModeDestination().count;
             return Math.round(
-                (totalUser / (totalBlockChartIndices - 1)) *
+                (totalDestination / (totalBlockChartIndices - 1)) *
                     Math.min(index - 1, totalBlockChartIndices),
             );
         },
@@ -110,7 +119,11 @@ const DashboardDestination = () => {
     return (
         <div className="relative px-5 flex flex-col items-center pb-5 w-full font-quicksand">
             <div className="py-8 flex flex-col w-full items-center bg-[#252527] rounded-md shadow-lg mb-4">
-                <img src={LogoDatabase} alt="Users Icon" className="w-8 mb-1" />
+                <img
+                    src={LogoDatabase}
+                    alt="Destinations Icon"
+                    className="w-8 mb-1"
+                />
                 <h2 className="text-[#aaa] tracking-wide text-xl">
                     Overview Destination Data
                 </h2>
@@ -129,7 +142,7 @@ const DashboardDestination = () => {
                                 setStartMonthIndex(0);
                             }}
                         >
-                            {Object.keys(destinationDataPerYear).map((year) => (
+                            {availableYears.map((year) => (
                                 <option key={year} value={year}>
                                     {year}
                                 </option>
@@ -196,7 +209,7 @@ const DashboardDestination = () => {
                                     {hoverData.month} {hoverData.year}
                                 </div>
                                 <div className="text-xs">
-                                    Total Destinations: {hoverData.amount}
+                                    Total Destinations: {hoverData.count}
                                 </div>
                             </div>
                         )}
@@ -244,12 +257,19 @@ const DashboardDestination = () => {
                             >
                                 <div
                                     className="rounded-full w-2 aspect-square"
-                                    style={{ backgroundColor: v.color }}
+                                    style={{
+                                        backgroundColor: getNamedMonth(v.month)
+                                            .color,
+                                    }}
                                 ></div>
                                 <p className="font-semibold">
-                                    {v.month}{' '}
-                                    <span style={{ color: v.color }}>
-                                        ({v.amount})
+                                    {getNamedMonth(v.month).name}&nbsp;
+                                    <span
+                                        style={{
+                                            color: getNamedMonth(v.month).color,
+                                        }}
+                                    >
+                                        ({v.count})
                                     </span>
                                 </p>
                             </div>

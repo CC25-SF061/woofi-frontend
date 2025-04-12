@@ -16,6 +16,7 @@ import { getProvince } from '../../util/province';
 
 const PostData = ({
     id,
+    order,
     pic,
     destination_name,
     email,
@@ -305,8 +306,11 @@ const PostData = ({
 
     return (
         <div
-            className="grid grid-cols-3 w-full items-center bg-[#252527] py-8 px-5 text-white relative"
-            style={tableRowTemplate}
+            className="grid grid-cols-3 w-full items-center py-8 px-5 text-white relative"
+            style={{
+                ...tableRowTemplate,
+                backgroundColor: order % 2 === 0 ? '#252527' : '#1E1E1F',
+            }}
         >
             <div className="flex items-center gap-3 truncate">
                 <img
@@ -541,6 +545,7 @@ const PostDataTable = () => {
         return (
             <PostData
                 key={v.id}
+                order={index}
                 id={v.id}
                 pic={
                     new URL(v.image, import.meta.env.VITE_STATIC_ASSET_BASE_URL)
@@ -613,8 +618,8 @@ const PostDataTable = () => {
                 className="flex flex-col divide-white divide-y w-full"
                 ref={listInnerRef}
             >
-                <div className='w-full overflow-x-auto'>
-                    <div className='min-w-[800px]'>
+                <div className="w-full overflow-x-auto">
+                    <div className="min-w-[800px]">
                         <div
                             className="grid w-full items-center bg-[#FFA666] py-3 px-5 rounded-tl-lg rounded-tr-lg text-black font-semibold tracking-wide"
                             style={tableRowTemplate}
