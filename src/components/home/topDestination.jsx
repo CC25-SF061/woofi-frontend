@@ -43,19 +43,23 @@ const topDestination = () => {
                         <SeeDetail
                             image={Image5}
                             title="Bromo Mountain"
-                            description="Lorem Ipsum is simply dummy text of the printing and f"
+                            description="Explore the majestic Bromo Mountain, a breathtaking view of the sunrise."
+                            // province="Jawa Timur"
+                            name="Bromo Mountain"
                         />
 
                         <SeeDetail
                             image={Image6}
                             title="Raja Ampat"
-                            description="Lorem Ipsum is simply dummy text of the printing and f"
+                            description="Explore the beautiful Raja Ampat, a paradise for divers and snorkelers."
+                            name="Raja Ampat"
                         />
 
                         <SeeDetail
                             image={Image7}
                             title="Komodo Island"
-                            description="Lorem Ipsum is simply dummy text of the printing and f"
+                            description="Explore the unique Komodo Island, home to the largest lizards in the world."
+                            name="Komodo Island"
                         />
                     </div>
                 </div>

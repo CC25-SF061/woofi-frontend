@@ -1,9 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { FaSearch, FaChevronDown } from 'react-icons/fa';
+import { useSearchParams } from 'react-router-dom';
+import { getProvince } from '../util/province';
 
 const SearchDestination = ({ handleSubmit, selectedHandler, provinces }) => {
-    const [province, setProvince] = useState({ name: '' });
-    const [destination, setDestination] = useState({ name: '' });
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const [province, setProvince] = useState({
+        name: searchParams.get('province') || '',
+    });
+    const [destination, setDestination] = useState({
+        name: searchParams.get('name') || '',
+    });
     const [filteredProvinces, setFilteredProvinces] = useState(provinces);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const inputDropdown = useRef(null);
@@ -23,6 +31,7 @@ const SearchDestination = ({ handleSubmit, selectedHandler, provinces }) => {
             setFilteredProvinces(provinces);
         }
     };
+
     useEffect(() => {
         setFilteredProvinces(provinces);
     }, [provinces]);

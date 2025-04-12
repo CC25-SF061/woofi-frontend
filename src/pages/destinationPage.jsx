@@ -20,7 +20,8 @@ import DestinationFilter from '../util/DestinationFilter';
 import LoginModal from '../components/loginModal';
 import { nanoid } from 'nanoid';
 import { getProvince } from '../util/province';
-const maxCardsToIndexable = 16;
+import { useSearchParams } from 'react-router-dom';
+// const maxCardsToIndexable = 16;
 const DestinationPage = () => {
     const dispatch = useDispatch();
     const userId = useSelector((state) => state.user.data.id);
@@ -28,6 +29,7 @@ const DestinationPage = () => {
     const [pageIndex, setPageIndex] = useState(0);
     const [destinations, setDestinations] = useState([]);
     const [provinces, setProvinces] = useState(getProvince() || []);
+    const [searchParams, setSearchParams] = useSearchParams();
     const loginModal = useRef(null);
     const [isLoading, setLoading] = useState(false);
     const [mapDisplay, setMapDisplay] = useState({
@@ -37,7 +39,11 @@ const DestinationPage = () => {
         isSelected: false,
     });
     const [hasMore, setHasMore] = useState(true);
-    const [searchState, setSearchState] = useState();
+    const [searchState, setSearchState] = useState({
+        destination: {
+            name: searchParams.get('name') || '',
+        },
+    });
     const [activeTags, setActiveTags] = useState([]);
 
     const searchDestination = async (
@@ -220,10 +226,19 @@ const DestinationPage = () => {
     useEffect(() => {
         (async () => {
             const keyLoading = nanoid();
+            const province = provinces.find(
+                (element) => element.name === searchParams.get('province'),
+            );
             try {
                 dispatch(showLoading(keyLoading));
-                const destination = searchDestination();
-                await destination;
+                if (province) {
+                    await onProvinceSelected(province);
+                } else {
+                    const destination = await searchDestination(
+                        null,
+                        searchState?.destination?.name,
+                    );
+                }
             } catch (e) {
                 if (!(e instanceof AxiosError)) {
                     return toast.error(
@@ -273,7 +288,6 @@ const DestinationPage = () => {
                     containerRef={destinationListContainer}
                     tags={[activeTags, setActiveTags]}
                     destinations={destinations}
-                    maxIndexable={maxCardsToIndexable}
                     tagsChangeHandler={tagsChangeHandler}
                     setLoginModalVisible={setLoginModalVisible}
                     handleEndScroll={handleEndScroll}
