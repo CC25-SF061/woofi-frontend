@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import LogoDatabase from '../../assets/icons/admin/database.svg';
 import { showLoading, hideLoading } from '../../stores/loadingReducer';
 import { toast } from 'react-toastify';
@@ -6,12 +6,12 @@ import { useDispatch } from 'react-redux';
 import axios from 'axios';
 
 const DashboardDestination = () => {
-    const availableYears = [2025];
-    const nullBlock = { month: 1, color: '#000000', count: 0 };
+    const availableYears = useRef([2025]);
+    const nullBlock = { month: 1, color: '#000000', count: -1 };
 
     const dispatch = useDispatch();
 
-    const [selectedYear, setSelectedYear] = useState(availableYears[0]);
+    const [selectedYear, setSelectedYear] = useState(availableYears.current[0]);
     const [startMonthIndex, setStartMonthIndex] = useState(0);
     const [hoverData, setHoverData] = useState(null);
     const [rawDestinationData, setRawDestinationData] = useState([nullBlock]);
@@ -26,14 +26,20 @@ const DashboardDestination = () => {
         (async () => {
             try {
                 dispatch(showLoading('DashboardPreviewDestination'));
-                const req = (
+                const resourceAnalytics = (
+                    await axios.get(`/api/admin/analytics`)
+                ).data.data;
+                const destinationData = (
                     await axios.get(
                         `/api/admin/destination-analytic?year=${selectedYear}`,
                     )
                 ).data.data;
-                setRawDestinationData(req);
+                setRawDestinationData(
+                    destinationData.length > 0 ? destinationData : [nullBlock],
+                );
+                availableYears.current = resourceAnalytics.destination_years;
             } catch (e) {
-                console.err(`Error getting destination analytics : ${e}`);
+                console.error(`Error getting destination analytics : ${e}`);
                 toast.error(
                     'Something went wrong at getting destination analytic',
                     {
@@ -142,7 +148,7 @@ const DashboardDestination = () => {
                                 setStartMonthIndex(0);
                             }}
                         >
-                            {availableYears.map((year) => (
+                            {availableYears.current.map((year) => (
                                 <option key={year} value={year}>
                                     {year}
                                 </option>
@@ -188,9 +194,11 @@ const DashboardDestination = () => {
 
                         {/* Bar Chart */}
                         <div className="absolute ml-7 pt-[0.5rem] w-4/5 h-full flex flex-row justify-around">
-                            {visibleData.map(
-                                generateDestinationDataBlockChart.monthBlock,
-                            )}
+                            {visibleData[0].count === -1
+                                ? null
+                                : visibleData.map(
+                                      generateDestinationDataBlockChart.monthBlock,
+                                  )}
                         </div>
 
                         {/* Tooltip Hover */}
@@ -213,6 +221,19 @@ const DashboardDestination = () => {
                                 </div>
                             </div>
                         )}
+                        {visibleData[0].count === -1 ? (
+                            <div
+                                className="relative flex items-center justify-center h-full w-full"
+                                style={{
+                                    background:
+                                        'radial-gradient(circle,rgba(20, 20, 28, 1) 0%, rgba(20, 20, 28, 0.48) 100%)',
+                                }}
+                            >
+                                <p className="text-3xl font-black tracking-wider">
+                                    Data not available
+                                </p>
+                            </div>
+                        ) : null}
                     </div>
 
                     {/* Navigasi bulan */}
@@ -250,30 +271,34 @@ const DashboardDestination = () => {
 
                     {/* Legend */}
                     <div className="px-15 mt-3 flex flex-row flex-wrap justify-evenly h-fit gap-3 text-xs">
-                        {visibleData.map((v, idx) => (
-                            <div
-                                key={idx}
-                                className="flex flex-row items-center gap-1"
-                            >
-                                <div
-                                    className="rounded-full w-2 aspect-square"
-                                    style={{
-                                        backgroundColor: getNamedMonth(v.month)
-                                            .color,
-                                    }}
-                                ></div>
-                                <p className="font-semibold">
-                                    {getNamedMonth(v.month).name}&nbsp;
-                                    <span
-                                        style={{
-                                            color: getNamedMonth(v.month).color,
-                                        }}
-                                    >
-                                        ({v.count})
-                                    </span>
-                                </p>
-                            </div>
-                        ))}
+                        {visibleData[0].count === -1
+                            ? null
+                            : visibleData.map((v, idx) => (
+                                  <div
+                                      key={idx}
+                                      className="flex flex-row items-center gap-1"
+                                  >
+                                      <div
+                                          className="rounded-full w-2 aspect-square"
+                                          style={{
+                                              backgroundColor: getNamedMonth(
+                                                  v.month,
+                                              ).color,
+                                          }}
+                                      ></div>
+                                      <p className="font-semibold">
+                                          {getNamedMonth(v.month).name}&nbsp;
+                                          <span
+                                              style={{
+                                                  color: getNamedMonth(v.month)
+                                                      .color,
+                                              }}
+                                          >
+                                              ({v.count})
+                                          </span>
+                                      </p>
+                                  </div>
+                              ))}
                     </div>
                 </div>
             </div>
