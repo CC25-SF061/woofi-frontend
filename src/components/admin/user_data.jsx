@@ -13,6 +13,7 @@ import { useDispatch } from 'react-redux';
 import { hideLoading, showLoading } from '../../stores/loadingReducer';
 const UserData = ({
     id,
+    order,
     image,
     name,
     email,
@@ -204,8 +205,11 @@ const UserData = ({
     };
     return (
         <div
-            className="grid grid-cols-3 w-full items-center bg-[#252527] py-8 px-5 text-white relative"
-            style={tableRowTemplate}
+            className="grid grid-cols-3 w-full items-center  py-8 px-5 text-white relative"
+            style={{
+                ...tableRowTemplate,
+                backgroundColor: order % 2 === 0 ? '#252527' : '#1E1E1F',
+            }}
         >
             <div className="flex items-center gap-3 truncate">
                 <img
@@ -495,8 +499,8 @@ const UserDataTable = () => {
             </div>
 
             <div className="flex flex-col divide-white divide-y w-full">
-                <div className='w-full overflow-x-auto'>
-                    <div className='min-w-[800px]'>
+                <div className="w-full overflow-x-auto">
+                    <div className="min-w-[800px]">
                         {/* Table Header */}
                         <div
                             className="grid w-full items-center bg-[#FFA666] py-3 px-5 rounded-tl-lg rounded-tr-lg text-black font-semibold tracking-wide"
@@ -505,7 +509,7 @@ const UserDataTable = () => {
                             <div>
                                 <p>User Data</p>
                             </div>
-                            <div className="px-3">
+                            <div>
                                 <p>Role</p>
                             </div>
                             <div>
@@ -520,6 +524,7 @@ const UserDataTable = () => {
                                     <UserData
                                         key={v.id}
                                         id={v.id}
+                                        order={index}
                                         image={v.profile_image}
                                         name={v.username}
                                         email={v.email}

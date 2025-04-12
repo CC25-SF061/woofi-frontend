@@ -15,6 +15,7 @@ import { hideLoading, showLoading } from '../../stores/loadingReducer';
 
 const ContactData = ({
     id,
+    order,
     profile_image,
     name,
     email,
@@ -218,8 +219,11 @@ const ContactData = ({
     };
     return (
         <div
-            className="grid grid-cols-4 w-full items-center bg-[#1E1E20] p-5 text-white"
-            style={tableRowTemplate}
+            className="grid grid-cols-4 w-full items-center p-5 text-white"
+            style={{
+                ...tableRowTemplate,
+                backgroundColor: order % 2 === 0 ? '#252527' : '#1E1E1F',
+            }}
         >
             <div className="flex items-center gap-3 truncate">
                 <img
@@ -239,9 +243,7 @@ const ContactData = ({
                     <p className="text-sm text-gray-400">{email}</p>
                 </div>
             </div>
-            <p className="text-sm text-gray-300">
-                {reason}
-            </p>
+            <p className="text-sm text-gray-300">{reason}</p>
             <div>{states[replied]}</div>
             <div className="relative ">
                 <button
@@ -457,7 +459,7 @@ const ContactDataTable = () => {
 
             {/* Table */}
             <div className="flex flex-col divide-white divide-y w-full">
-                <div className='w-full overflow-x-auto'>
+                <div className="w-full overflow-x-auto">
                     <div className="min-w-[800px]">
                         {/* Header */}
                         <div
@@ -476,6 +478,7 @@ const ContactDataTable = () => {
                                 contacts.map((v, index) => (
                                     <ContactData
                                         key={index}
+                                        order={index}
                                         id={v.id}
                                         profile_image={v.profile_image}
                                         name={v.name}
