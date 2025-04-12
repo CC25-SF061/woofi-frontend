@@ -9,11 +9,10 @@ import { toast, ToastContainer } from 'react-toastify';
 import ErrorConstant from '../../util/ErrorConstant';
 import { nanoid } from 'nanoid';
 import EditConfirm from '../dataDestination/editConfirm';
-import { useWindowVirtualizer } from '@tanstack/react-virtual';
 import { useDispatch } from 'react-redux';
 import { hideLoading, showLoading } from '../../stores/loadingReducer';
 import { getProvince } from '../../util/province';
-
+import { getCategories } from '../../util/category';
 const PostData = ({
     id,
     order,
@@ -37,10 +36,10 @@ const PostData = ({
 
     const [selectedItemToEdit, setSelectedItemToEdit] = useState(null);
     const [dropdownOpen, setDropdownOpen] = useState(false);
-    const [filteredProvinces, setFilteredProvinces] = useState([]);
+    const [filteredProvinces, setFilteredProvinces] = useState(getProvince());
     const [isDragging, setIsDragging] = useState(false);
-    const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
-    const [filteredCategories, setFilteredCategories] = useState([]);
+    const [filteredCategories, setFilteredCategories] =
+        useState(getCategories());
     const [errorsEdit, setErrorsEdit] = useState({
         name: '',
         detail: '',
@@ -49,18 +48,7 @@ const PostData = ({
         province: '',
         category: '',
     });
-    const allCategories = [
-        { name: 'Peak' },
-        { name: 'Mountain' },
-        { name: 'Forest' },
-        { name: 'Beach' },
-        { name: 'Waterfall' },
-        { name: 'Lake' },
-        { name: 'Museum' },
-        { name: 'Recreational Park' },
-        { name: 'Tourist Village' },
-        { name: 'Others' },
-    ];
+
     const states = {
         deleted: (
             <div className="w-fit px-4 py-1 bg-red-500 text-white text-sm tracking-wider rounded-md">
@@ -162,32 +150,6 @@ const PostData = ({
         await navigate(`/destination/${id}`);
     };
 
-    const handleProvinceChange = (e) => {
-        const input = e.target.value;
-        const filtered = allProvinces.filter((province) =>
-            province.name.toLowerCase().includes(input.toLowerCase()),
-        );
-
-        setSelectedItemToEdit((prev) => ({
-            ...prev,
-            province: input,
-        }));
-
-        setFilteredProvinces(filtered);
-    };
-
-    const toggleDropdown = () => {
-        setDropdownOpen(!dropdownOpen);
-    };
-
-    const handleSelectProvince = (province) => {
-        setSelectedItemToEdit((prev) => ({
-            ...prev,
-            province: province.name,
-        }));
-        setDropdownOpen(false);
-    };
-
     const handleDragOver = (e) => {
         e.preventDefault();
         setIsDragging(true);
@@ -208,8 +170,6 @@ const PostData = ({
         }
         setIsDragging(false);
     };
-
-    const allProvinces = getProvince();
 
     const handleEdit = async (closeModal) => {
         const formData = new FormData();
@@ -273,35 +233,6 @@ const PostData = ({
     const openEditModal = () => {
         setSelectedItemToEdit(editData);
         setDropdownOpen(false);
-    };
-
-    const handleCategoryChange = (e) => {
-        const value = e.target.value;
-
-        const filtered = allCategories.filter((c) =>
-            c.name.toLowerCase().includes(value.toLowerCase()),
-        );
-        setSelectedItemToEdit((prev) => ({
-            ...prev,
-            category: value,
-        }));
-        setFilteredCategories(filtered);
-        setCategoryDropdownOpen(true);
-    };
-
-    const toggleCategoryDropdown = () => {
-        setCategoryDropdownOpen((prev) => !prev);
-        if (!categoryDropdownOpen && category.name === '') {
-            setFilteredCategories(allCategories); // tampilkan semua saat kosong
-        }
-    };
-
-    const handleSelectCategory = (selectedCategory) => {
-        setSelectedItemToEdit((prev) => ({
-            ...prev,
-            category: selectedCategory.name,
-        }));
-        setCategoryDropdownOpen(false);
     };
 
     return (
@@ -523,7 +454,6 @@ const PostDataTable = () => {
         const tempPosts = [...posts];
         const updatedPostsIndex = tempPosts.findIndex((post) => post.id === id);
         const updatedPosts = { ...tempPosts[updatedPostsIndex] };
-        console.log(id);
         updatedPosts.status = 'posted';
         tempPosts[updatedPostsIndex] = updatedPosts;
         setPosts(tempPosts);

@@ -10,14 +10,14 @@ import { ErrorToast } from '../../components/toast';
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-// import { useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setData } from '../../stores/userReducer';
 import { FaSpinner } from 'react-icons/fa';
 
 const SignIn = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [invalidLoginState, setInvalidLoginState] = useState(null);
-    // const dispatch = useDispatch();
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
     const [loadingGoogle, setLoadingGoogle] = useState(false);
@@ -64,8 +64,9 @@ const SignIn = () => {
             const response = await axios.post('/api/auth/login', request, {
                 withCredentials: true,
             });
+            dispatch(setData());
+
             localStorage.setItem('token', response.data.data.token);
-            // dispatch(setData(response.data.data));
             await navigate('/interest');
         } catch (e) {
             if (!(e instanceof AxiosError)) {
@@ -102,6 +103,8 @@ const SignIn = () => {
                 },
                 { withCredentials: true },
             );
+            dispatch(setData());
+
             localStorage.setItem('token', response.data.data.token);
             // dispatch(setData(response.data.data));
 
@@ -139,7 +142,7 @@ const SignIn = () => {
                     },
                     { withCredentials: true },
                 );
-
+                dispatch(setData());
                 localStorage.setItem('token', response.data.data.token);
 
                 await navigate('/interest');

@@ -344,8 +344,8 @@ const ContactData = ({
                 <textarea
                     className="bg-[#1E1E20] border border-[#444] w-full p-3 rounded text-white resize-none focus:outline-none focus:ring-2 focus:ring-red-400"
                     rows={4}
-                    required
                     placeholder="Enter your reply here..."
+                    required
                     value={replyValue}
                     onChange={(e) => setReplyValue(e.target.value)}
                 />

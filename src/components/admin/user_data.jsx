@@ -377,8 +377,6 @@ const UserDataTable = () => {
     const [roleFilter, setRoleFilter] = useState();
     const [activeDropdownIndex, setActiveDropdownIndex] = useState(null);
     const [users, setUsers] = useState([]);
-    const [page, setPage] = useState(0);
-    const prevPage = useRef(0);
     const dispatch = useDispatch();
 
     const searchUser = async (page = 0) => {

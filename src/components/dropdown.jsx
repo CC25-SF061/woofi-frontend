@@ -7,6 +7,7 @@ const Dropdown = ({
     setSelected,
     getOptionLabel = (item) => item.name,
     placeholder = 'Select...',
+    onSelect = () => {},
     error = '',
 }) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -22,7 +23,7 @@ const Dropdown = ({
                     .includes(search.toLowerCase()),
             ),
         );
-    }, [search, options, getOptionLabel]);
+    }, [search, options]);
 
     useEffect(() => {
         const label = getOptionLabel?.(selected) || '';
@@ -47,6 +48,9 @@ const Dropdown = ({
     }, []);
 
     const toggleDropdown = () => {
+        if (!dropdownOpen) {
+            setFilteredOptions(options);
+        }
         setDropdownOpen((prev) => !prev);
     };
 

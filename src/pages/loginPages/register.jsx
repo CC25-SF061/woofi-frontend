@@ -10,15 +10,15 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import { useGoogleLogin } from '@react-oauth/google';
-// import { useDispatch } from 'react-redux';
-// import { setData } from '../../stores/userReducer';
+import { useDispatch } from 'react-redux';
+import { setData } from '../../stores/userReducer';
 import { FaSpinner } from 'react-icons/fa';
 
 const Register = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [showPassword1, setShowPassword1] = useState(false);
     const navigate = useNavigate();
-    // const dispatch = useDispatch();
+    const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(false);
     const [isGoogleLoading, setIsGoogleLoading] = useState(false);
     const [errState, setErrState] = useState({
@@ -93,8 +93,8 @@ const Register = () => {
                 })
             ).data;
             e.target.reset();
+            dispatch(setData());
             localStorage.setItem('token', response.data.token);
-            // dispatch(setData(response.data));
             await navigate('/interest');
         } catch (error) {
             if (
@@ -139,7 +139,9 @@ const Register = () => {
                     token: accessToken,
                 })
             ).data;
+
             localStorage.setItem('token', response.data.token);
+            await dispatch(setData());
             await navigate('/interest');
         } catch (e) {
             if (!(e instanceof AxiosError)) {
@@ -171,8 +173,8 @@ const Register = () => {
                         token: credentialsResponse.access_token,
                     })
                 ).data;
+                dispatch(setData());
                 localStorage.setItem('token', response.data.token);
-                // dispatch(setData(response.data));
                 await navigate('/interest');
             } catch (e) {
                 if (!(e instanceof AxiosError)) {

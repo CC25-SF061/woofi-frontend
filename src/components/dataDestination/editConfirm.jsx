@@ -161,11 +161,9 @@ const EditConfirm = ({
                                 </label>
                                 <Dropdown
                                     options={filteredCategories}
-                                    selected={filteredCategories.find(
-                                        (item) =>
-                                            item.name ===
-                                            selectedItemToEdit.category,
-                                    )}
+                                    selected={{
+                                        name: selectedItemToEdit.category,
+                                    }}
                                     setSelected={(item) =>
                                         setSelectedItemToEdit({
                                             ...selectedItemToEdit,
