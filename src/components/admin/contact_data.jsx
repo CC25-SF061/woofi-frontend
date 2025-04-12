@@ -100,7 +100,7 @@ const ContactData = ({
             }
 
             const response = e?.response?.data?.payload;
-            if (response.errCode === ErrorConstant.ERR_INVALID_FIELD) {
+            if (response?.errCode === ErrorConstant.ERR_INVALID_FIELD) {
                 return invalidFieldErr(
                     response.fields,
                     { message: '' },
