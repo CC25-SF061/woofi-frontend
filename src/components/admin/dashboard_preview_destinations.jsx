@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import React, { useEffect, useState, useRef } from 'react';
-=======
-import React, { useEffect, useRef, useState } from 'react';
->>>>>>> e0bd57b318b3717f9de1cf96342c968fb0b59831
 import LogoDatabase from '../../assets/icons/admin/database.svg';
 import { showLoading, hideLoading } from '../../stores/loadingReducer';
 import { toast } from 'react-toastify';
@@ -10,7 +6,6 @@ import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { nanoid } from 'nanoid';
 
-<<<<<<< HEAD
 const DashboardDestination = ({ destinationYears }) => {
     // const availableYears = [2025];
     const nullBlock = { month: 1, color: '#000000', count: 0 };
@@ -34,15 +29,6 @@ const DashboardDestination = ({ destinationYears }) => {
         destinationYears[destinationYears.length - 1],
     );
     const tooltipContainerRef = useRef(null);
-=======
-const DashboardDestination = () => {
-    const availableYears = useRef([2025]);
-    const nullBlock = { month: 1, color: '#000000', count: -1 };
-
-    const dispatch = useDispatch();
-
-    const [selectedYear, setSelectedYear] = useState(availableYears.current[0]);
->>>>>>> e0bd57b318b3717f9de1cf96342c968fb0b59831
     const [startMonthIndex, setStartMonthIndex] = useState(0);
     const [hoverData, setHoverData] = useState(null);
     const [rawDestinationData, setRawDestinationData] = useState([nullBlock]);
@@ -60,21 +46,12 @@ const DashboardDestination = () => {
         (async () => {
             const keyLoading = nanoid();
             try {
-<<<<<<< HEAD
                 dispatch(showLoading(keyLoading));
                 const req = (
-=======
-                dispatch(showLoading('DashboardPreviewDestination'));
-                const resourceAnalytics = (
-                    await axios.get(`/api/admin/analytics`)
-                ).data.data;
-                const destinationData = (
->>>>>>> e0bd57b318b3717f9de1cf96342c968fb0b59831
                     await axios.get(
                         `/api/admin/destination-analytic?year=${selectedYear}`,
                     )
                 ).data.data;
-<<<<<<< HEAD
                 const months = defaultMonth.map((v) => {
                     const search = searchMonth(req, v.month);
                     if (search) {
@@ -86,14 +63,6 @@ const DashboardDestination = () => {
                 });
                 setRawDestinationData(months);
             } catch (e) {
-=======
-                setRawDestinationData(
-                    destinationData.length > 0 ? destinationData : [nullBlock],
-                );
-                availableYears.current = resourceAnalytics.destination_years;
-            } catch (e) {
-                console.error(`Error getting destination analytics : ${e}`);
->>>>>>> e0bd57b318b3717f9de1cf96342c968fb0b59831
                 toast.error(
                     'Something went wrong at getting destination analytic',
                     {
@@ -210,11 +179,7 @@ const DashboardDestination = () => {
                                 setStartMonthIndex(0);
                             }}
                         >
-<<<<<<< HEAD
                             {destinationYears.map((year) => (
-=======
-                            {availableYears.current.map((year) => (
->>>>>>> e0bd57b318b3717f9de1cf96342c968fb0b59831
                                 <option key={year} value={year}>
                                     {year}
                                 </option>

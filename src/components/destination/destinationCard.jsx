@@ -8,8 +8,7 @@ import { motion } from 'framer-motion';
 import countStars from '../../util/starRating';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import axios, { AxiosError } from 'axios';
-import ErrorConstant from '../../util/ErrorConstant.js';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const DestinationCard = ({

@@ -473,7 +473,7 @@ const ContactDataTable = () => {
                         </div>
 
                         {/* Data Rows */}
-                        <div className="overflow-y-auto max-h-[65vh]">
+                        <div className="overflow-y-auto">
                             {contacts.length > 0 ? (
                                 contacts.map((v, index) => (
                                     <ContactData

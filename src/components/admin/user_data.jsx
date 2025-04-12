@@ -377,6 +377,7 @@ const UserDataTable = () => {
     const [roleFilter, setRoleFilter] = useState();
     const [activeDropdownIndex, setActiveDropdownIndex] = useState(null);
     const [users, setUsers] = useState([]);
+    const [page, setPage] = useState(0);
     const prevPage = useRef(0);
     const dispatch = useDispatch();
 
@@ -386,9 +387,11 @@ const UserDataTable = () => {
                 params: {
                     role: roleFilter || undefined,
                     q: searchResult || undefined,
+                    page: page,
                 },
             });
-            prevPage.current = page;
+
+            // prevPage.current = page;
 
             setUsers(users.data.data);
         } catch (e) {
@@ -518,7 +521,7 @@ const UserDataTable = () => {
                         </div>
 
                         {/* Table Contents */}
-                        <div className="overflow-y-auto max-h-[65vh]">
+                        <div className="overflow-y-auto">
                             {users.length > 0 ? (
                                 users.map((v, index) => (
                                     <UserData

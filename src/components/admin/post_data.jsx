@@ -635,7 +635,7 @@ const PostDataTable = () => {
                             </div>
                         </div>
                         <ToastContainer />
-                        <div className="overflow-y-auto max-h-[65vh]">
+                        <div className="overflow-y-auto">
                             {posts.length > 0 ? (
                                 posts.map((_, index) =>
                                     renderDestination(index),

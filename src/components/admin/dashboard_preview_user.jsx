@@ -4,8 +4,8 @@ import axios from 'axios';
 import { showLoading, hideLoading } from '../../stores/loadingReducer';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
+import { nanoid } from 'nanoid';
 
-<<<<<<< HEAD
 const DashboardUser = ({ userYears }) => {
     // const availableYears = [2025];
     const nullBlock = { month: 1, color: '#000000', count: 0 };
@@ -28,15 +28,6 @@ const DashboardUser = ({ userYears }) => {
     const [selectedYear, setSelectedYear] = useState(
         userYears[userYears.length - 1],
     );
-=======
-const DashboardUser = () => {
-    const availableYears = useRef([2025]);
-    const nullBlock = { month: 1, color: '#000000', count: -1 };
-
-    const dispatch = useDispatch();
-
-    const [selectedYear, setSelectedYear] = useState(availableYears.current[0]);
->>>>>>> e0bd57b318b3717f9de1cf96342c968fb0b59831
     const [startMonthIndex, setStartMonthIndex] = useState(0);
     const [hoverData, setHoverData] = useState(null);
     const [rawUserData, setRawUserData] = useState([nullBlock]);
@@ -46,20 +37,18 @@ const DashboardUser = () => {
     };
     useEffect(() => {
         // User Analytics
+        const keyLoading = nanoid();
         (async () => {
             try {
-                dispatch(showLoading('DashboardPreviewUser'));
-                const resourceAnalytics = (
-                    await axios.get(`/api/admin/analytics`)
-                ).data.data;
+                dispatch(showLoading(keyLoading));
+
                 const userData = (
                     await axios.get(
                         `/api/admin/user-analytic?year=${selectedYear}`,
                     )
                 ).data.data;
-<<<<<<< HEAD
                 const months = defaultMonth.map((v, i) => {
-                    const search = searchMonth(req, v.month);
+                    const search = searchMonth(userData, v.month);
                     if (search) {
                         return {
                             ...search,
@@ -69,18 +58,12 @@ const DashboardUser = () => {
                 });
                 setRawUserData(months);
             } catch (e) {
-=======
-                setRawUserData(userData.length > 0 ? userData : [nullBlock]);
-                availableYears.current = resourceAnalytics.user_years;
-            } catch (e) {
-                console.error(`Error getting user analytics : ${e}`);
->>>>>>> e0bd57b318b3717f9de1cf96342c968fb0b59831
                 toast.error('Something went wrong at getting user analytic', {
                     autoClose: 3000,
                     position: 'top-right',
                 });
             } finally {
-                dispatch(hideLoading('DashboardPreviewUser'));
+                dispatch(hideLoading(keyLoading));
             }
         })();
     }, [selectedYear]);
@@ -99,7 +82,6 @@ const DashboardUser = () => {
             ? nullBlock
             : [...rawUserData].sort((a, b) => b.count - a.count)[0];
     const totalBlockChartIndices = 7;
-
     const getNamedMonth = (month) => {
         const namedMonth = [
             { name: 'January', color: '#8979FF' },
@@ -192,11 +174,7 @@ const DashboardUser = () => {
                                 setStartMonthIndex(0);
                             }}
                         >
-<<<<<<< HEAD
                             {userYears.map((year) => (
-=======
-                            {availableYears.current.map((year) => (
->>>>>>> e0bd57b318b3717f9de1cf96342c968fb0b59831
                                 <option key={year} value={year}>
                                     {year}
                                 </option>

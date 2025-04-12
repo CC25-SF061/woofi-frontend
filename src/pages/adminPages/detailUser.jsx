@@ -1,20 +1,43 @@
 import React, { useState } from 'react';
 import Navbar from '../../components/navbar';
 import ProfileIcon from '../../assets/navbar/Icon.webp';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import axios, { AxiosError } from 'axios';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import DestinationCard from '../../components/destination/destinationCard';
 import imgURL from '../../util/imgURL';
+import { toast } from 'react-toastify';
+import ErrorConstant from '../../util/ErrorConstant';
+import { nanoid } from 'nanoid';
+import { useDispatch } from 'react-redux';
+import { showLoading, hideLoading } from '../../stores/loadingReducer';
 
 const DetailUser = () => {
     const [user, setUser] = useState();
     const params = useParams();
-    DestinationCard;
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
     useEffect(() => {
         (async () => {
-            const response = await axios.get(`/api/user/${params.userId}`);
-            setUser(response.data.data);
+            const keyLoading = nanoid();
+            try {
+                dispatch(showLoading(keyLoading));
+                const response = await axios.get(`/api/user/${params.userId}`);
+                setUser(response.data.data);
+            } catch (e) {
+                if (!(e instanceof AxiosError)) {
+                    return toast.error('Something went wrong', {
+                        position: 'top-right',
+                        autoClose: 3000,
+                    });
+                }
+                const response = e?.response?.data?.payload;
+                if (response?.errCode === ErrorConstant.ERR_NOT_FOUND) {
+                    await navigate('/notfound', { replace: true });
+                }
+            } finally {
+                dispatch(hideLoading(keyLoading));
+            }
         })();
         // fetchUser();
     }, []);

@@ -46,7 +46,6 @@ export const markNotificationUser = createAsyncThunk(
             });
             return data;
         } catch (e) {
-            console.log(e);
             return state.notificationUser.data;
         } finally {
             dispatch(setMarkLoading(false));
