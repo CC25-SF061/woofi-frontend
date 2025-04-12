@@ -20,9 +20,9 @@ const Footer = () => {
         <div className="w-full md:w-1/3 flex flex-col items-center md:items-start">
           <h1 className="font-quicksand text-2xl pb-2">Sosial Media</h1>
           <div className="flex justify-center md:justify-start items-center gap-4">
-            <img src={instagram} alt="Instagram" className="w-7 cursor-pointer md:w-8" />
-            <img src={twitter} alt="Twitter/X" className="w-6 cursor-pointer md:w-7" />
-            <img src={youtube} alt="Youtube" className="w-7 cursor-pointer md:w-8" />
+            <img src={instagram} alt="Instagram" className="w-7 md:w-8" />
+            <img src={twitter} alt="Twitter/X" className="w-6 md:w-7" />
+            <img src={youtube} alt="Youtube" className="w-7 md:w-8" />
           </div>
         </div>
 
@@ -30,8 +30,7 @@ const Footer = () => {
         <div className="w-full text-center md:w-1/3 font-quicksand tracking-wider">
           <h1 className="text-2xl pb-2">Woofi Team</h1>
           <p>
-            Lorem Ipsum is simply dummy text of the printing and Lorem Ipsum is
-            simply dummy text of the printing and
+            Discover the natural beauty, culture and history of Indonesia in one place.
           </p>
         </div>
 
