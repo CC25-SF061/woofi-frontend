@@ -11,7 +11,7 @@ const DashboardUser = () => {
 
     const dispatch = useDispatch();
 
-    const [selectedYear, setSelectedYear] = useState(2025);
+    const [selectedYear, setSelectedYear] = useState(availableYears[0]);
     const [startMonthIndex, setStartMonthIndex] = useState(0);
     const [hoverData, setHoverData] = useState(null);
     const [rawUserData, setRawUserData] = useState([nullBlock]);
