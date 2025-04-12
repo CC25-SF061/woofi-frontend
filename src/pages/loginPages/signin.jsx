@@ -81,6 +81,13 @@ const SignIn = () => {
             if (err.errCode === ErrorConstant.ERR_INVALID_LOGIN) {
                 invalidLogin();
             }
+
+            if (err.errCode === ErrorConstant.ERR_ACCOUNT_SUSPENDED) {
+                return toast.error('Account Suspended', {
+                    position: 'top-right',
+                    autoClose: 3000,
+                });
+            }
         } finally {
             setIsLoading(false);
         }
@@ -134,9 +141,7 @@ const SignIn = () => {
                 );
 
                 localStorage.setItem('token', response.data.data.token);
-                // dispatch(setData(response.data.data));
 
-                //lakukan sesuatu jika berhasil kurang lebih sama dengan yang diatas
                 await navigate('/interest');
             } catch (e) {
                 if (!(e instanceof AxiosError)) {
@@ -145,6 +150,13 @@ const SignIn = () => {
                 const response = e.response.data.payload;
                 if (response.errCode === ErrorConstant.ERR_USER_NOT_FOUND) {
                     await createUserGoogle(credentialResponse.access_token);
+                }
+
+                if (response.errCode === ErrorConstant.ERR_ACCOUNT_SUSPENDED) {
+                    return toast.error('Account Suspended', {
+                        position: 'top-right',
+                        autoClose: 3000,
+                    });
                 }
             } finally {
                 setLoadingGoogle(false);

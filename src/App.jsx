@@ -35,6 +35,7 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setData } from './stores/userReducer.js';
 import NewUserGuard from './components/newUserGuard.jsx';
+import AdminGuard from './components/adminGuard.jsx';
 // import { ToastContainer } from 'react-toastify';
 
 const App = () => {
@@ -147,7 +148,14 @@ const App = () => {
                             </NewUserGuard>
                         }
                     ></Route>
-                    <Route path="/interest" element={<InterestPage />}></Route>
+                    <Route
+                        path="/interest"
+                        element={
+                            <AuthGuard>
+                                <InterestPage />
+                            </AuthGuard>
+                        }
+                    ></Route>
 
                     <Route path="/sign-in" element={<Signin />}></Route>
                     <Route path="/register" element={<Register />}></Route>
@@ -192,21 +200,40 @@ const App = () => {
                             </AuthGuard>
                         }
                     ></Route>
-                    <Route path="/admin" element={<Dashboard />}></Route>
+                    <Route
+                        path="/admin"
+                        element={
+                            <AdminGuard>
+                                <Dashboard />
+                            </AdminGuard>
+                        }
+                    ></Route>
                     <Route
                         path="/admin/users"
-                        element={<UsersDashboard />}
+                        element={
+                            <AdminGuard>
+                                <UsersDashboard />
+                            </AdminGuard>
+                        }
                     ></Route>
                     <Route
                         path="/admin/posts"
-                        element={<PostsDashboard />}
+                        element={
+                            <AdminGuard>
+                                <PostsDashboard />
+                            </AdminGuard>
+                        }
                     ></Route>
                     <Route
                         path="/admin/contact"
-                        element={<ContactDashboard />}
+                        element={
+                            <AdminGuard>
+                                <ContactDashboard />
+                            </AdminGuard>
+                        }
                     ></Route>
                     <Route
-                        path="/detailUser/:userId"
+                        path="/user-detail/:userId"
                         element={<DetailUser />}
                     ></Route>
                     <Route path="*" element={<NotFound />}></Route>

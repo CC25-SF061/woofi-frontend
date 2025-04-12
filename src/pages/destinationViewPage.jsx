@@ -73,6 +73,7 @@ const DestinationViewPage = () => {
                     personalRating={destination.personalRating || 0}
                 />
                 <DestinationContent
+                    userId={destination.user_id}
                     name={destination.name}
                     detail={destination.detail}
                     writer={destination.writer}

@@ -219,13 +219,15 @@ const Navbar = () => {
                                         >
                                             My Profile
                                         </Link>
-                                        <Link
-                                            to="/admin"
-                                            className="block px-4 font-semibold py-2 text-sm hover:bg-[#FFA666]"
-                                            onClick={() => setIsOpen(false)}
-                                        >
-                                            Admin
-                                        </Link>
+                                        {user.isAdmin && (
+                                            <Link
+                                                to="/admin"
+                                                className="block px-4 font-semibold py-2 text-sm hover:bg-[#FFA666]"
+                                                onClick={() => setIsOpen(false)}
+                                            >
+                                                Admin
+                                            </Link>
+                                        )}
                                         <button
                                             onClick={() => {
                                                 setShowLogoutConfirm(true);
@@ -336,18 +338,22 @@ const Navbar = () => {
                                                 >
                                                     My Profile
                                                 </Link>
-                                                <Link
-                                                    to="/admin"
-                                                    className="block px-4 py-2 font-semibold text-sm hover:bg-[#FFA666]"
-                                                    onClick={() =>
-                                                        setIsOpen(false)
-                                                    }
-                                                >
-                                                    Admin
-                                                </Link>
+                                                {user.isAdmin && (
+                                                    <Link
+                                                        to="/admin"
+                                                        className="block px-4 py-2 font-semibold text-sm hover:bg-[#FFA666]"
+                                                        onClick={() =>
+                                                            setIsOpen(false)
+                                                        }
+                                                    >
+                                                        Admin
+                                                    </Link>
+                                                )}
                                                 <button
                                                     onClick={() => {
-                                                        setShowLogoutConfirm(true);
+                                                        setShowLogoutConfirm(
+                                                            true,
+                                                        );
                                                         setIsOpen(false);
                                                     }}
                                                     className="w-full text-left px-4 py-2 font-semibold text-sm text-red-500 hover:bg-[#FFA666] cursor-pointer"
@@ -428,7 +434,7 @@ const Navbar = () => {
                 title="Confirm Logout"
                 message={
                     <>
-                        Are you sure you want to loged out from {' '}
+                        Are you sure you want to loged out from{' '}
                         <span className="text-red-500 font-bold">
                             {user.username}
                         </span>

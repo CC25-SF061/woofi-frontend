@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Sidebar from '../../components/profile/sidebar';
 import { HiX, HiDotsHorizontal } from 'react-icons/hi';
 import { RiMenu2Line } from 'react-icons/ri';
-import { IoIosNotifications } from 'react-icons/io';
 import DestinationCard from '../../components/destination/destinationCard';
 import { useDispatch } from 'react-redux';
 import axios, { AxiosError } from 'axios';

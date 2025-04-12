@@ -1,17 +1,34 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import LogoDatabase from '../../assets/icons/admin/database.svg';
 import { showLoading, hideLoading } from '../../stores/loadingReducer';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
+import { nanoid } from 'nanoid';
 
-const DashboardDestination = () => {
-    const availableYears = [2025];
+const DashboardDestination = ({ destinationYears }) => {
+    // const availableYears = [2025];
     const nullBlock = { month: 1, color: '#000000', count: 0 };
-
+    const defaultMonth = [
+        { month: 1, color: '#000000', count: 0 },
+        { month: 2, color: '#000000', count: 0 },
+        { month: 3, color: '#000000', count: 0 },
+        { month: 4, color: '#000000', count: 0 },
+        { month: 5, color: '#000000', count: 0 },
+        { month: 6, color: '#000000', count: 0 },
+        { month: 7, color: '#000000', count: 0 },
+        { month: 8, color: '#000000', count: 0 },
+        { month: 9, color: '#000000', count: 0 },
+        { month: 10, color: '#000000', count: 0 },
+        { month: 11, color: '#000000', count: 0 },
+        { month: 12, color: '#000000', count: 0 },
+    ];
     const dispatch = useDispatch();
 
-    const [selectedYear, setSelectedYear] = useState(availableYears[0]);
+    const [selectedYear, setSelectedYear] = useState(
+        destinationYears[destinationYears.length - 1],
+    );
+    const tooltipContainerRef = useRef(null);
     const [startMonthIndex, setStartMonthIndex] = useState(0);
     const [hoverData, setHoverData] = useState(null);
     const [rawDestinationData, setRawDestinationData] = useState([nullBlock]);
@@ -21,19 +38,31 @@ const DashboardDestination = () => {
         startMonthIndex,
         startMonthIndex + visibleMonths,
     );
+    const searchMonth = (months, monthToSearch) => {
+        return months.find((v) => v.month === monthToSearch);
+    };
     useEffect(() => {
         // User Analytics
         (async () => {
+            const keyLoading = nanoid();
             try {
-                dispatch(showLoading('DashboardPreviewDestination'));
+                dispatch(showLoading(keyLoading));
                 const req = (
                     await axios.get(
                         `/api/admin/destination-analytic?year=${selectedYear}`,
                     )
                 ).data.data;
-                setRawDestinationData(req);
+                const months = defaultMonth.map((v) => {
+                    const search = searchMonth(req, v.month);
+                    if (search) {
+                        return {
+                            ...search,
+                        };
+                    }
+                    return v;
+                });
+                setRawDestinationData(months);
             } catch (e) {
-                console.err(`Error getting destination analytics : ${e}`);
                 toast.error(
                     'Something went wrong at getting destination analytic',
                     {
@@ -42,7 +71,7 @@ const DashboardDestination = () => {
                     },
                 );
             } finally {
-                dispatch(hideLoading('DashboardPreviewDestination'));
+                dispatch(hideLoading(keyLoading));
             }
         })();
     }, [selectedYear]);
@@ -78,19 +107,27 @@ const DashboardDestination = () => {
                 className="flex items-end h-full bg-[#D6DBED22] relative"
                 style={{ width: `calc(${100.0 / context.length}% - 2px)` }}
                 onMouseEnter={(e) => {
+                    const tooltipContainer = tooltipContainerRef.current;
+                    const rect = tooltipContainer.getBoundingClientRect();
                     setHoverData({
                         month: getNamedMonth(v.month).month,
                         year: selectedYear,
                         count: v.count,
                         color: getNamedMonth(v.month).color,
-                        x: e.clientX,
-                        y: e.clientY,
+                        x: e.clientX - rect.left,
+                        y: e.clientY - rect.top,
                     });
                 }}
                 onMouseMove={(e) => {
+                    const tooltipContainer = tooltipContainerRef.current;
+                    const rect = tooltipContainer.getBoundingClientRect();
                     setHoverData(
                         (prev) =>
-                            prev && { ...prev, x: e.clientX, y: e.clientY },
+                            prev && {
+                                ...prev,
+                                x: e.clientX - rect.left,
+                                y: e.clientY - rect.top,
+                            },
                     );
                 }}
                 onMouseLeave={() => setHoverData(null)}
@@ -142,7 +179,7 @@ const DashboardDestination = () => {
                                 setStartMonthIndex(0);
                             }}
                         >
-                            {availableYears.map((year) => (
+                            {destinationYears.map((year) => (
                                 <option key={year} value={year}>
                                     {year}
                                 </option>
@@ -151,7 +188,10 @@ const DashboardDestination = () => {
                     </div>
 
                     {/* Grafik */}
-                    <div className="relative w-full flex justify-center aspect-[2/1] max-h-[400px]">
+                    <div
+                        className="relative w-full flex justify-center aspect-[2/1] max-h-[400px]"
+                        ref={tooltipContainerRef}
+                    >
                         {/* Grid garis bantu */}
                         <div
                             className="absolute inset-0 grid items-end"
@@ -198,8 +238,8 @@ const DashboardDestination = () => {
                             <div
                                 className="absolute z-50 bg-black text-white text-sm p-2 rounded shadow-lg pointer-events-none transition-opacity duration-200"
                                 style={{
-                                    top: hoverData.y - 140,
-                                    left: hoverData.x - 280,
+                                    top: hoverData.y,
+                                    left: hoverData.x + 13,
                                     minWidth: 160,
                                     backgroundColor: '#1c1c1c',
                                     border: `1px solid ${hoverData.color}`,

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { fetchUserProfile } from '../stores/userReducer';
 import PageWrapper from './loading/pageWrapper';
 
-const NewUserGuard = ({ children }) => {
+const AdminGuard = ({ children }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [canContinue, setCanContinue] = useState(false);
@@ -13,8 +13,8 @@ const NewUserGuard = ({ children }) => {
         async function fetchProfile() {
             try {
                 const user = await dispatch(fetchUserProfile()).unwrap();
-                if (user.isNewUser) {
-                    return await navigate('/interest');
+                if (!user.id || !user.isAdmin) {
+                    return await navigate('/');
                 }
 
                 setCanContinue(true);
@@ -27,4 +27,4 @@ const NewUserGuard = ({ children }) => {
     return <>{canContinue ? children : <PageWrapper />}</>;
 };
 
-export default NewUserGuard;
+export default AdminGuard;

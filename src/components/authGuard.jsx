@@ -16,7 +16,7 @@ const AuthGuard = ({ children }) => {
             }
         }
         fetchProfile();
-    }, []);
+    }, [user]);
 
     return <>{user ? children : <PageWrapper />}</>;
 };

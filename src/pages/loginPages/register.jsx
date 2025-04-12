@@ -140,11 +140,25 @@ const Register = () => {
                 })
             ).data;
             localStorage.setItem('token', response.data.token);
-            // dispatch(setData(response.data));
-            //lakukan sesuatu jika berhasil kurang lebih sama dengan yang diatas
             await navigate('/interest');
         } catch (e) {
-            console.log(e);
+            if (!(e instanceof AxiosError)) {
+                return toast.error('Something went wrong', {
+                    position: 'top-right',
+                    autoClose: 3000,
+                });
+            }
+            const response = e?.response?.data?.payload;
+            if (response?.errCode === ErrorConstant.ERR_ACCOUNT_SUSPENDED) {
+                return toast.error('Account Suspended', {
+                    position: 'top-right',
+                    autoClose: 3000,
+                });
+            }
+            return toast.error('Something went wrong', {
+                position: 'top-right',
+                autoClose: 3000,
+            });
         }
     };
 

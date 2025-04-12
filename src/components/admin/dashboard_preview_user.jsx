@@ -1,21 +1,39 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import LogoUsers from '../../assets/icons/admin/users.svg';
 import axios from 'axios';
 import { showLoading, hideLoading } from '../../stores/loadingReducer';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 
-const DashboardUser = () => {
-    const availableYears = [2025];
+const DashboardUser = ({ userYears }) => {
+    // const availableYears = [2025];
     const nullBlock = { month: 1, color: '#000000', count: 0 };
-
+    const defaultMonth = [
+        { month: 1, color: '#000000', count: 0 },
+        { month: 2, color: '#000000', count: 0 },
+        { month: 3, color: '#000000', count: 0 },
+        { month: 4, color: '#000000', count: 0 },
+        { month: 5, color: '#000000', count: 0 },
+        { month: 6, color: '#000000', count: 0 },
+        { month: 7, color: '#000000', count: 0 },
+        { month: 8, color: '#000000', count: 0 },
+        { month: 9, color: '#000000', count: 0 },
+        { month: 10, color: '#000000', count: 0 },
+        { month: 11, color: '#000000', count: 0 },
+        { month: 12, color: '#000000', count: 0 },
+    ];
     const dispatch = useDispatch();
 
-    const [selectedYear, setSelectedYear] = useState(availableYears[0]);
+    const [selectedYear, setSelectedYear] = useState(
+        userYears[userYears.length - 1],
+    );
     const [startMonthIndex, setStartMonthIndex] = useState(0);
     const [hoverData, setHoverData] = useState(null);
     const [rawUserData, setRawUserData] = useState([nullBlock]);
-
+    const tooltipRef = useRef(null);
+    const searchMonth = (months, monthToSearch) => {
+        return months.find((v) => v.month === monthToSearch);
+    };
     useEffect(() => {
         // User Analytics
         (async () => {
@@ -26,9 +44,17 @@ const DashboardUser = () => {
                         `/api/admin/user-analytic?year=${selectedYear}`,
                     )
                 ).data.data;
-                setRawUserData(req);
+                const months = defaultMonth.map((v, i) => {
+                    const search = searchMonth(req, v.month);
+                    if (search) {
+                        return {
+                            ...search,
+                        };
+                    }
+                    return v;
+                });
+                setRawUserData(months);
             } catch (e) {
-                console.err(`Error getting user analytics : ${e}`);
                 toast.error('Something went wrong at getting user analytic', {
                     autoClose: 3000,
                     position: 'top-right',
@@ -71,7 +97,6 @@ const DashboardUser = () => {
         ];
         return namedMonth[Math.min(11, Math.max(0, Number(month) - 1))];
     };
-
     const generateUserDataBlockChart = {
         monthBlock: (v, i, context) => (
             <div
@@ -79,19 +104,27 @@ const DashboardUser = () => {
                 className="flex items-end h-full bg-[#D6DBED22] relative"
                 style={{ width: `calc(${100.0 / context.length}% - 2px)` }}
                 onMouseEnter={(e) => {
+                    const tooltip = tooltipRef.current;
+                    const rect = tooltip.getBoundingClientRect();
                     setHoverData({
                         month: getNamedMonth(v.month).name,
                         year: selectedYear,
                         count: v.count,
                         color: getNamedMonth(v.month).color,
-                        x: e.clientX,
-                        y: e.clientY,
+                        x: e.clientX - rect.left,
+                        y: e.clientY - rect.top,
                     });
                 }}
                 onMouseMove={(e) => {
+                    const tooltip = tooltipRef.current;
+                    const rect = tooltip.getBoundingClientRect();
                     setHoverData(
                         (prev) =>
-                            prev && { ...prev, x: e.clientX, y: e.clientY },
+                            prev && {
+                                ...prev,
+                                x: e.clientX - rect.left,
+                                y: e.clientY - rect.top,
+                            },
                     );
                 }}
                 onMouseLeave={() => setHoverData(null)}
@@ -139,7 +172,7 @@ const DashboardUser = () => {
                                 setStartMonthIndex(0);
                             }}
                         >
-                            {availableYears.map((year) => (
+                            {userYears.map((year) => (
                                 <option key={year} value={year}>
                                     {year}
                                 </option>
@@ -148,7 +181,10 @@ const DashboardUser = () => {
                     </div>
 
                     {/* Grafik */}
-                    <div className="relative w-full flex justify-center aspect-[2/1] max-h-[400px]">
+                    <div
+                        className="relative w-full flex justify-center aspect-[2/1] max-h-[400px]"
+                        ref={tooltipRef}
+                    >
                         {/* Grid garis bantu */}
                         <div
                             className="absolute inset-0 grid items-end"
@@ -195,8 +231,8 @@ const DashboardUser = () => {
                             <div
                                 className="absolute z-50 bg-black text-white text-sm p-2 rounded shadow-lg pointer-events-none transition-opacity duration-200"
                                 style={{
-                                    top: hoverData.y - 140,
-                                    left: hoverData.x - 280,
+                                    top: `${hoverData.y}px`,
+                                    left: `${hoverData.x + 20}px`,
                                     minWidth: 160,
                                     backgroundColor: '#1c1c1c',
                                     border: `1px solid ${hoverData.color}`,
