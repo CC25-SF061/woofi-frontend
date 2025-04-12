@@ -384,7 +384,7 @@ const UserDataTable = () => {
         try {
             const users = await axios.get('/api/admin/users', {
                 params: {
-                    role: roleFilter,
+                    role: roleFilter || undefined,
                     q: searchResult || undefined,
                 },
             });
