@@ -1,6 +1,8 @@
 import { React } from 'react';
 import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import markerIconPng from 'leaflet/dist/images/marker-icon.png';
+import { Icon } from 'leaflet';
 
 const ChangeView = ({ center, zoom }) => {
     const map = useMap();
@@ -31,7 +33,17 @@ const DestinationMap = ({ pos, zoom, name, isSelected, provinces = [] }) => {
                     </Marker>
                 ) : (
                     provinces.map((el) => (
-                        <Marker position={[el.lat, el.long]} key={el.name}>
+                        <Marker
+                            position={[el.lat, el.long]}
+                            key={el.name}
+                            icon={
+                                new Icon({
+                                    iconUrl: markerIconPng,
+                                    iconSize: [25, 41],
+                                    iconAnchor: [12, 41],
+                                })
+                            }
+                        >
                             <Popup> {el.name}</Popup>
                         </Marker>
                     ))

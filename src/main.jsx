@@ -8,12 +8,14 @@ import { Provider } from 'react-redux';
 import store from './stores/store.js';
 
 axios.defaults.baseURL = import.meta.env.VITE_SERVER_URL;
+console.log(import.meta.env.VITE_SERVER_URL);
 axios.defaults.timeout = 1000 * 60;
 axios.defaults.paramsSerializer = (params) =>
     QueryString.stringify(params, { arrayFormat: 'repeat' });
 axios.interceptors.request.use(
     function (request) {
         if (localStorage.getItem('token')) {
+            console.log(localStorage.getItem('token'));
             request.headers['Authorization'] = `Bearer ${localStorage.getItem(
                 'token',
             )}`;

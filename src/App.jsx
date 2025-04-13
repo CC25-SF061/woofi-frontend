@@ -68,6 +68,7 @@ const App = () => {
                             withCredentials: true,
                         })
                     ).data;
+                    console.log(refreshToken, 'sdjsdjsbdd');
                     localStorage.setItem('token', refreshToken.data.token);
                     refreshAndRetryQueue.current.forEach(
                         ({ resolve, config }) => resolve(config),
