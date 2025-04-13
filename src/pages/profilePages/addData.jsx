@@ -191,6 +191,7 @@ const AddData = () => {
             handleImageChange({ target: { files: [file] } });
         }
     };
+    
 
     return (
         <div>

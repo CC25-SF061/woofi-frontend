@@ -65,8 +65,25 @@ const Dropdown = ({
         setDropdownOpen(false);
     };
 
+    const autoCompleteOption = (e) => {
+        if (filteredOptions.length > 0 && search.name != '') {
+            const firstFilteredOpt = getOptionLabel(filteredOptions[0]);
+            setSearch(firstFilteredOpt);
+            setDropdownOpen(false);
+        } else {
+            e.preventDefault();
+            setSearch('');
+        }
+    };
+
     return (
-        <div ref={dropdownRef} className="relative w-full">
+        <div
+            ref={dropdownRef}
+            className="relative w-full"
+            onKeyDown={(e) => {
+                if (e.key === 'Enter') autoCompleteOption(e);
+            }}
+        >
             <div className="flex items-center">
                 <input
                     type="text"
