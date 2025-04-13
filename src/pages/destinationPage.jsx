@@ -229,6 +229,7 @@ const DestinationPage = () => {
             const province = provinces.find(
                 (element) => element.name === searchParams.get('province'),
             );
+            window.scrollTo(0, 0);
             try {
                 dispatch(showLoading(keyLoading));
                 if (province) {
