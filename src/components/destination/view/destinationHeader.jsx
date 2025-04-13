@@ -12,7 +12,8 @@ import countStars from '../../../util/starRating';
 import { useSelector } from 'react-redux';
 import axios, { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
-import LoginModal from '../../loginModal';
+import ModalMessage from '../../profile/modalMessage';
+import { useNavigate } from 'react-router-dom';
 import errorConstant from '../../../util/errorConstant';
 import { nanoid } from 'nanoid';
 
@@ -36,6 +37,10 @@ const DestinationGroup = ({
     const [rating, setRating] = useState(personalRating);
     const [wishlist, setWishlist] = useState(isWishlist);
     const { whole_rating, has_half_rating, empty_rating } = countStars(rating);
+
+    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+    const navigate = useNavigate();
+    const MotionButton = motion.button;
 
     async function handleWishlist() {
         if (!userId) {
@@ -114,9 +119,43 @@ const DestinationGroup = ({
         }
     }
 
+    const closeLoginModal = () => {
+        setIsLoginModalOpen(false);
+    };
+
+    const goToLogin = () => {
+        closeLoginModal();
+        navigate('/sign-in');
+    };
+
     return (
         <div className="text-white flex flex-col w-full mb-4 gap-4">
-            <LoginModal dialogRef={loginModal} />
+            <ModalMessage
+                isOpen={isLoginModalOpen}
+                onClose={closeLoginModal}
+                title="Not Logged In"
+            >
+                <div className="text-white">
+                    <h3 className="font-bold text-xl">
+                        You are not{' '}
+                        <span className="text-[#FFA666] font-bold">
+                            Logged In
+                        </span>
+                        , yet
+                    </h3>
+                    <p className="pb-6 font-light tracking-wide">
+                        Login to continue
+                    </p>
+                    <MotionButton
+                        transition={{ ease: 'backOut', delay: 0 }}
+                        whileHover={{ scale: 1.05 }}
+                        className="rounded-md hover:bg-[#FFA66622] border-solid border-[#FFA666] text-[#FFA666] border-[1px] px-2 py-1 font-semibold tracking-wider"
+                        onClick={goToLogin}
+                    >
+                        Login right away
+                    </MotionButton>
+                </div>
+            </ModalMessage>
             <div className="flex flex-row gap-4 items-center">
                 <h1 className="font-inknut-antiqua font-normal text-lg md:font-semibold md:text-3xl">
                     {name}
