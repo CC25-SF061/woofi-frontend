@@ -14,6 +14,7 @@ import axios, { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
 import LoginModal from '../../loginModal';
 import errorConstant from '../../../util/errorConstant';
+import { nanoid } from 'nanoid';
 
 const DestinationGroup = ({
     id,
@@ -26,8 +27,10 @@ const DestinationGroup = ({
     countRating,
     isWishlist,
     personalRating,
+    refreshDestination,
 }) => {
     const userId = useSelector((state) => state.user.data.id);
+    const prevRatingToastId = useRef(null);
 
     const loginModal = useRef();
     const [rating, setRating] = useState(personalRating);
@@ -93,11 +96,16 @@ const DestinationGroup = ({
                 return;
             }
             setRating(value);
+            toast.dismiss(prevRatingToastId.current); // prevent toast duplicate when spamming
             await axios.post(`/api/destination/rating/${id}`, { score: value });
-            toast.success(`Rating sent : ${value} / 5`, {
-                position: 'top-right',
-                autoClose: 2000,
-            });
+            await refreshDestination();
+            prevRatingToastId.current = toast.success(
+                `Rating sent : ${value} / 5`,
+                {
+                    position: 'top-right',
+                    autoClose: 2000,
+                },
+            );
         } catch (e) {
             toast.error('Something went wrong while rating', {
                 position: 'top-right',

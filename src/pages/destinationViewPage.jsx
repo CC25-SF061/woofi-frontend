@@ -17,35 +17,37 @@ const DestinationViewPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        (async () => {
-            const keyLoading = nanoid();
-            try {
-                dispatch(showLoading(keyLoading));
-                const response = (
-                    await axios.get(`/api/destination/${destinationId}`)
-                ).data;
-                setDestination(response.data || null);
-            } catch (e) {
-                if (!(e instanceof AxiosError)) {
-                    return toast.error(
-                        'Something went wrong, Please try again later.',
-                        {
-                            position: 'top-right',
-                        },
-                    );
-                }
-                const response = e.response;
-                if (
-                    !response ||
-                    response.data.payload.code !== ErrorConstant.ERR_NOT_FOUND
-                ) {
-                    await navigate('/not-found', { replace: true });
-                }
-            } finally {
-                dispatch(hideLoading(keyLoading));
+    const refreshDestination = async () => {
+        const keyLoading = nanoid();
+        try {
+            dispatch(showLoading(keyLoading));
+            const response = (
+                await axios.get(`/api/destination/${destinationId}`)
+            ).data;
+            setDestination(response.data || null);
+        } catch (e) {
+            if (!(e instanceof AxiosError)) {
+                return toast.error(
+                    'Something went wrong, Please try again later.',
+                    {
+                        position: 'top-right',
+                    },
+                );
             }
-        })();
+            const response = e.response;
+            if (
+                !response ||
+                response.data.payload.code !== ErrorConstant.ERR_NOT_FOUND
+            ) {
+                await navigate('/not-found', { replace: true });
+            }
+        } finally {
+            dispatch(hideLoading(keyLoading));
+        }
+    };
+
+    useEffect(() => {
+        refreshDestination();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [destinationId]);
 
@@ -71,6 +73,7 @@ const DestinationViewPage = () => {
                     countRating={destination.ratingCount || 0}
                     isWishlist={destination.isWishlisted}
                     personalRating={destination.personalRating || 0}
+                    refreshDestination={refreshDestination}
                 />
                 <DestinationContent
                     userId={destination.user_id}
