@@ -13,10 +13,13 @@ import { Link } from 'react-router-dom';
 import FavDestination from '../components/home/favDestination';
 import TopDestination from '../components/home/topDestination';
 
+const mapUrl = (url) => {
+    return new URL(url, import.meta.url).href;
+};
 const backgroundImages = [
-    '/src/assets/homePage/borobudur.webp',
-    '/src/assets/homePage/gunung-rinjani.webp',
-    '/src/assets/homePage/raja-ampat.webp',
+    mapUrl('/src/assets/homePage/borobudur.webp'),
+    mapUrl('/src/assets/homePage/gunung-rinjani.webp'),
+    mapUrl('/src/assets/homePage/raja-ampat.webp'),
 ];
 
 const home = () => {
