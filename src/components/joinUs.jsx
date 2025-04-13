@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Image8 from '../assets/homePage/image8.webp';
 import LogoWoofi from '../assets/navbar/logo.webp';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { fadeInUp } from '../util/animation';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchUserProfile } from '../stores/userReducer';
 
 const JoinUs = () => {
     const user = useSelector((state) => state.user.data);

@@ -57,7 +57,7 @@ const OtpPages = () => {
                 setForgetPassword({
                     otp: data.otp,
                     hash: localStorage.getItem('passToken'),
-                })
+                }),
             );
             // toast.success('OTP resend successfully', {
             //     position: 'top-right',
@@ -104,7 +104,7 @@ const OtpPages = () => {
             });
         }
     };
-    
+
     return (
         <div className="bg-[#221122] min-h-screen w-full flex items-center justify-center p-5 md:p-10">
             <div className="flex flex-col md:flex-row w-full max-w-5xl rounded-lg overflow-hidden shadow-lg bg-[#252527] min-h-[650px]">

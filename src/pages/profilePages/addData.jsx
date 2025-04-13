@@ -317,7 +317,9 @@ const AddData = () => {
                                     <Dropdown
                                         options={provinces}
                                         selected={province}
-                                        setSelected={(value) => setProvince(value)}
+                                        setSelected={(value) =>
+                                            setProvince(value)
+                                        }
                                         error={errors.province}
                                         getOptionLabel={(item) => item.name}
                                         placeholder="Search Province"

@@ -19,7 +19,7 @@ import ProfileIcon from '../../assets/navbar/Icon.webp';
 import { ValidateFields } from '../../util/validation.js';
 // Redux
 import { useDispatch, useSelector } from 'react-redux';
-import ErrorConstant from '../../util/ErrorConstant';
+import ErrorConstant from '../../util/errorConstant.js';
 import {
     setUsername as setUsernameRedux,
     setEmail as setEmailRedux,
@@ -42,10 +42,8 @@ const Profile = () => {
     // const [isModalOpen, setIsModalOpen] = useState(false);
 
     const [isModalProfile, setIsModalProfile] = useState(false);
-    const [isModalMessage, setIsModalMessage] = useState(false);
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
     const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
-    const [hasNewMessage, setHasNewMessage] = useState(false);
 
     // Username State
     const [isModalUsernameOpen, setIsModalUsernameOpen] = useState(false);
@@ -414,18 +412,6 @@ const Profile = () => {
             setFileImage(null);
         }
     }, [isModalProfile]);
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setHasNewMessage(true);
-        }, 3000);
-        return () => clearTimeout(timer);
-    }, []);
-
-    const handleOpenModal = () => {
-        setIsModalMessage(true);
-        setHasNewMessage(false);
-    };
 
     return (
         <div className="w-full bg-[#221122] flex lg:h-screen items-center justify-center p-5 lg:p-10 text-white">

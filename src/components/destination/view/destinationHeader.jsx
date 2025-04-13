@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux';
 import axios, { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
 import LoginModal from '../../loginModal';
-import errorConstant from '../../../util/ErrorConstant';
+import errorConstant from '../../../util/errorConstant';
 
 const DestinationGroup = ({
     id,

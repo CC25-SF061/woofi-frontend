@@ -95,6 +95,7 @@ const ContactUs = () => {
                 reply_id: parseInt(searchParams.get('reply_id')) || null,
             });
         } catch (e) {
+            console.log(e);
             if (!(e instanceof AxiosError)) {
                 return;
             }

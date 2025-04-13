@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import DestinationFilter from './destinationTag';
 import DestinationCard from './destinationCard';
-import DestinationFilterConstant from '../../util/DestinationFilter.js';
+import DestinationFilterConstant from '../../util/destinationFilter';
 import { useWindowVirtualizer } from '@tanstack/react-virtual';
 import Dropdown from '../dropdown.jsx';
 

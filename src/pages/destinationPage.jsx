@@ -13,10 +13,10 @@ import 'swiper/css/effect-fade';
 import 'swiper/css/pagination';
 import { showLoading, hideLoading } from '../stores/loadingReducer';
 import axios, { AxiosError } from 'axios';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 // Geolocation
-import DestinationFilter from '../util/DestinationFilter';
+import DestinationFilter from '../util/destinationFilter';
 import LoginModal from '../components/loginModal';
 import { nanoid } from 'nanoid';
 import { getProvince } from '../util/province';

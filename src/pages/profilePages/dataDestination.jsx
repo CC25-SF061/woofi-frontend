@@ -9,7 +9,7 @@ import { nanoid } from 'nanoid';
 import { hideLoading, showLoading } from '../../stores/loadingReducer';
 import { toast, ToastContainer } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import ErrorConstant from '../../util/ErrorConstant';
+import ErrorConstant from '../../util/errorConstant';
 import DeleteConfirmationModal from '../../components/dataDestination/deleteConfirm';
 import EditConfirm from '../../components/dataDestination/editConfirm';
 import { getProvince } from '../../util/province';
@@ -23,11 +23,8 @@ const DataDestination = () => {
     const navigate = useNavigate();
     const [isDragging, setIsDragging] = useState(false);
     const dispatch = useDispatch();
-    const [dropdownOpen, setDropdownOpen] = useState(false);
     const [filteredProvinces, setFilteredProvinces] = useState([]);
     const [deleteType, setDeleteType] = useState(null);
-    const [category, setCategory] = useState({ name: '' });
-    const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
     const [filteredCategories, setFilteredCategories] = useState([]);
     const [errors, setErrors] = useState({
         name: '',

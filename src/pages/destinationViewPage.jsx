@@ -8,7 +8,7 @@ import { showLoading, hideLoading } from '../stores/loadingReducer';
 import axios, { AxiosError } from 'axios';
 import { useDispatch } from 'react-redux';
 import { toast, ToastContainer } from 'react-toastify';
-import ErrorConstant from '../util/ErrorConstant.js';
+import ErrorConstant from '../util/errorConstant.js';
 import { nanoid } from 'nanoid';
 
 const DestinationViewPage = () => {
@@ -50,7 +50,6 @@ const DestinationViewPage = () => {
     }, [destinationId]);
 
     return destination ? (
-        // TODO: Fix the backend/this part so that the data match up (refer some of the || used below)
         <>
             <Navbar />
             <main className="flex flex-col px-10 pt-25 py-10 items-center bg-[#221122]">

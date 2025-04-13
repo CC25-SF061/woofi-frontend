@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { FaSearch, FaChevronDown } from 'react-icons/fa';
 import { useSearchParams } from 'react-router-dom';
-import { getProvince } from '../util/province';
 
 const SearchDestination = ({ handleSubmit, selectedHandler, provinces }) => {
     const [searchParams, setSearchParams] = useSearchParams();
