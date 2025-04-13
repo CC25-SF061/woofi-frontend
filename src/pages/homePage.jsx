@@ -4,6 +4,9 @@ import Navbar from '../components/navbar';
 import Footer from '../components/footer';
 import LogoWoofi from '../assets/navbar/logo.webp';
 import Image1 from '../assets/homePage/whatWoofi.webp';
+import borobudur from '../assets/homePage/borobudur.webp';
+import gunungRinjani from '../assets/homePage/gunung-rinjani.webp';
+import rajaAmpat from '../assets/homePage/raja-ampat.webp';
 
 import JoinUs from '../components/joinUs';
 import { slideInLeft, slideInRight, fadeInUp } from '../util/animation';
@@ -13,14 +16,10 @@ import { Link } from 'react-router-dom';
 import FavDestination from '../components/home/favDestination';
 import TopDestination from '../components/home/topDestination';
 
-const mapUrl = (url) => {
-    return new URL(url, import.meta.url).href;
-};
-const backgroundImages = [
-    mapUrl('/src/assets/homePage/borobudur.webp'),
-    mapUrl('/src/assets/homePage/gunung-rinjani.webp'),
-    mapUrl('/src/assets/homePage/raja-ampat.webp'),
-];
+// const mapUrl = (url) => {
+//     return new URL(url, import.meta.url).href;
+// };
+const backgroundImages = [borobudur, gunungRinjani, rajaAmpat];
 
 const home = () => {
     return (
