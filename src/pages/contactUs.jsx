@@ -7,7 +7,7 @@ import Logo from '../assets/navbar/logo.webp';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios, { AxiosError } from 'axios';
-import ErrorConstant from '../util/ErrorConstant';
+import ErrorConstant from '../util/errorConstant';
 import { FaSpinner } from 'react-icons/fa';
 import { useSearchParams } from 'react-router-dom';
 

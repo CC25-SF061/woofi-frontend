@@ -6,7 +6,7 @@ import ModalConfirm from '../dataDestination/deleteConfirm';
 import axios, { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
-import ErrorConstant from '../../util/ErrorConstant';
+import ErrorConstant from '../../util/errorConstant';
 import { nanoid } from 'nanoid';
 import EditConfirm from '../dataDestination/editConfirm';
 import { useDispatch } from 'react-redux';

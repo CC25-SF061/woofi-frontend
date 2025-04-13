@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import axios, { AxiosError } from 'axios';
-import ErrorConstant from '../../util/ErrorConstant';
+import ErrorConstant from '../../util/errorConstant';
 import { ErrorToast } from '../../components/toast';
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 import { ToastContainer, toast } from 'react-toastify';

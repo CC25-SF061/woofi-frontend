@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from '../../components/profile/sidebar';
 import { HiX } from 'react-icons/hi';
 import { RiMenu2Line } from 'react-icons/ri';
-import ErrorConstant from '../../util/ErrorConstant.js';
+import ErrorConstant from '../../util/errorConstant.js';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios, { AxiosError } from 'axios';

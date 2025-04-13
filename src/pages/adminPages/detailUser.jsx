@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 import DestinationCard from '../../components/destination/destinationCard';
 import imgURL from '../../util/imgURL';
 import { toast } from 'react-toastify';
-import ErrorConstant from '../../util/ErrorConstant';
+import ErrorConstant from '../../util/errorConstant';
 import { nanoid } from 'nanoid';
 import { useDispatch } from 'react-redux';
 import { showLoading, hideLoading } from '../../stores/loadingReducer';

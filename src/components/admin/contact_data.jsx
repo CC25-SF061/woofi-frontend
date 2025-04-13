@@ -7,7 +7,7 @@ import ModalReply from '../profile/modalEdit';
 import axios, { AxiosError } from 'axios';
 import ModalMessage from '../profile/modalMessage';
 import invalidFieldErr from '../../util/invalidField';
-import ErrorConstant from '../../util/ErrorConstant';
+import ErrorConstant from '../../util/errorConstant';
 import { toast, ToastContainer } from 'react-toastify';
 import { nanoid } from 'nanoid';
 import { useDispatch } from 'react-redux';
@@ -93,7 +93,7 @@ const ContactData = ({
             });
         } catch (e) {
             if (!(e instanceof AxiosError)) {
-                return toast.error('Something went wrong while replying', {
+                return toast.error('Something went wrong', {
                     position: 'top-right',
                     autoClose: 3000,
                 });
@@ -108,8 +108,7 @@ const ContactData = ({
                 );
             }
 
-            console.error(e);
-            return toast.error('Something went wrong while replying', {
+            return toast.error('Something went wrong', {
                 position: 'top-right',
                 autoClose: 3000,
             });
