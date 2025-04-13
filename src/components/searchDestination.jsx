@@ -2,8 +2,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import { FaSearch, FaChevronDown } from 'react-icons/fa';
 import { useSearchParams } from 'react-router-dom';
 
-const SearchDestination = ({ handleSubmit, selectedHandler, provinces }) => {
-    const [searchParams, setSearchParams] = useSearchParams();
+const SearchDestination = ({
+    handleSubmit,
+    selectedHandler,
+    provinces,
+    resetSelectedHandler,
+}) => {
+    const [searchParams, _] = useSearchParams();
 
     const [province, setProvince] = useState({
         name: searchParams.get('province') || '',
@@ -28,6 +33,19 @@ const SearchDestination = ({ handleSubmit, selectedHandler, provinces }) => {
             setFilteredProvinces(filtered);
         } else {
             setFilteredProvinces(provinces);
+        }
+    };
+    const autoCompleteProvince = (e) => {
+        if (filteredProvinces.length > 0 && province.name != '') {
+            const selectedProvince = filteredProvinces[0];
+            setProvince(selectedProvince);
+            selectedHandler(selectedProvince);
+            setDropdownOpen(false);
+            setFilteredProvinces(provinces);
+        } else {
+            e.preventDefault();
+            setProvince({ name: '' });
+            resetSelectedHandler();
         }
     };
 
@@ -73,6 +91,9 @@ const SearchDestination = ({ handleSubmit, selectedHandler, provinces }) => {
                             ref={inputDropdown}
                             value={province?.name || ''}
                             onChange={handleProvinceChange}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') autoCompleteProvince(e);
+                            }}
                         />
                         <button
                             type="button"

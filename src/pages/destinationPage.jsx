@@ -23,6 +23,7 @@ import { getProvince } from '../util/province';
 import { useSearchParams } from 'react-router-dom';
 // const maxCardsToIndexable = 16;
 const DestinationPage = () => {
+    const defaultMapCoord = [-1.748926, 120.0148634];
     const dispatch = useDispatch();
     const userId = useSelector((state) => state.user.data.id);
     const destinationListContainer = useRef(null);
@@ -33,7 +34,7 @@ const DestinationPage = () => {
     const loginModal = useRef(null);
     const [isLoading, setLoading] = useState(false);
     const [mapDisplay, setMapDisplay] = useState({
-        pos: [-1.748926, 120.0148634],
+        pos: defaultMapCoord,
         zoom: 5,
         name: '',
         isSelected: false,
@@ -211,6 +212,17 @@ const DestinationPage = () => {
             isSelected: true,
         }));
     };
+    
+    const onProvinceSelectReset = () => {
+        setSearchState((state) => ({ ...state, province: '' }));
+        setMapDisplay((state) => ({
+            ...state,
+            zoom: 7,
+            pos: defaultMapCoord,
+            name: '',
+            isSelected: false,
+        }));
+    };
 
     const handleCategoryChange = async (selectedCategory) => {
         setSearchState((state) => ({
@@ -277,6 +289,7 @@ const DestinationPage = () => {
                     handleSubmit={onSearchSubmit}
                     provinces={provinces}
                     selectedHandler={onProvinceSelected}
+                    resetSelectedHandler={onProvinceSelectReset}
                 />
                 <DestinationMap
                     pos={mapDisplay.pos}

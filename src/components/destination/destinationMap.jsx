@@ -15,11 +15,15 @@ const DestinationMap = ({ pos, zoom, name, isSelected, provinces = [] }) => {
             <MapContainer
                 center={pos}
                 zoom={zoom}
-                minZoom={5}
+                minZoom={4}
                 scrollWheelZoom={true}
                 className="bg-gray-500 w-full md:w-11/12 aspect-[1/2] md:aspect-[12/5] rounded-md"
             >
-                {isSelected && <ChangeView center={pos} zoom={zoom} />}
+                {isSelected ? (
+                    <ChangeView center={pos} zoom={zoom} />
+                ) : (
+                    <ChangeView center={pos} zoom={5} />
+                )}
 
                 {isSelected ? (
                     <Marker position={pos}>
