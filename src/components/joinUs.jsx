@@ -4,6 +4,7 @@ import LogoWoofi from '../assets/navbar/logo.webp';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { fadeInUp } from '../util/animation';
+import { useSelector } from 'react-redux';
 
 const JoinUs = () => {
     const user = useSelector((state) => state.user.data);
