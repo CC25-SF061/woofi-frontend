@@ -25,6 +25,7 @@ import { fadeInUp } from '../util/animation';
 const images = [Image10, Image11, Image12];
 
 const galleryPage = () => {
+    const MotionDiv = motion.div;
     return (
         <div>
             <Navbar />
@@ -36,7 +37,7 @@ const galleryPage = () => {
             />
 
             <div className="flex flex-col px-10 items-center bg-[#221122]">
-                <motion.div
+                <MotionDiv
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ amount: 0.1 }}
@@ -53,9 +54,9 @@ const galleryPage = () => {
                         cultural moments, every picture tells a story. Discover
                         the wonders of Indonesia, one snapshot at a time!
                     </p>
-                </motion.div>
+                </MotionDiv>
 
-                <motion.div
+                <MotionDiv
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ amount: 0.1 }}
@@ -83,9 +84,9 @@ const galleryPage = () => {
                             </SwiperSlide>
                         ))}
                     </Swiper>
-                </motion.div>
+                </MotionDiv>
 
-                <motion.div
+                <MotionDiv
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ amount: 0.1 }}
@@ -156,7 +157,7 @@ const galleryPage = () => {
                             />
                         </div>
                     </div>
-                </motion.div>
+                </MotionDiv>
             </div>
             <JoinUs />
             <Footer />
