@@ -66,7 +66,7 @@ const Dropdown = ({
     };
 
     const autoCompleteOption = (e) => {
-        if (filteredOptions.length > 0 && search.name != '') {
+        if (filteredOptions.length > 0 && search != '') {
             const firstFilteredOpt = getOptionLabel(filteredOptions[0]);
             setSearch(firstFilteredOpt);
             setDropdownOpen(false);
