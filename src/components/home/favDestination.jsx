@@ -20,6 +20,7 @@ import { slideInRight } from '../../util/animation';
 import SeeDetail from '../seeDetail';
 
 const FavDestination = () => {
+    const MotionDiv = motion.div;
     return (
         <Swiper
             className="swiper absolute inset-0 w-full lg:w-3/5 h-screen lg:h-[720px] md:h-[960px] cursor-grab active:cursor-grabbing"
@@ -31,7 +32,7 @@ const FavDestination = () => {
         >
             {/* Slide 1 */}
             <SwiperSlide>
-                <motion.div
+                <MotionDiv
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ amount: 0.1 }}
@@ -65,12 +66,12 @@ const FavDestination = () => {
                         />
                         <div className="absolute inset-0 bg-black opacity-40"></div>
                     </div>
-                </motion.div>
+                </MotionDiv>
             </SwiperSlide>
 
             {/* Slide 2 */}
             <SwiperSlide>
-                <motion.div
+                <MotionDiv
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ amount: 0.1 }}
@@ -104,12 +105,12 @@ const FavDestination = () => {
                         />
                         <div className="absolute inset-0 bg-black opacity-40"></div>
                     </div>
-                </motion.div>
+                </MotionDiv>
             </SwiperSlide>
 
             {/* Slide 3 */}
             <SwiperSlide>
-                <motion.div
+                <MotionDiv
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ amount: 0.1 }}
@@ -143,7 +144,7 @@ const FavDestination = () => {
                         />
                         <div className="absolute inset-0 bg-black opacity-40"></div>
                     </div>
-                </motion.div>
+                </MotionDiv>
             </SwiperSlide>
         </Swiper>
     );

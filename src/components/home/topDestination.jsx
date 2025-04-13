@@ -8,21 +8,20 @@ import { Link } from 'react-router-dom';
 import SeeDetail from '../seeDetail';
 
 const topDestination = () => {
+    const MotionDiv = motion.div;
     return (
         <>
-            {/* Top Destination */}
-
-            <motion.div
+            <MotionDiv
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ amount: 0.1 }}
                 variants={fadeInUp}
                 className=" flex flex-col items-center justify-center gap-4 py-12 px-8 lg:px-0 bg-[#252527] text-white"
             >
-                <h1 className="font-inknut-antiqua lg:text-4xl text-2xl">
+                <h1 className="font-inknut-antiqua lg:text-3xl text-xl">
                     <span className="text-[#FFA666]">Top</span> Destination
                 </h1>
-                <p className="font-quicksand lg:text-2xl w-full md:w-3/4 text-xl text-center">
+                <p className="font-quicksand lg:text-2xl w-full md:w-3/4 text-center">
                     Explore Indonesia’s most stunning destinations, from
                     pristine beaches to majestic mountains. Find your next
                     adventure with Woofi!
@@ -33,7 +32,7 @@ const topDestination = () => {
                         to="/destination"
                         className="relative inline-block font-quicksand font-semibold hover:text-[#FFA666] transition-colors duration-300 group"
                     >
-                        <span className="relative z-10">
+                        <span className="relative z-10 text-sm lg:text-base">
                             See More Destination
                         </span>
                         <span className="absolute left-0 bottom-0 h-[2px] bg-[#FFA666] transition-all duration-300 w-0 group-hover:w-full"></span>
@@ -44,7 +43,6 @@ const topDestination = () => {
                             image={Image5}
                             title="Bromo Mountain"
                             description="Explore the majestic Bromo Mountain, a breathtaking view of the sunrise."
-                            // province="Jawa Timur"
                             name="Bromo Mountain"
                         />
 
@@ -63,7 +61,7 @@ const topDestination = () => {
                         />
                     </div>
                 </div>
-            </motion.div>
+            </MotionDiv>
         </>
     );
 };

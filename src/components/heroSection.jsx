@@ -1,6 +1,6 @@
 import React from "react";
 
-const heroSection = ({
+const HeroSection = ({
   backgroundImage,
   title,
   highlightedWord,
@@ -9,31 +9,28 @@ const heroSection = ({
   const titleParts = title.split(" ");
 
   return (
-    <div>
+    <div className="relative w-full min-h-screen flex items-center justify-center">
+      <div className="absolute z-10 text-white px-8 lg:px-0 max-w-5xl mx-auto">
+        <h1 className="mb-5 lg:text-5xl text-3xl font-inknut-antiqua uppercase">
+          {titleParts.map((word, index) => (
+            <span
+              key={index}
+              className={word === highlightedWord ? "text-[#FFA666]" : ""}
+            >
+              {word}{" "}
+            </span>
+          ))}
+        </h1>
+        <p className="mb-5 lg:text-3xl text-xl font-quicksand">
+          {description}
+        </p>
+      </div>
+
       <div
-        className="hero min-h-screen"
-        style={{
-          backgroundImage: `url(${backgroundImage})`,
-        }}
+        className="absolute inset-0 w-full h-screen bg-cover bg-center relative"
+        style={{ backgroundImage: `url(${backgroundImage})` }}
       >
-        <div className="hero-overlay"></div>
-        <div className="hero-content text-neutral-content">
-          <div className="max-w-full px-8 lg:px-0">
-            <h1 className="mb-5 lg:text-5xl text-3xl font-inknut-antiqua uppercase">
-              {titleParts.map((word, index) => (
-                <span
-                  key={index}
-                  className={word === highlightedWord ? "text-[#FFA666]" : ""}
-                >
-                  {word}{" "}
-                </span>
-              ))}
-            </h1>
-            <p className="mb-5 lg:text-3xl text-xl font-quicksand">
-              {description}
-            </p>
-          </div>
-        </div>
+        <div className="absolute inset-0 bg-black/40"></div>
         <div
           className="absolute bottom-0 w-full"
           style={{
@@ -47,4 +44,4 @@ const heroSection = ({
   );
 };
 
-export default heroSection;
+export default HeroSection;

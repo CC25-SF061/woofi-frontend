@@ -16,10 +16,8 @@ import { Link } from 'react-router-dom';
 import FavDestination from '../components/home/favDestination';
 import TopDestination from '../components/home/topDestination';
 
-// const mapUrl = (url) => {
-//     return new URL(url, import.meta.url).href;
-// };
 const backgroundImages = [borobudur, gunungRinjani, rajaAmpat];
+const MotionDiv = motion.div;
 
 const home = () => {
     return (
@@ -32,7 +30,6 @@ const home = () => {
                 description="Discover the natural beauty, culture and history of Indonesia in one place."
             />
 
-            {/* What is Woofi */}
             <div className="relative flex w-full min-h-screen items-center justify-center bg-[#252527]">
                 <div
                     className="absolute top-0 w-full z-10"
@@ -44,12 +41,12 @@ const home = () => {
                 ></div>
 
                 <div className="flex flex-col lg:flex-row items-center justify-center px-8 py-20 lg:py-0 gap-8 lg:gap-0 lg:px-0">
-                    <motion.div
+                    <MotionDiv
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ amount: 0.1 }}
                         variants={slideInLeft}
-                        className="flex flex-col items-center justify-center lg:w-1/3 text-center lg:px-16  z-11"
+                        className="flex flex-col items-center justify-center lg:w-1/3 text-center lg:px-16 z-11"
                     >
                         <h1 className="text-white lg:text-2xl text-xl font-inknut-antiqua">
                             What is{' '}
@@ -62,9 +59,9 @@ const home = () => {
                             white sandy beaches, majestic green mountains, to
                             rich and colorful cultures—Indonesia has it all.
                         </p>
-                    </motion.div>
+                    </MotionDiv>
 
-                    <motion.div
+                    <MotionDiv
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ amount: 0.1 }}
@@ -84,9 +81,9 @@ const home = () => {
                             alt="Logo Woofi"
                             className="h-auto w-38 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 "
                         />
-                    </motion.div>
+                    </MotionDiv>
 
-                    <motion.div
+                    <MotionDiv
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ amount: 0.1 }}
@@ -106,7 +103,7 @@ const home = () => {
                             journey unforgettable. Let’s explore Indonesia like
                             never before!
                         </p>
-                    </motion.div>
+                    </MotionDiv>
                 </div>
 
                 <div
@@ -119,9 +116,8 @@ const home = () => {
                 ></div>
             </div>
 
-            {/* Explore your favorite dentination */}
             <div className="relative flex flex-col lg:flex-row w-full min-h-screen items-center justify-center bg-[#221122] px-8 gap-8 lg:gap-8 py-12 pt-0 lg:pt-12">
-                <motion.div
+                <MotionDiv
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ amount: 0.1 }}
@@ -146,7 +142,7 @@ const home = () => {
                     >
                         Start Exploring
                     </Link>
-                </motion.div>
+                </MotionDiv>
 
                 <FavDestination />
             </div>

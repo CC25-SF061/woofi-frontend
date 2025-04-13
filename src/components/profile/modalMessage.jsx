@@ -15,7 +15,7 @@ const ModalMessage = ({
         <AnimatePresence>
             {isOpen && (
                 <MotionDiv
-                    className="fixed inset-0 flex items-center justify-center bg-black/50 bg-opacity-80 backdrop-blur-md z-50 font-quicksand top-20 lg:top-0"
+                    className="fixed inset-0 flex items-center justify-center bg-black/50 bg-opacity-80 backdrop-blur-md z-50 font-quicksand top-16 lg:top-0"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
@@ -43,26 +43,6 @@ const ModalMessage = ({
                         </div>
 
                         <div className="p-4 space-y-4">
-                            {/* {notifications.map((notification) => {
-                                return (
-                                    <div
-                                        key={notification.id}
-                                        className={`${notification.is_read ? '' : 'bg-[#333339]'} border border-gray-600 rounded-lg px-4 py-3 text-white`}
-                                    >
-                                        <div className="flex justify-between items-center mb-1">
-                                            <span className="font-semibold">
-                                                {notification.from}
-                                            </span>
-                                            <span className="text-sm text-gray-400">
-                                                {notification.created_at}
-                                            </span>
-                                        </div>
-                                        <p className="text-sm text-gray-300">
-                                            {notification.detail}
-                                        </p>
-                                    </div>
-                                );
-                            })} */}
                             {children}
                         </div>
 

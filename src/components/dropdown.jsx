@@ -111,7 +111,7 @@ const Dropdown = ({
             </div>
 
             {dropdownOpen && filteredOptions.length > 0 && (
-                <ul className="absolute z-20 w-full mt-1 bg-[#252527] text-white border border-[#FFA666] rounded shadow-md max-h-49 overflow-y-auto">
+                <ul className="absolute z-30 w-full mt-1 bg-[#252527] text-white border border-[#FFA666] rounded shadow-md max-h-49 overflow-y-auto">
                     {filteredOptions.map((opt, index) => (
                         <li
                             key={index}
