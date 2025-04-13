@@ -87,7 +87,7 @@ const DestinationGroup = ({
             {/* Title */}
             <div className="relative w-full caret-transparent">
                 <div className="absolute right-0 left-0 h-[2px] top-[50%] bg-[#FFA66677]"></div>
-                <h1 className="relative mx-auto px-3 font-inknut-antiqua text-2xl md:text-4xl w-fit text-center text-[#FFA666] font-bold bg-[#221122]">
+                <h1 className="relative mx-auto px-3 font-inknut-antiqua text-xl md:text-2xl w-fit text-center text-[#FFA666] font-semibold bg-[#221122]">
                     Explore Destinations
                 </h1>
             </div>

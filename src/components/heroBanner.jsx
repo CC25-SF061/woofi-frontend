@@ -13,10 +13,11 @@ const HeroBanner = ({
   description,
 }) => {
   const titleParts = title.split(" ");
+  const MotionDiv = motion.div
 
   return (
     <div className="relative w-full min-h-screen flex items-center justify-center">
-      <motion.div
+      <MotionDiv
         initial="hidden"
         whileInView="visible"
         viewport={{ staggerChildren: 0.15, once: true, amount: 0.1 }}
@@ -34,7 +35,7 @@ const HeroBanner = ({
           ))}
         </h1>
         <p className="mb-5 lg:text-3xl text-xl font-quicksand">{description}</p>
-      </motion.div>
+      </MotionDiv>
 
       <Swiper
         className="swiper absolute inset-0 w-full h-screen"

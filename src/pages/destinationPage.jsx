@@ -15,9 +15,11 @@ import { showLoading, hideLoading } from '../stores/loadingReducer';
 import axios, { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
+import ModalMessage from '../components/profile/modalMessage';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 // Geolocation
 import DestinationFilter from '../util/destinationFilter';
-import LoginModal from '../components/loginModal';
 import { nanoid } from 'nanoid';
 import { getProvince } from '../util/province';
 import { useSearchParams } from 'react-router-dom';
@@ -31,8 +33,10 @@ const DestinationPage = () => {
     const [destinations, setDestinations] = useState([]);
     const [provinces, setProvinces] = useState(getProvince() || []);
     const [searchParams, setSearchParams] = useSearchParams();
-    const loginModal = useRef(null);
     const [isLoading, setLoading] = useState(false);
+    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+    const navigate = useNavigate();
+    const MotionButton = motion.button;
     const [mapDisplay, setMapDisplay] = useState({
         pos: defaultMapCoord,
         zoom: 5,
@@ -189,8 +193,7 @@ const DestinationPage = () => {
     };
 
     const setLoginModalVisible = () => {
-        if (!loginModal) return;
-        loginModal.current.showModal();
+        setIsLoginModalOpen(true);
     };
 
     const onProvinceSelected = async (province) => {
@@ -212,7 +215,7 @@ const DestinationPage = () => {
             isSelected: true,
         }));
     };
-    
+
     const onProvinceSelectReset = () => {
         setSearchState((state) => ({ ...state, province: '' }));
         setMapDisplay((state) => ({
@@ -275,6 +278,15 @@ const DestinationPage = () => {
         })();
     }, []);
 
+    const closeLoginModal = () => {
+        setIsLoginModalOpen(false);
+    };
+
+    const goToLogin = () => {
+        closeLoginModal();
+        navigate('/sign-in');
+    };
+
     return (
         <div>
             <Navbar />
@@ -284,7 +296,7 @@ const DestinationPage = () => {
                 highlightedWord="Destinations"
                 description="Explore countless places in Indonesia with complete information."
             />
-            <div className="flex flex-col px-10 items-center bg-[#221122] w-full">
+            <div className="flex flex-col px-8 items-center bg-[#221122] w-full">
                 <SearchDestination
                     handleSubmit={onSearchSubmit}
                     provinces={provinces}
@@ -318,7 +330,32 @@ const DestinationPage = () => {
             <JoinUs />
             <Footer />
             {/* <ToastContainer /> */}
-            <LoginModal dialogRef={loginModal} />
+            <ModalMessage
+                isOpen={isLoginModalOpen}
+                onClose={closeLoginModal}
+                title="Not Logged In"
+            >
+                <div className="text-white">
+                    <h3 className="font-bold text-xl">
+                        You are not{' '}
+                        <span className="text-[#FFA666] font-bold">
+                            Logged In
+                        </span>
+                        , yet
+                    </h3>
+                    <p className="pb-6 font-light tracking-wide">
+                        Login to continue
+                    </p>
+                    <MotionButton
+                        transition={{ ease: 'backOut', delay: 0 }}
+                        whileHover={{ scale: 1.05 }}
+                        className="rounded-md hover:bg-[#FFA66622] border-solid border-[#FFA666] text-[#FFA666] border-[1px] px-2 py-1 font-semibold tracking-wider"
+                        onClick={goToLogin}
+                    >
+                        Login right away
+                    </MotionButton>
+                </div>
+            </ModalMessage>
         </div>
     );
 };

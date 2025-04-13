@@ -9,8 +9,8 @@ const ChangeView = ({ center, zoom }) => {
 const DestinationMap = ({ pos, zoom, name, isSelected, provinces = [] }) => {
     return (
         <div className="items-center mt-12 md:mt-16 flex flex-col w-full caret-transparent">
-            <h1 className="relative mx-auto mb-5 px-3 font-inknut-antiqua text-3xl md:text-4xl tracking-wider w-fit text-center text-[#FFA666] font-semibold bg-[#221122]">
-                Explore available Provinces
+            <h1 className="relative mx-auto mb-5 font-inknut-antiqua text-xl md:text-2xl tracking-wider w-fit text-center text-[#FFA666] bg-[#221122]">
+                Explore Available Provinces
             </h1>
             <MapContainer
                 center={pos}
