@@ -67,6 +67,7 @@ const DestinationViewPage = () => {
                     ]}
                     location={destination.location}
                     province={destination.province}
+                    category={destination.category}
                     avgRating={destination?.rating?.toFixed(1) || 0}
                     countRating={destination.ratingCount || 0}
                     isWishlist={destination.isWishlisted}

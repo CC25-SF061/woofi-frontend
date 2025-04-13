@@ -21,6 +21,7 @@ const DestinationGroup = ({
     image,
     location,
     province,
+    category,
     avgRating,
     countRating,
     isWishlist,
@@ -93,6 +94,10 @@ const DestinationGroup = ({
             }
             setRating(value);
             await axios.post(`/api/destination/rating/${id}`, { score: value });
+            toast.success(`Rating sent : ${value} / 5`, {
+                position: 'top-right',
+                autoClose: 2000,
+            });
         } catch (e) {
             toast.error('Something went wrong while rating', {
                 position: 'top-right',
@@ -127,7 +132,10 @@ const DestinationGroup = ({
             <div className="flex flex-row">
                 <div className="font-quicksand text-sm md:text-2xl pr-8">
                     <p className="text-white">{location}</p>
-                    <p className="text-[#bbb] font-light">{province}</p>
+                    <p className="text-[#bbb] font-light text-xl">
+                        <span className="font-medium">{category}</span> at&nbsp;
+                        <span className="font-medium">{province}</span>
+                    </p>
                 </div>
                 <div className="flex flex-col ml-auto">
                     <div className="flex flex-row gap-2 md:gap-4">
