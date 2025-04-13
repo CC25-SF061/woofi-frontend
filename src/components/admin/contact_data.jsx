@@ -93,7 +93,7 @@ const ContactData = ({
             });
         } catch (e) {
             if (!(e instanceof AxiosError)) {
-                return toast.error('Something went wrong', {
+                return toast.error('Something went wrong while replying', {
                     position: 'top-right',
                     autoClose: 3000,
                 });
@@ -108,7 +108,8 @@ const ContactData = ({
                 );
             }
 
-            return toast.error('Something went wrong', {
+            console.error(e);
+            return toast.error('Something went wrong while replying', {
                 position: 'top-right',
                 autoClose: 3000,
             });
