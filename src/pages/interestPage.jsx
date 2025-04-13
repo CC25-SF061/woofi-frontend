@@ -2,7 +2,7 @@ import axios, { AxiosError } from 'axios';
 import React, { useEffect, useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import invalidFieldErr from '../util/invalidField';
-import ErrorConstant from '../util/ErrorConstant';
+import ErrorConstant from '../util/errorConstant';
 import { fetchUserProfile, setIsNewUser } from '../stores/userReducer';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';

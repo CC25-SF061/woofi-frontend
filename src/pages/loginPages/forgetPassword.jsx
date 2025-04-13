@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
-import ErrorConstant from '../../util/ErrorConstant';
+import ErrorConstant from '../../util/errorConstant';
 import { FaSpinner } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
 import { setForgetEmail } from '../../stores/forgetPasswordReducer';
