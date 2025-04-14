@@ -14,7 +14,7 @@ const SeeDetail = ({ image, title, description, province, name }) => {
                 <p className="text-sm font-quicksand">{description}</p>
                 <Link
                     to={encodeURI(
-                        `/destination?province=${province}&name=${name}`,
+                        `/destination?province=${province ?? ''}&name=${name ?? ''}`,
                     )}
                     className="mt-3 hover:bg-[#ffffff55] hover:scale-[1.05] px-3 py-1 border border-white rounded-md font-quicksand font-semibold"
                 >

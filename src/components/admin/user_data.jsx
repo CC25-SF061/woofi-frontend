@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 import { nanoid } from 'nanoid';
 import { useDispatch } from 'react-redux';
 import { hideLoading, showLoading } from '../../stores/loadingReducer';
+import { useNavigate } from 'react-router-dom';
 const UserData = ({
     id,
     order,
@@ -26,6 +27,7 @@ const UserData = ({
     onPromote = () => {},
     onDemote = () => {},
 }) => {
+    const navigate = useNavigate();
     const roles = {
         user: (
             <div className="w-fit px-4 py-1 text-black bg-[#ff853e] text-sm tracking-wider rounded-md text-white font-semibold">
@@ -200,8 +202,9 @@ const UserData = ({
             });
         }
     };
-    const seeDetailUser = () => {
+    const seeDetailUser = async () => {
         // To do remove user
+        await navigate(`/user-detail/${id}`);
     };
     return (
         <div
