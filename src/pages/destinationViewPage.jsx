@@ -54,7 +54,7 @@ const DestinationViewPage = () => {
     return destination ? (
         <>
             <Navbar />
-            <main className="flex flex-col px-10 pt-25 py-10 items-center bg-[#221122]">
+            <main className="flex flex-col px-8 pt-20 py-10 items-center bg-[#221122]">
                 <DestinationViewHeader
                     id={destinationId}
                     name={destination.name}

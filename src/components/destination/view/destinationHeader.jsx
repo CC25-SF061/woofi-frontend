@@ -156,7 +156,7 @@ const DestinationGroup = ({
                     </MotionButton>
                 </div>
             </ModalMessage>
-            <div className="flex flex-row gap-4 items-center">
+            <div className="flex flex-row lg:gap-4 justify-between lg:justify-normal items-center">
                 <h1 className="font-inknut-antiqua font-normal text-lg md:font-semibold md:text-3xl">
                     {name}
                 </h1>
@@ -176,8 +176,8 @@ const DestinationGroup = ({
                 </motion.div>
             </div>
             <DestinationCollage image={image}></DestinationCollage>
-            <div className="flex flex-row">
-                <div className="font-quicksand text-sm md:text-2xl pr-8">
+            <div className="lg:flex flex-row">
+                <div className="font-quicksand text-sm md:text-2xl lg:pr-8 pb-4 lg:pb-0">
                     <p className="text-white">{location}</p>
                     {
                         // Others category check
@@ -266,7 +266,7 @@ const DestinationGroup = ({
                             );
                         })}
                     </div>
-                    <p className="text-[#FFA666] text-right text-xl font-quicksand tracking-wider">
+                    <p className="text-[#FFA666] lg:text-right text-xl font-quicksand tracking-wider">
                         {avgRating} ·{' '}
                         <span className="text-[#FFA666DD] text-base tracking-normal">
                             {countRating} ratings

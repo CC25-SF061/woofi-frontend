@@ -414,7 +414,7 @@ const Profile = () => {
     }, [isModalProfile]);
 
     return (
-        <div className="w-full bg-[#221122] flex lg:h-screen items-center justify-center p-5 lg:p-10 text-white">
+        <div className="w-full bg-[#221122] flex lg:h-screen items-center justify-center p-8 lg:p-10 text-white">
             <ToastContainer />
 
             {/* Header Mobile */}
@@ -453,7 +453,7 @@ const Profile = () => {
                 <Sidebar />
             </div>
 
-            <div className="flex flex-col flex-1 rounded-lg overflow-hidden shadow-lg bg-[#252527] p-3 m-5 lg:m-0 h-full w-12 mt-20">
+            <div className="flex flex-col flex-1 rounded-lg overflow-hidden shadow-lg bg-[#252527] p-3 h-full w-12 mt-20 lg:m-0">
                 {/* Header */}
                 <div className="flex justify-between items-center border-white border-b-2 pb-5">
                     {/* Profile */}
@@ -469,10 +469,10 @@ const Profile = () => {
                             onClick={() => setIsModalProfile(true)}
                         />
                         <div className="flex flex-col gap-2">
-                            <h1 className="font-inknut-antiqua text-3xl">
+                            <h1 className="font-inknut-antiqua text-xl lg:text-3xl">
                                 {user.username}
                             </h1>
-                            <p className="font-quicksand">{user.name}</p>
+                            <p className="font-quicksand text-lg">{user.name}</p>
                         </div>
                         <ModalEdit
                             isOpen={isModalProfile}
@@ -559,7 +559,7 @@ const Profile = () => {
                     <DekstopNotification />
                 </div>
 
-                <h1 className="font-inknut-antiqua text-2xl text-center my-4">
+                <h1 className="font-inknut-antiqua text-xl lg:text-2xl text-center my-4">
                     Account Information
                 </h1>
 

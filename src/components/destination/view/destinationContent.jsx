@@ -1,6 +1,4 @@
-import { useState, React } from 'react';
-
-import { motion } from 'framer-motion';
+import { React } from 'react';
 
 const DestinationGroup = ({ name, detail, writer, creationDate, userId }) => {
     return (
@@ -13,12 +11,12 @@ const DestinationGroup = ({ name, detail, writer, creationDate, userId }) => {
                 {detail}
             </p>
             <hr className="opacity-75"></hr>
-            <div className="flex flex-row">
+            <div className="lg:flex flex-row">
                 <h2 className="text-xl font-inknut-antiqua font-black tracking-wider md:text-3xl">
                     Written By
                 </h2>
-                <div className="ml-auto font-quicksand">
-                    <h3 className="text-xl text-right md:text-2xl font-semibold">
+                <div className="ml-auto font-quicksand pt-1 lg:pt-0">
+                    <h3 className="text-xl lg:text-right md:text-2xl font-semibold">
                         <a
                             href={`/user-detail/${userId}`}
                             className="underline"
@@ -26,7 +24,7 @@ const DestinationGroup = ({ name, detail, writer, creationDate, userId }) => {
                             {writer}
                         </a>
                     </h3>
-                    <h3 className="text-md text-right text-gray-100 font-light">
+                    <h3 className="text-md lg:text-right text-gray-100 font-light">
                         {`at ${new Date(creationDate).toDateString()}`}
                     </h3>
                 </div>

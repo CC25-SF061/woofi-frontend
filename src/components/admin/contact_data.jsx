@@ -353,6 +353,7 @@ const ContactData = ({
                     <p className="text-red-500 text-sm">{err.message}</p>
                 )}
             </ModalReply>
+            <ToastContainer />
         </div>
     );
 };
@@ -412,7 +413,6 @@ const ContactDataTable = () => {
     }, [stateFilter, searchResult]);
     return (
         <div className="flex flex-col items-stretch justify-center p-6 pt-28 gap-8 font-quicksand">
-            <ToastContainer />
             {/* Title Section */}
             <div className="py-6 flex flex-col items-center bg-[#252527] rounded-md shadow-lg shadow-[#00000055]">
                 <img src={LogoUsers} alt="contacts Icon" className="w-8 mb-1" />
