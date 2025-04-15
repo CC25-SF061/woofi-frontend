@@ -194,7 +194,7 @@ const Navbar = () => {
                                                     : defaultProfile
                                             }
                                             alt="Profile"
-                                            className="size-8 rounded-full border border-gray-300"
+                                            className="size-8 rounded-full border border-gray-300 object-cover"
                                         />
                                         <FaChevronDown
                                             className={`text-lg transform transition-transform duration-300 ${
@@ -293,7 +293,7 @@ const Navbar = () => {
                                                     : defaultProfile
                                             }
                                             alt="Profile"
-                                            className="size-8 rounded-full border border-gray-300"
+                                            className="size-8 rounded-full border border-gray-300 object-cover"
                                         />
                                         <span className="truncate">
                                             {user.name}

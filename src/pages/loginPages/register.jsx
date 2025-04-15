@@ -141,8 +141,8 @@ const Register = () => {
             ).data;
 
             localStorage.setItem('token', response.data.token);
-            await dispatch(setData());
-            await navigate('/interest');
+            dispatch(setData());
+            await navigate('/profile');
         } catch (e) {
             if (!(e instanceof AxiosError)) {
                 return toast.error('Something went wrong', {

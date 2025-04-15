@@ -15,7 +15,6 @@ axios.defaults.paramsSerializer = (params) =>
 axios.interceptors.request.use(
     function (request) {
         if (localStorage.getItem('token')) {
-            console.log(localStorage.getItem('token'));
             request.headers['Authorization'] = `Bearer ${localStorage.getItem(
                 'token',
             )}`;

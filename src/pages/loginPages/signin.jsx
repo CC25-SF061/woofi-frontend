@@ -67,7 +67,7 @@ const SignIn = () => {
             dispatch(setData());
 
             localStorage.setItem('token', response.data.data.token);
-            await navigate('/interest');
+            await navigate('/profile');
         } catch (e) {
             if (!(e instanceof AxiosError)) {
                 return;
@@ -145,7 +145,7 @@ const SignIn = () => {
                 dispatch(setData());
                 localStorage.setItem('token', response.data.data.token);
 
-                await navigate('/interest');
+                await navigate('/profile');
             } catch (e) {
                 if (!(e instanceof AxiosError)) {
                     return;

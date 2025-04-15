@@ -68,7 +68,6 @@ const App = () => {
                             withCredentials: true,
                         })
                     ).data;
-                    console.log(refreshToken, 'sdjsdjsbdd');
                     localStorage.setItem('token', refreshToken.data.token);
                     refreshAndRetryQueue.current.forEach(
                         ({ resolve, config }) => resolve(config),
@@ -172,33 +171,41 @@ const App = () => {
                     <Route
                         path="/profile/wishlist"
                         element={
-                            <AuthGuard>
-                                <Wishlist />
-                            </AuthGuard>
+                            <NewUserGuard>
+                                <AuthGuard>
+                                    <Wishlist />
+                                </AuthGuard>
+                            </NewUserGuard>
                         }
                     ></Route>
                     <Route
                         path="/profile"
                         element={
-                            <AuthGuard>
-                                <Profile />
-                            </AuthGuard>
+                            <NewUserGuard>
+                                <AuthGuard>
+                                    <Profile />
+                                </AuthGuard>
+                            </NewUserGuard>
                         }
                     ></Route>
                     <Route
                         path="/profile/add-data"
                         element={
-                            <AuthGuard>
-                                <AddData />
-                            </AuthGuard>
+                            <NewUserGuard>
+                                <AuthGuard>
+                                    <AddData />
+                                </AuthGuard>
+                            </NewUserGuard>
                         }
                     ></Route>
                     <Route
                         path="/profile/data-destination"
                         element={
-                            <AuthGuard>
-                                <DataDestination />
-                            </AuthGuard>
+                            <NewUserGuard>
+                                <AuthGuard>
+                                    <DataDestination />
+                                </AuthGuard>
+                            </NewUserGuard>
                         }
                     ></Route>
                     <Route

@@ -146,7 +146,9 @@ const Profile = () => {
 
         try {
             setErr((state) => ({ ...state, image: null }));
-
+            await axios
+                .patch('/api/user/edit/profile-picture', new FormData())
+                .catch((e) => {});
             const result = (
                 await axios.patch('/api/user/edit/profile-picture', formData, {
                     headers: { 'Content-Type': 'multipart/form-data' },
@@ -465,7 +467,7 @@ const Profile = () => {
                                     : ProfileIcon
                             }
                             alt="Profile"
-                            className="rounded-full max-w-20 w-full aspect-1/1 cursor-pointer"
+                            className="rounded-full max-w-20 w-full aspect-1/1 cursor-pointer object-cover"
                             onClick={() => setIsModalProfile(true)}
                         />
                         <div className="flex flex-col gap-2">
@@ -696,7 +698,8 @@ const Profile = () => {
                                 if (!isValid) return;
 
                                 await handleEditName(newName);
-                                setUsername(newName);
+                                // setUsername(newName);
+                                setName(newName);
                                 setIsModalEditNameOpen(false);
                             }}
                         >
