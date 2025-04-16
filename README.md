@@ -11,8 +11,6 @@ Memberikan sebuah informasi tentang budaya, tradisi, alat musik tradisional, tem
 ### Mengapa Anda menggunakan teknologi yang Anda gunakan? 
 Mengikuti perkembangan teknologi untuk memaksimalkan proyek ini supaya berjalan dengan baik
 
-## Daftar Isi (Opsional)
-
 ## Cara Menginstall dan Menjalankan Projek
 1. Clone repository untuk menjalankan perintah berikut ini di terminal atau Git Bash Anda:
 ```
@@ -38,6 +36,17 @@ https://github.com/CC25-SF061/woofi-frontend.git
 | **Post** | ![Halaman Post](/Media/HalamanPost.png "Halaman Post") | **Contact** | ![Halaman Contact](/Media/HalamanContact.png "Halaman Contact") |
 | **Destination Detail** | ![Halaman Destination Detail](/Media/HalamanDestinationDetail.jpg "Halaman Destination Detail") | | |
 
+## Library
+- Google OAuth
+- Redux
+- TailwindCSS Vite
+- axios
+- dayjs
+- framer-motion
+- nanoid
+- react-icons
+- swiper
+
 ## Kredit
 Kami mengucapkan terima kasih yang sebesar-besarnya kepada semua pihak yang telah berkontribusi, baik secara langsung maupun tidak langsung, dalam pengembangan proyek ini. Tanpa dukungan dan kontribusi mereka, proyek ini tidak akan mungkin terwujud seperti sekarang.
 
@@ -52,7 +61,3 @@ GitHub: ```https://github.com/kesavamas```
 GitHub: ```https://github.com/dklfh```
 5. I Wayan Widhyadana Sadhu Gunawan(FS060D5Y0159) - Frotend/Backend Development- Smk Negeri 1 Denpasar </br>
 GitHub: ```https://github.com/KelloVerra```
-
-### Pustaka
-
-## Licensi
