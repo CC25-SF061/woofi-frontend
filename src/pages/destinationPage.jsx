@@ -73,7 +73,6 @@ const DestinationPage = () => {
                     page: pageIdx,
                 },
             });
-            console.log(response.data.data);
             if (!response.data.data.length) {
                 setHasMore(() => false);
             }
