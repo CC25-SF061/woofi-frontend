@@ -40,6 +40,7 @@ const DestinationViewPageGenerated = () => {
                     name={destination.name}
                     detail={destination.Penjelasan_English}
                     writer="System"
+                    province={destination.Provinsi}
                 />
             </main>
             <Footer />

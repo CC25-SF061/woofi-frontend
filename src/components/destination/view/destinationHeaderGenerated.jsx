@@ -20,7 +20,29 @@ const DestinationGroup = ({
 }) => {
     const { whole_rating, has_half_rating, empty_rating } = countStars(rating);
     const navigate = useNavigate();
-
+    const renderCategory = () => {
+        if (category === 'Others' || !category) {
+            return (
+                <p className="text-[#bbb] font-light text-base">
+                    <span className="font-medium text-xl">{province}</span>
+                    &nbsp;(Others)
+                </p>
+            );
+        }
+        return (
+            <>
+                <p className="text-[#bbb] font-light text-xl">
+                    <span className="font-medium">{category}</span>
+                    {province && (
+                        <>
+                            &nbsp;at&nbsp;
+                            <span className="font-medium">{province}</span>
+                        </>
+                    )}
+                </p>
+            </>
+        );
+    };
     return (
         <div className="text-white flex flex-col w-full mb-4 gap-4">
             <div className="flex flex-row lg:gap-4 justify-between lg:justify-normal items-center">
@@ -32,29 +54,7 @@ const DestinationGroup = ({
             <div className="lg:flex flex-row">
                 <div className="font-quicksand text-sm md:text-2xl lg:pr-8 pb-4 lg:pb-0">
                     <p className="text-white">{location}</p>
-                    {
-                        // Others category check
-                        category === 'Others' ? (
-                            <p className="text-[#bbb] font-light text-base">
-                                <span className="font-medium text-xl">
-                                    {province}
-                                </span>
-                                &nbsp;(Others)
-                            </p>
-                        ) : (
-                            <p className="text-[#bbb] font-light text-xl">
-                                {category && (
-                                    <>
-                                        <span className="font-medium">
-                                            {category}
-                                        </span>
-                                        &nbsp;at&nbsp;
-                                    </>
-                                )}
-                                <span className="font-medium">{province}</span>
-                            </p>
-                        )
-                    }
+                    {renderCategory()}
                 </div>
                 <div className="flex flex-col ml-auto">
                     <div className="flex flex-row gap-2 md:gap-4">

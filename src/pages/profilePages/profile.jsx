@@ -205,7 +205,10 @@ const Profile = () => {
                 position: 'top-right',
                 autoClose: 3000,
             });
+            setUsername(username);
+            setIsModalUsernameOpen(false);
         } catch (e) {
+            console.log(e, 'e');
             if (!(e instanceof AxiosError)) {
                 toast.error('Something went wrong', {
                     position: 'top-right',
@@ -474,7 +477,9 @@ const Profile = () => {
                             <h1 className="font-inknut-antiqua text-xl lg:text-3xl">
                                 {user.username}
                             </h1>
-                            <p className="font-quicksand text-lg">{user.name}</p>
+                            <p className="font-quicksand text-lg">
+                                {user.name}
+                            </p>
                         </div>
                         <ModalEdit
                             isOpen={isModalProfile}
@@ -613,8 +618,8 @@ const Profile = () => {
                                 if (!isValid) return;
 
                                 await handlerEditUsername(newUsername);
-                                setUsername(newUsername);
-                                setIsModalUsernameOpen(false);
+                                // setUsername(newUsername);
+                                // setIsModalUsernameOpen(false);
                             }}
                         >
                             <div className="flex flex-col">
