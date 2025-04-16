@@ -4,7 +4,7 @@ import DestinationCard from './destinationCard';
 import DestinationFilterConstant from '../../util/destinationFilter';
 import { useWindowVirtualizer } from '@tanstack/react-virtual';
 import Dropdown from '../dropdown.jsx';
-
+import DestinationCardGenerated from './destinationCardGenerated';
 const DestinationGroup = ({
     containerRef,
     tagsChangeHandler,
@@ -72,7 +72,6 @@ const DestinationGroup = ({
         { name: 'Tourist Village' },
         { name: 'Others' },
     ];
-
     const handleSelectCategory = (selectedCategory) => {
         setCategory(selectedCategory);
         handleCategoryChange(selectedCategory);
@@ -147,6 +146,7 @@ const DestinationGroup = ({
                 >
                     {virtualizer.getVirtualItems().map((item) => {
                         const destination = destinations[item.index];
+
                         return (
                             <div
                                 key={item.index}
@@ -160,20 +160,32 @@ const DestinationGroup = ({
                                     transform: `translateY(${item.start - virtualizer.options.scrollMargin}px)`,
                                 }}
                             >
-                                <DestinationCard
-                                    id={destination.id}
-                                    picture={
-                                        new URL(
-                                            destination.image,
-                                            import.meta.env.VITE_STATIC_ASSET_BASE_URL,
-                                        ).href
-                                    }
-                                    name={destination.name}
-                                    detail={destination.detail}
-                                    isWishlisted={destination.isWishlisted}
-                                    rating={destination.rating}
-                                    setLoginModalVisible={setLoginModalVisible}
-                                />
+                                {destination.isAIGenerated ? (
+                                    <DestinationCardGenerated
+                                        picture={destination.Foto}
+                                        name={destination.NameLocation}
+                                        detail={destination.Penjelasan_English}
+                                        rating={destination.Rating}
+                                        destinationData={destination}
+                                    />
+                                ) : (
+                                    <DestinationCard
+                                        id={destination.id}
+                                        picture={
+                                            new URL(
+                                                destination.image,
+                                                import.meta.env.VITE_STATIC_ASSET_BASE_URL,
+                                            ).href
+                                        }
+                                        name={destination.name}
+                                        detail={destination.detail}
+                                        isWishlisted={destination.isWishlisted}
+                                        rating={destination.rating}
+                                        setLoginModalVisible={
+                                            setLoginModalVisible
+                                        }
+                                    />
+                                )}
                             </div>
                         );
                     })}

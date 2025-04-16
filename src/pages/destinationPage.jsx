@@ -73,6 +73,7 @@ const DestinationPage = () => {
                     page: pageIdx,
                 },
             });
+            console.log(response.data.data);
             if (!response.data.data.length) {
                 setHasMore(() => false);
             }
@@ -178,6 +179,10 @@ const DestinationPage = () => {
     const onSearchSubmit = async (province, destination) => {
         const keyLoading = nanoid();
         dispatch(showLoading(keyLoading));
+        setSearchParams(() => ({
+            province: province.name,
+            destination: destination.name,
+        }));
         setSearchState((state) => ({
             ...state,
             province: province,
@@ -199,7 +204,12 @@ const DestinationPage = () => {
     const onProvinceSelected = async (province) => {
         const keyLoading = nanoid();
         dispatch(showLoading(keyLoading));
+
         setSearchState((state) => ({ ...state, province: province }));
+        setSearchParams(() => ({
+            province: province.name,
+            destination: searchState?.destination?.name,
+        }));
         await searchDestination(
             province.name,
             searchState?.destination?.name,
@@ -231,6 +241,11 @@ const DestinationPage = () => {
         setSearchState((state) => ({
             ...state,
             category: selectedCategory,
+        }));
+        setSearchParams(() => ({
+            province: searchState?.province?.name || '',
+            destination: searchState?.destination?.name || '',
+            category: selectedCategory.name || '',
         }));
         await searchDestination(
             searchState?.province?.name,

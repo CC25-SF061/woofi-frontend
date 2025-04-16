@@ -9,6 +9,7 @@ import GalleryPage from './pages/galleryPage';
 import DestinationPage from './pages/destinationPage';
 import DestinationViewPage from './pages/destinationViewPage';
 import NotFound from './pages/notFound';
+import DestinationViewPageGenerated from './pages/destinationViewPageGenerated';
 import ContactUs from './pages/contactUs';
 import InterestPage from './pages/interestPage.jsx';
 
@@ -121,6 +122,15 @@ const App = () => {
                         element={
                             <NewUserGuard>
                                 <DestinationPage />
+                            </NewUserGuard>
+                        }
+                    ></Route>
+
+                    <Route
+                        path="/destination/:destinationId/generated"
+                        element={
+                            <NewUserGuard>
+                                <DestinationViewPageGenerated />
                             </NewUserGuard>
                         }
                     ></Route>
