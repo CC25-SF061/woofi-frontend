@@ -14,7 +14,6 @@ const DestinationCard = ({
     rating,
     destinationData,
 }) => {
-    console.log(destinationData);
     const MotionDiv = motion.div;
     const navigate = useNavigate();
     const { whole_rating, has_half_rating, empty_rating } = countStars(rating);
